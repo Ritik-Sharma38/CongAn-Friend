@@ -38,6 +38,8 @@ target 'depression' do
 
   pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
 
+  pod 'RNSVG', :path => '../node_modules/react-native-svg'
+
   target 'depressionTests' do
     inherit! :search_paths
     # Pods for testing

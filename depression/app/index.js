@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Image, Dimensions, StatusBar } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, StatusBar } from 'react-native';
+import Svg, { Image, Circle, ClipPath } from 'react-native-svg';
 
 import Animated, { Easing } from 'react-native-reanimated';
 import { TapGestureHandler, State, TextInput } from 'react-native-gesture-handler';
@@ -89,7 +90,7 @@ class Depression extends Component {
 
     this.bgY = interpolate(this.buttonOpacity, {
       inputRange: [0, 1],
-      outputRange: [-height / 3, 0],
+      outputRange: [-height / 3 - 50, 0],
       extrapolate: Extrapolate.CLAMP
     });
 
@@ -132,10 +133,18 @@ class Depression extends Component {
             transform: [{ translateY: this.bgY }]
           }}
         >
+        <Svg height={height + 50} width={width}>
+          <ClipPath id="clip">
+            <Circle r={height + 50} cx={width / 2} />
+          </ClipPath>
           <Image
-            source={require('../assets/bg.jpg')}
-            style={{ flex: 1, height: null, width: null }}
+            href={require('../assets/bg.png')}
+            width={width}
+            height={height + 50}
+            preserveAspectRatio="xMidYMid slice"
+            clipPath="url(#clip)"
           />
+        </Svg>
         </Animated.View>
         <View style={{ height: height / 3, justifyContent: 'center' }}>
           <TapGestureHandler onHandlerStateChange={this.onStateChange}>
@@ -146,9 +155,10 @@ class Depression extends Component {
                 transform: [{ translateY: this.buttonY }]
               }}
             >
-              <Text style={{ fontSize: 20, fontWeight: 'bold' }}>SIGN IN</Text>
+              <Text style={{ fontSize: 20, fontWeight: 'bold' }}>SIGN IN | LOGIN IN</Text>
             </Animated.View>
           </TapGestureHandler>
+          <TapGestureHandler onHandlerStateChange={this.onStateChange}>
           <Animated.View
             style={{
               ...styles.button,
@@ -161,13 +171,25 @@ class Depression extends Component {
               SIGN IN WITH FACEBOOK
             </Text>
           </Animated.View>
+          </TapGestureHandler>
+          <TapGestureHandler onHandlerStateChange={this.onStateChange}>
+            <Animated.View
+              style={{
+                ...styles.button,
+                opacity: this.buttonOpacity,
+                transform: [{ translateY: this.buttonY }]
+              }}
+            >
+              <Text style={{ fontSize: 20, fontWeight: 'bold' }}>SIGN IN WITH GOOGLE</Text>
+            </Animated.View>
+          </TapGestureHandler>
           <Animated.View
             style={{zIndex: this.textInputZindex,
             opacity: this.textInputOpacity,
             transform:[{translateY: this.textInputY}],
             height: height/3,
-            ...StyleSheet.absoluteFill, top: null, justifyContent: 'center'}
-          }>
+            ...StyleSheet.absoluteFill, top: null, justifyContent: 'center'}}
+          >
             <TapGestureHandler onHandlerStateChange=
             {this.onCloseState}>
               <Animated.View style={styles.closeButton}>
