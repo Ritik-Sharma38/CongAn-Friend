@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Dimensions, StatusBar } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, StatusBar, TouchableOpacity } from 'react-native';
 import Svg, { Image, Circle, ClipPath } from 'react-native-svg';
-
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 import Animated, { Easing } from 'react-native-reanimated';
 import { TapGestureHandler, State, TextInput } from 'react-native-gesture-handler';
 const { width, height } = Dimensions.get('window');
@@ -52,7 +53,8 @@ function runTiming(clock, value, dest) {
     state.position
   ]);
 }
-class Depression extends Component {
+
+class Depression extends React.Component {
   constructor() {
     super();
 
@@ -216,7 +218,9 @@ class Depression extends Component {
               secureTextEntry={true}
             />
             <Animated.View style={styles.button}>
+              <TouchableOpacity>
               <Text Style= {{ fontsize: 20, fontWeight: 'bold' }}>SIGN IN</Text>
+              </TouchableOpacity>
             </Animated.View>
           </Animated.View>
         </View>

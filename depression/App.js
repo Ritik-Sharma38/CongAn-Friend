@@ -1,16 +1,30 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, StatusBar} from 'react-native';
-import Depression from './app/index';
+import { StyleSheet, Text, View, StatusBar} from 'react-native';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
 
-export default class App extends Component {
-  render() {
+import Depression from './app/Depression';
+import Loading from './app/Welcome';
+
+const Stack = createStackNavigator();
+
+export default function App( { naivgation } ) {
     return (
-      <View style={styles.container}>
-      	<StatusBar hidden={true} />
-        <Depression/>
-      </View>
+      <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Welcome"
+          component={Loading}
+        
+        />
+        <Stack.Screen
+          name="Depression"
+          component={Depression}
+        
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
     );
-  }
 }
 
 const styles = StyleSheet.create({
