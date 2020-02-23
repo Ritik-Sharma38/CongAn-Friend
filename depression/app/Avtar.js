@@ -19,8 +19,8 @@ export default class Avtar extends React.Component {
         image: <Image 
                 style={{ resizeMode: 'center',}}
                 source={require('../assets/teenGirl2.png')} />,
-        title: 'Page 1',
-        subtitle: 'app description ',
+        title: 'Select your avatar',
+        subtitle: "Description",
       },
       {
         backgroundColor: 'rgba(0, 130, 255, 1)',
