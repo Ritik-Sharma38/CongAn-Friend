@@ -124,7 +124,7 @@ class Depression extends React.Component {
       <View
         style={{
           flex: 1,
-          backgroundColor: 'white',
+          backgroundColor: 'rgba(0, 130, 255, 1)',
           justifyContent: 'flex-end'
         }}
       >
@@ -148,17 +148,30 @@ class Depression extends React.Component {
         </Svg>
         </Animated.View>
         <View style={{ height: height / 3, justifyContent: 'center' }}>
+          <View style={{ flexDirection: 'row', }}>
           <TapGestureHandler onHandlerStateChange={this.onStateChange}>
             <Animated.View
               style={{
-                ...styles.button,
+                ...styles.Lbutton,
                 opacity: this.buttonOpacity,
                 transform: [{ translateY: this.buttonY }]
               }}
             >
-              <Text style={{ fontSize: 20, }}>SIGN IN | LOGIN IN</Text>
+              <Text style={{ fontSize: 20, }}>SIGN IN</Text>
             </Animated.View>
           </TapGestureHandler>
+          <TapGestureHandler onHandlerStateChange={this.onStateChange}>
+            <Animated.View
+              style={{
+                ...styles.Rbutton,
+                opacity: this.buttonOpacity,
+                transform: [{ translateY: this.buttonY }]
+              }}
+            >
+              <Text style={{ fontSize: 20, }}>LOG IN</Text>
+            </Animated.View>
+          </TapGestureHandler>
+          </View>
           <TapGestureHandler onHandlerStateChange={this.onStateChange}>
           <Animated.View
             style={{
@@ -204,7 +217,7 @@ class Depression extends React.Component {
             <TextInput
               placeholder="Email"
               style={styles.textInput}
-              placeholderTextColor='black'
+              placeholderTextColor='white'
               autoCompleteType='email'
               autoCorrect={true}
               keyboardType='email-address'
@@ -212,12 +225,12 @@ class Depression extends React.Component {
             <TextInput
               placeholder="Password"
               style={styles.textInput}
-              placeholderTextColor='black'
+              placeholderTextColor='white'
               autoCompleteType='password'
               secureTextEntry={true}
             />
             <Animated.View style={styles.button}>
-              <TouchableOpacity onPress={() => this.props.navigation.navigate('AppDiscription')}>
+              <TouchableOpacity onPress={() => this.props.navigation.navigate('SelectYourAvtar')}>
               <Text Style= {{ fontsize: 20, fontWeight: 'bold' }}>SIGN IN</Text>
               </TouchableOpacity>
             </Animated.View>
@@ -248,6 +261,37 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.4,
     elevation: 4,
   },
+  Lbutton: {
+    flexDirection: 'row',
+    backgroundColor: 'white',
+    height: 40,
+    marginHorizontal: 25,
+    borderBottomLeftRadius: 35,
+    borderTopLeftRadius: 35,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 5,
+    width: width/2.47,
+    shadowOffset: { width: 0, height: 3 },
+    shadowColor: '#000',
+    shadowOpacity: 0.4,
+    elevation: 4,
+  },
+  Rbutton: {
+    flexDirection: 'row',
+    backgroundColor: 'white',
+    height: 40,
+    borderBottomRightRadius: 35,
+    borderTopRightRadius: 35,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 5,
+    width: width/2.47,
+    shadowOffset: { width: 0, height: 3 },
+    shadowColor: '#000',
+    shadowOpacity: 0.4,
+    elevation: 4,
+  },
   closeButton: {
     height: 40,
     width: 40,
@@ -264,6 +308,7 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   textInput: {
+    backgroundColor: 'rgba(0,0,0,0.05)',
     height:50,
     borderRadius: 25,
     borderWidth:0.5,

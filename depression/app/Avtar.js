@@ -2,16 +2,16 @@ import React, {Component }from 'react'
 import { View, Text, StyleSheet, StatusBar,Image} from 'react-native';
 import Onboarding from 'react-native-onboarding-swiper';
 
-export default class AppDiscription extends React.Component {
+export default class Avtar extends React.Component {
 
   render( ) {
   return (
     <Onboarding 
     onSkip={() => {
-      this.props.navigation.navigate('Depression')
+      alert("further app is under development")
     }}
     onDone={() => {
-        this.props.navigation.navigate('Depression')
+          alert("further app is under development")
         }}
     pages={[
       {
