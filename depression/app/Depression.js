@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, Dimensions, StatusBar, TouchableOpacity } from 'react-native';
 import Svg, { Image, Circle, ClipPath } from 'react-native-svg';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
 import Animated, { Easing } from 'react-native-reanimated';
 import { TapGestureHandler, State, TextInput } from 'react-native-gesture-handler';
+
 const { width, height } = Dimensions.get('window');
 
 const {
@@ -140,7 +139,7 @@ class Depression extends React.Component {
             <Circle r={height + 50} cx={width / 2} />
           </ClipPath>
           <Image
-            href={require('../assets/bg.png')}
+            href={require('../assets/bgg.png')}
             width={width}
             height={height + 50}
             preserveAspectRatio="xMidYMid slice"
@@ -157,7 +156,7 @@ class Depression extends React.Component {
                 transform: [{ translateY: this.buttonY }]
               }}
             >
-              <Text style={{ fontSize: 20, fontWeight: 'bold' }}>SIGN IN | LOGIN IN</Text>
+              <Text style={{ fontSize: 20, }}>SIGN IN | LOGIN IN</Text>
             </Animated.View>
           </TapGestureHandler>
           <TapGestureHandler onHandlerStateChange={this.onStateChange}>
@@ -169,7 +168,7 @@ class Depression extends React.Component {
               transform: [{ translateY: this.buttonY }]
             }}
           >
-            <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'white' }}>
+            <Text style={{ fontSize: 20, color: 'white' }}>
               SIGN IN WITH FACEBOOK
             </Text>
           </Animated.View>
@@ -182,7 +181,7 @@ class Depression extends React.Component {
                 transform: [{ translateY: this.buttonY }]
               }}
             >
-              <Text style={{ fontSize: 20, fontWeight: 'bold' }}>SIGN IN WITH GOOGLE</Text>
+              <Text style={{ fontSize: 20, }}>SIGN IN WITH GOOGLE</Text>
             </Animated.View>
           </TapGestureHandler>
           <Animated.View
@@ -238,7 +237,7 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: 'white',
-    height: 60,
+    height: 40,
     marginHorizontal: 25,
     borderRadius: 35,
     alignItems: 'center',

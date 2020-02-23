@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
 import { StyleSheet, View, Text, Image, StatusBar, Animated, Alert} from 'react-native';
 
 class ImageLoader extends Component {
@@ -58,7 +56,7 @@ export default class Loading extends Component {
           style={{ flex:1, resizeMode: 'center', }}
           source={require('../assets/Logo.png')}
         /> 
-        <Text style={styles.logoText}>Welcome</Text>
+        <Text style={styles.logoText}>CogAn Friend</Text>
         {this.callToDepression()}
       </View>
     );
@@ -73,7 +71,7 @@ const styles = StyleSheet.create({
   },
 
   logoText : {
-    marginVertical: 50,
+    marginVertical: 140,
     fontSize: 30,
     color : 'white'
   },
