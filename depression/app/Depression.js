@@ -218,7 +218,7 @@ class Depression extends React.Component {
               secureTextEntry={true}
             />
             <Animated.View style={styles.button}>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => this.props.navigation.navigate('AppDiscription')}>
               <Text Style= {{ fontsize: 20, fontWeight: 'bold' }}>SIGN IN</Text>
               </TouchableOpacity>
             </Animated.View>
