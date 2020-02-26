@@ -38,7 +38,7 @@ export default class AppDiscription extends React.Component {
                 style={{ width: '100%', height: '60%'}}
                 source={require('../assets/ap3.jpg')} />,
         title: "Page 3",
-        subtitle: "app discription",
+        subtitle: "app description",
 
       },
       {
@@ -47,7 +47,7 @@ export default class AppDiscription extends React.Component {
                 style={{ width: '100%', height: '60%'}}
                 source={require('../assets/ap1.png')} />,
         title: "Page 4",
-        subtitle: "app discription",
+        subtitle: "app description",
 
       },
       {
@@ -56,7 +56,7 @@ export default class AppDiscription extends React.Component {
                 style={{ width: '100%', height: '60%'}}
                 source={require('../assets/ap5.jpg')} />,
         title: "Page 5",
-        subtitle: "app discription",
+        subtitle: "app description",
 
       },
     ]}
