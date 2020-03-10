@@ -42,7 +42,7 @@ export default class Loading extends Component {
     call = () => {
         {this.props.navigation.navigate('AppDiscription')}
     }
-    
+
   callToDepression(){
     setTimeout(this.call, 3000);
   }
@@ -54,8 +54,8 @@ export default class Loading extends Component {
         <StatusBar hidden={true} />
         <ImageLoader
           style={{ flex:1, resizeMode: 'center', }}
-          source={require('../assets/Logo.png')}
-        /> 
+          source={require('../../assets/Logo.png')}
+        />
         <Text style={styles.logoText}>CogAn Friend</Text>
         {this.callToDepression()}
       </View>

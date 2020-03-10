@@ -1,4 +1,22 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
+import {useSelector, useDispatch} from 'react-redux';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+import {SignedIn} from './navigators/SignedIn';
+import {SignedOut} from './navigators/SignedOut';
+function App(){
+
+    const Stack = createStackNavigator();
+    const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
+    return (
+            <NavigationContainer>
+                {isAuthenticated ? <SignedIn/> : <SignedOut/>}
+            </NavigationContainer>
+    );
+  }
+export default App;
+
+{/**import React, { Component } from 'react';
 import { StyleSheet, Text, View, StatusBar} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -51,6 +69,6 @@ const styles = StyleSheet.create({
    flexGrow: 1,
   },
 
-});
+});**/}
 
 

@@ -2,11 +2,9 @@ import React, {Component }from 'react'
 import { View, Text, StyleSheet, StatusBar,Image} from 'react-native';
 import Onboarding from 'react-native-onboarding-swiper';
 
-export default class Avtar extends React.Component {
-
-  render( ) {
+function Avtar(){
   return (
-    <Onboarding 
+    <Onboarding
     onSkip={() => {
       alert("further app is under development")
     }}
@@ -16,42 +14,41 @@ export default class Avtar extends React.Component {
     pages={[
       {
         backgroundColor: 'rgba(0, 130, 255, 1)',
-        image: <Image 
+        image: <Image
                 style={{ resizeMode: 'center',}}
-                source={require('../assets/teenGirl2.png')} />,
+                source={require('../../assets/teenGirl2.png')} />,
         title: 'Select your avatar',
         subtitle: "Description",
       },
       {
         backgroundColor: 'rgba(0, 130, 255, 1)',
-        image: <Image 
+        image: <Image
                 style={{ resizeMode: 'center', }}
-                source={require('../assets/teenBoy2.png')} />,
+                source={require('../../assets/teenBoy2.png')} />,
         title: 'Page 2',
         subtitle: 'app description',
       },
       {
         backgroundColor: 'rgba(0, 130, 255, 1)',
-        image: <Image 
+        image: <Image
                 style={{ resizeMode: 'center', }}
-                source={require('../assets/women.png')} />,
+                source={require('../../assets/women.png')} />,
         title: "Page 3",
         subtitle: "app discription",
 
       },
       {
         backgroundColor: 'rgba(0, 130, 255, 1)',
-        image: <Image 
+        image: <Image
                 style={{ resizeMode: 'center', }}
-                source={require('../assets/man2.png')} />,
+                source={require('../../assets/man2.png')} />,
         title: "Page 4",
         subtitle: "app discription",
 
       },
     ]}
   />
-  );  
-  }
+  );
 }
 const styles = StyleSheet.create({
   container: {
@@ -60,3 +57,4 @@ const styles = StyleSheet.create({
     }
   }
 );
+export default Avtar;

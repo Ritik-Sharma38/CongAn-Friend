@@ -139,7 +139,7 @@ class Depression extends React.Component {
             <Circle r={height + 50} cx={width / 2} />
           </ClipPath>
           <Image
-            href={require('../assets/bgg.png')}
+            href={require('../../assets/bgg.png')}
             width={width}
             height={height + 50}
             preserveAspectRatio="xMidYMid slice"
@@ -207,8 +207,8 @@ class Depression extends React.Component {
             <TapGestureHandler onHandlerStateChange=
             {this.onCloseState}>
               <Animated.View style={styles.closeButton}>
-                <Animated.Text 
-                  style={{fontSize: 15, 
+                <Animated.Text
+                  style={{fontSize: 15,
                   transform: [{rotate: concat(this.rotateCross, 'deg') }] }}>
                     X
                 </Animated.Text>
@@ -316,5 +316,5 @@ const styles = StyleSheet.create({
     paddingLeft:10,
     marginVertical:5,
     borderColor:'rgba(0,0,0,0.2)',
-  } 
+  }
 });
