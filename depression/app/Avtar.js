@@ -21,24 +21,36 @@ export default class AvtarSelection extends Component {
     this.state = {
       videos: [
         { 
-          id: 1,
           uri: require('../assets/teenGirl2.png'),
           title: 'Write something about the TeenGirl.'
         },
         { 
-          id: 2,
           uri: require('../assets/teenBoy2.png'),
           title: 'Write something about the TeenBoy.' 
         },
         { 
-          id: 2,
           uri: require('../assets/women.png'),
           title: 'Write something about the Woman.' 
         },
         { 
-          id: 2,
           uri: require('../assets/man2.png'),
           title: 'Write something about the Man.' 
+        },
+        { 
+          uri: require('../assets/teenboy.png'),
+          title: 'Write something about the avatar.' 
+        },
+        { 
+          uri: require('../assets/teenGirl.jpg'),
+          title: 'Write something about the avatar.' 
+        },
+        { 
+          uri: require('../assets/unname.png'),
+          title: 'Write something about the avatar.' 
+        },
+        { 
+          uri: require('../assets/man.jpg'),
+          title: 'Write something about the avatar.' 
         },
       ]
     };
@@ -61,6 +73,7 @@ export default class AvtarSelection extends Component {
           {item.title}
         </Text>
         <Button
+          onPress = { () => alert("Further app under development")}
           buttonStyle={{borderRadius: 25 , marginVertical: height/15 }}
           title='This is me' />
       </Card>  
@@ -79,6 +92,7 @@ export default class AvtarSelection extends Component {
             sliderWidth={width}
             itemWidth={width}
             layout={'stack'}
+            layoutCardOffset={8}
             firstItem={0}
           />
         </View>
