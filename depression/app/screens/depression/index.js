@@ -3,7 +3,8 @@ import { View, Text, StyleSheet, Dimensions, StatusBar, TouchableOpacity } from 
 import Svg, { Image, Circle, ClipPath } from 'react-native-svg';
 import Animated, { Easing } from 'react-native-reanimated';
 import { TapGestureHandler, State, TextInput } from 'react-native-gesture-handler';
-
+import { connect } from 'react-redux';
+import {fbSignin} from '../../actions/authAction';
 const { width, height } = Dimensions.get('window');
 
 const {
@@ -172,8 +173,9 @@ class Depression extends React.Component {
             </Animated.View>
           </TapGestureHandler>
           </View>
-          <TapGestureHandler onHandlerStateChange={this.onStateChange}>
-          <Animated.View
+        {/**<TapGestureHandler onHandlerStateChange={this.onStateChange}>**/}
+          <TouchableOpacity onPress={this.props.fbSignin}>
+            <Animated.View
             style={{
               ...styles.button,
               backgroundColor: '#2E71DC',
@@ -185,7 +187,8 @@ class Depression extends React.Component {
               SIGN IN WITH FACEBOOK
             </Text>
           </Animated.View>
-          </TapGestureHandler>
+        </TouchableOpacity>
+        {/**</TapGestureHandler>**/}
           <TapGestureHandler onHandlerStateChange={this.onStateChange}>
             <Animated.View
               style={{
@@ -240,7 +243,6 @@ class Depression extends React.Component {
     );
   }
 }
-export default Depression;
 
 const styles = StyleSheet.create({
   container: {
@@ -318,3 +320,5 @@ const styles = StyleSheet.create({
     borderColor:'rgba(0,0,0,0.2)',
   }
 });
+
+export default connect(null,{fbSignin})(Depression)

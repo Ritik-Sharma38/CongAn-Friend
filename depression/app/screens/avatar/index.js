@@ -1,15 +1,16 @@
 import React, {Component }from 'react'
 import { View, Text, StyleSheet, StatusBar,Image} from 'react-native';
 import Onboarding from 'react-native-onboarding-swiper';
-
+import { useNavigation } from '@react-navigation/native';
 function Avtar(){
+  const navigation = useNavigation();
   return (
     <Onboarding
     onSkip={() => {
-      alert("further app is under development")
+        navigation.navigate("Profile")
     }}
     onDone={() => {
-          alert("further app is under development")
+          navigation.navigate("Profile")//alert("further app is under development")
         }}
     pages={[
       {
