@@ -1,62 +1,60 @@
 import React, {Component }from 'react'
-import { View, Text, StyleSheet, StatusBar,Image} from 'react-native';
-import Onboarding from 'react-native-onboarding-swiper';
+import { View, FlatList, Text, StyleSheet, StatusBar,Image, Dimensions, } from 'react-native';
+import { Avatar, Card, Button, Icon  } from 'react-native-elements';
 
-export default class Avtar extends React.Component {
+const { width, height } = Dimensions.get('window');
+
+export default class AvtarSelection extends React.Component {
 
   render( ) {
-  return (
-    <Onboarding 
-    onSkip={() => {
-      alert("further app is under development")
-    }}
-    onDone={() => {
-          alert("further app is under development")
-        }}
-    pages={[
-      {
-        backgroundColor: 'rgba(0, 130, 255, 1)',
-        image: <Image 
-                style={{ resizeMode: 'center',}}
-                source={require('../assets/teenGirl2.png')} />,
-        title: 'Select your avatar',
-        subtitle: "Description",
-      },
-      {
-        backgroundColor: 'rgba(0, 130, 255, 1)',
-        image: <Image 
-                style={{ resizeMode: 'center', }}
-                source={require('../assets/teenBoy2.png')} />,
-        title: 'Page 2',
-        subtitle: 'app description',
-      },
-      {
-        backgroundColor: 'rgba(0, 130, 255, 1)',
-        image: <Image 
-                style={{ resizeMode: 'center', }}
-                source={require('../assets/women.png')} />,
-        title: "Page 3",
-        subtitle: "app discription",
-
-      },
-      {
-        backgroundColor: 'rgba(0, 130, 255, 1)',
-        image: <Image 
-                style={{ resizeMode: 'center', }}
-                source={require('../assets/man2.png')} />,
-        title: "Page 4",
-        subtitle: "app discription",
-
-      },
-    ]}
-  />
-  );  
+    return (
+      <View style = {styles.container}>
+        <View style = {styles.FirstHalf}>
+          <Card
+            containerStyle={{borderRadius: 30, height: height/2, width: width/1.08,}}
+            image={require('../assets/teenGirl2.png')}
+            imageStyle={{width: width, height: height/3, }}>
+            <Text style={{marginBottom: '2%', marginVertical: '2%'}}>
+              Write something about the teen girl.
+            </Text>
+            <Button
+              buttonStyle={{borderRadius: 25 , marginVertical: height/15 }}
+              title='This is me' />
+          </Card>
+        </View>
+        <View style = {styles.SecondHalf}>
+          <Text style={{fontSize: 50}}>Avtar Selection</Text>
+        </View>
+      </View>
+    );  
   }
 }
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    }
+    },
+    FirstHalf: {
+      flexDirection: 'row',
+      flexWrap: 'nowrap',
+      height: height/1.5,
+      alignItems: 'center',
+      alignContent: 'center',
+      backgroundColor: '#2E71DC',
+    },
+    SecondHalf: {
+      alignItems: 'center',
+    },
+    Cards: {
+      backgroundColor: 'white',
+      height: height/3,
+      width: width/1.5,
+      borderRadius: 75,
+      alignItems: 'center',
+      justifyContent: 'center',
+      shadowOffset: { width: 0, height: 3 },
+      shadowColor: '#000',
+      shadowOpacity: 0.4,
+      elevation: 4,
+    },
   }
 );

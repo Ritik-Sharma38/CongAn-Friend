@@ -6,7 +6,8 @@ import {createStackNavigator} from '@react-navigation/stack';
 import Depression from './app/Depression';
 import Loading from './app/Welcome';
 import AppDiscription from './app/AppDiscription';
-import Avtar from './app/Avtar';
+import AvtarSelection from './app/Avtar';
+import Appp from './app/test'
 
 import { createStore } from 'redux'
 import { Provider } from 'react-redux'
@@ -38,7 +39,11 @@ export default function App( { naivgation } ) {
           />
           <Stack.Screen
             name="SelectYourAvtar"
-            component={Avtar}
+            component={AvtarSelection}
+          />
+          <Stack.Screen
+            name="hello"
+            component={Appp}
           />
         </Stack.Navigator>
       </NavigationContainer>
