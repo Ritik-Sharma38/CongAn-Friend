@@ -120,6 +120,7 @@ class Depression extends React.Component {
     });
   }
   render() {
+    console.log("rendering LoginSignup page")
     return (
       <View
         style={{

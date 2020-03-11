@@ -1,34 +1,90 @@
-import React, {Component }from 'react'
-import { View, FlatList, Text, StyleSheet, StatusBar,Image, Dimensions, } from 'react-native';
+import React, { Component } from 'react';
+import { View, FlatList, Text, StyleSheet, StatusBar,Image, Dimensions, TouchableOpacity } from 'react-native';
 import { Avatar, Card, Button, Icon  } from 'react-native-elements';
+import Carousel from 'react-native-snap-carousel'; 
 
 const { width, height } = Dimensions.get('window');
 
-export default class AvtarSelection extends React.Component {
+export default class SelectAvatar extends Component {
 
-  render( ) {
+  constructor(props){
+    super();
+    this.state = {
+      errors: []
+    }
+    this.props = props;
+    this._carousel = {};
+    this.init();
+  }
+
+  init(){
+    this.state = {
+      videos: [
+        { 
+          id: 1,
+          uri: 'https://reactnative.dev/img/tiny_logo.png',
+          title: 'Write something about the avatar.'
+        },
+        { 
+          id: 2,
+          uri: 'https://reactnative.dev/img/tiny_logo.png',
+          title: 'Write something about the teen.' 
+        },
+        { 
+          id: 2,
+          uri: 'https://reactnative.dev/img/tiny_logo.png',
+          title: 'Write something about the teen.' 
+        },
+      ]
+    };
+
+  }
+
+  componentDidMount() {
+    this._carousel.snapToItem(2);
+  }
+
+  _renderItem = ( {item, index} ) => {
+    console.log("rendering,", index, item)
+    return (
+      <Card
+        containerStyle={{borderRadius: 30, height: height/2, width: width/1.1,}}>
+        <Image
+          style={{width: width/1.2, height: height/3,}}
+          source={{uri: item.uri}}
+        />
+        <Text style={{marginBottom: '2%', marginVertical: '2%'}}>
+          {item.title}
+        </Text>
+        <Button
+          buttonStyle={{borderRadius: 25 , marginVertical: height/15 }}
+          title='This is me' />
+      </Card>  
+    );
+  }
+
+  render = () => {
     return (
       <View style = {styles.container}>
         <View style = {styles.FirstHalf}>
-          <Card
-            containerStyle={{borderRadius: 30, height: height/2, width: width/1.08,}}
-            image={require('../assets/teenGirl2.png')}
-            imageStyle={{width: width, height: height/3, }}>
-            <Text style={{marginBottom: '2%', marginVertical: '2%'}}>
-              Write something about the teen girl.
-            </Text>
-            <Button
-              buttonStyle={{borderRadius: 25 , marginVertical: height/15 }}
-              title='This is me' />
-          </Card>
+          <Carousel
+            ref={ (c) => { this._carousel = c; } }
+            data={this.state.videos}
+            renderItem={this._renderItem.bind(this)}
+            sliderWidth={width}
+            itemWidth={width}
+            layout={'stack'}
+            firstItem={0}
+          />
         </View>
         <View style = {styles.SecondHalf}>
-          <Text style={{fontSize: 50}}>Avtar Selection</Text>
+          <Text style={{fontSize: 50}}>Write about why do user need to select avatar ?</Text>
         </View>
       </View>
-    );  
+    );
   }
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

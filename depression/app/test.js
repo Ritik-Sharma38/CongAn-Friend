@@ -1,97 +1,114 @@
-import React, { Component } from "react";
-import { Animated, Dimensions, ScrollView, StyleSheet, Text, View } from "react-native";
+import React, { Component }from 'react'
+import { View, FlatList, Text, StyleSheet, StatusBar,Image, Dimensions, } from 'react-native';
+import { Avatar, Card, Button, Icon  } from 'react-native-elements';
+import Carousel from 'react-native-snap-carousel';
 
-const SCREEN_WIDTH = Dimensions.get("window").width;
+const { width, height } = Dimensions.get('window');
 
-const xOffset = new Animated.Value(0);
+export default class AvtarSelection extends React.Component {
 
-const Screen = props => {
-  return (
-    <View style={styles.scrollPage}>
-      <Animated.View style={[styles.screen, transitionAnimation(props.index)]}>
-        <Text style={styles.text}>{props.text}</Text>
-      </Animated.View>
-    </View>
-  );
-};
+  constructor(props){
+    super();
+    this.state = {
+      errors: []
+    }
+    this.props = props;
+    this._carousel = {};
+    this.init();
+  }
+  
+  init(){
+    this.state = {
+      entries: [
+        { 
+          id: 1,
+          title: 'https://reactnative.dev/img/tiny_logo.png' 
+        },
+        { 
+          id: 2,
+          title: 'https://reactnative.dev/img/tiny_logo.png' 
+        },
+        { 
+          id: 2,
+          title: 'https://reactnative.dev/img/tiny_logo.png' 
+        },
+      ],
+    }
+  }
 
-const transitionAnimation = index => {
-  return {
-    transform: [
-      { perspective: 800 },
-      {
-        scale: xOffset.interpolate({
-          inputRange: [
-            (index - 1) * SCREEN_WIDTH,
-            index * SCREEN_WIDTH,
-            (index + 1) * SCREEN_WIDTH
-          ],
-          outputRange: [0.25, 1, 0.25]
-        })
-      },
-      {
-        rotateX: xOffset.interpolate({
-          inputRange: [
-            (index - 1) * SCREEN_WIDTH,
-            index * SCREEN_WIDTH,
-            (index + 1) * SCREEN_WIDTH
-          ],
-          outputRange: ["45deg", "0deg", "45deg"]
-        })
-      },
-      {
-        rotateY: xOffset.interpolate({
-          inputRange: [
-            (index - 1) * SCREEN_WIDTH,
-            index * SCREEN_WIDTH,
-            (index + 1) * SCREEN_WIDTH
-          ],
-          outputRange: ["-45deg", "0deg", "45deg"]
-        })
-      }
-    ]
-  };
-};
+  componentDidMount() {
+    this._carousel.snapToItem(2);
+  }
 
-export default class App extends Component {
-  render() {
+  handleSnapToItem(index){
+    console.log("snapped to ", index)
+  }
+
+  _renderItem = ({item, index}) => {
     return (
-      <Animated.ScrollView
-        scrollEventThrottle={16}
-        onScroll={Animated.event(
-          [{ nativeEvent: { contentOffset: { x: xOffset } } }],
-          { useNativeDriver: true }
-        )}
-        horizontal
-        pagingEnabled
-        style={styles.scrollView}
-      >
-        <Screen text="Screen 1" index={0} />
-        <Screen text="Screen 2" index={1} />
-        <Screen text="Screen 3" index={2} />
-      </Animated.ScrollView>
-    );
+          <Card
+            containerStyle={{borderRadius: 30, height: height/2, width: width/1.08,}}>
+            <Image
+              style={{width: width, height: height/3,}}
+              source={{uri: item.title}}
+            />
+            <Text style={{marginBottom: '2%', marginVertical: '2%'}}>
+              Write something about the teen girl.
+            </Text>
+            <Button
+              buttonStyle={{borderRadius: 25 , marginVertical: height/15 }}
+              title='This is me' />
+          </Card>
+  );}
+
+  render =() => {
+    return (
+      <View style = {styles.container}>
+        <View style = {styles.FirstHalf}>
+        <Carousel
+          ref={(c) => { this._carousel = c; }}
+          data={this.state.entries}
+          renderItem={this._renderItem.bind(this)}
+          onSnapToItem={this.handleSnapToItem.bind(this)}
+          sliderWidth={150}
+          itemWidth={100}
+          layout={'default'}
+          firstItem={0}
+        />
+        </View>
+        <View style = {styles.SecondHalf}>
+          <Text style={{fontSize: 50}}>Avtar Selection</Text>
+        </View>
+      </View>
+    );  
   }
 }
-
 const styles = StyleSheet.create({
-  scrollView: {
-    flexDirection: "row",
-    backgroundColor: "#00d4ff"
-  },
-  scrollPage: {
-    width: SCREEN_WIDTH,
-    padding: 20
-  },
-  screen: {
-    height: 600,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 25,
-    backgroundColor: "white"
-  },
-  text: {
-    fontSize: 45,
-    fontWeight: "bold"
+  container: {
+    flex: 1,
+    },
+    FirstHalf: {
+      flexDirection: 'row',
+      flexWrap: 'nowrap',
+      height: height/1.5,
+      alignItems: 'center',
+      alignContent: 'center',
+      backgroundColor: '#2E71DC',
+    },
+    SecondHalf: {
+      alignItems: 'center',
+    },
+    Cards: {
+      backgroundColor: 'white',
+      height: height/3,
+      width: width/1.5,
+      borderRadius: 75,
+      alignItems: 'center',
+      justifyContent: 'center',
+      shadowOffset: { width: 0, height: 3 },
+      shadowColor: '#000',
+      shadowOpacity: 0.4,
+      elevation: 4,
+    },
   }
-});
+);

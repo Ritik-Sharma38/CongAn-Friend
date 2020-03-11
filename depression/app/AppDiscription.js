@@ -7,6 +7,7 @@ const { width, height } = Dimensions.get('window');
 export default class AppDiscription extends React.Component {
 
   render( ) {
+    console.log("rendering AppDiscription page")
   return (
     <Onboarding 
     onSkip={() => {

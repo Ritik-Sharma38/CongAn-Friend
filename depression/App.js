@@ -3,11 +3,11 @@ import { StyleSheet, Text, View, StatusBar} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import Depression from './app/Depression';
+import LoginSignup from './app/LoginSignup';
 import Loading from './app/Welcome';
 import AppDiscription from './app/AppDiscription';
 import AvtarSelection from './app/Avtar';
-import Appp from './app/test'
+import ThumbnailCarousel from './app/test'
 
 import { createStore } from 'redux'
 import { Provider } from 'react-redux'
@@ -35,15 +35,11 @@ export default function App( { naivgation } ) {
           />
           <Stack.Screen
             name="Depression"
-            component={Depression}
+            component={LoginSignup}
           />
           <Stack.Screen
             name="SelectYourAvtar"
             component={AvtarSelection}
-          />
-          <Stack.Screen
-            name="hello"
-            component={Appp}
           />
         </Stack.Navigator>
       </NavigationContainer>
