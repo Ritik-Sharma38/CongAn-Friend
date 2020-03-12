@@ -54,7 +54,7 @@ function runTiming(clock, value, dest) {
   ]);
 }
 
-class Depression extends React.Component {
+class LoginSignup extends React.Component {
   constructor() {
     super();
 
@@ -234,7 +234,7 @@ class Depression extends React.Component {
               secureTextEntry={true}
             />
             <Animated.View style={styles.button}>
-              <TouchableOpacity onPress={() => this.props.navigation.navigate('SelectYourAvtar')}>
+              <TouchableOpacity onPress={() => this.props.navigation.navigate('avatar')}>
               <Text Style= {{ fontsize: 20, fontWeight: 'bold' }}>SIGN IN</Text>
               </TouchableOpacity>
             </Animated.View>
@@ -322,4 +322,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default connect(null,{fbSignin})(Depression)
+export default connect(null,{fbSignin})(LoginSignup)

@@ -40,7 +40,7 @@ class ImageLoader extends Component {
 
 export default class Loading extends Component {
     call = () => {
-        {this.props.navigation.navigate('AppDiscription')}
+        {this.props.navigation.navigate('appdescription')}
     }
 
   callToDepression(){
