@@ -1,3 +1,4 @@
+<<<<<<< HEAD:depression/app/Avtar.js
 import React, { Component } from 'react';
 import { View, FlatList, Text, StyleSheet, StatusBar,Image, Dimensions, TouchableOpacity } from 'react-native';
 import { Avatar, Card, Button, Icon  } from 'react-native-elements';
@@ -102,6 +103,60 @@ export default class AvtarSelection extends Component {
       </View>
     );
   }
+=======
+import React, {Component }from 'react'
+import { View, Text, StyleSheet, StatusBar,Image} from 'react-native';
+import Onboarding from 'react-native-onboarding-swiper';
+import { useNavigation } from '@react-navigation/native';
+function Avtar(){
+  const navigation = useNavigation();
+  return (
+    <Onboarding
+    onSkip={() => {
+        navigation.navigate("Profile")
+    }}
+    onDone={() => {
+          navigation.navigate("Profile")//alert("further app is under development")
+        }}
+    pages={[
+      {
+        backgroundColor: 'rgba(0, 130, 255, 1)',
+        image: <Image
+                style={{ resizeMode: 'center',}}
+                source={require('../../assets/teenGirl2.png')} />,
+        title: 'Select your avatar',
+        subtitle: "Description",
+      },
+      {
+        backgroundColor: 'rgba(0, 130, 255, 1)',
+        image: <Image
+                style={{ resizeMode: 'center', }}
+                source={require('../../assets/teenBoy2.png')} />,
+        title: 'Page 2',
+        subtitle: 'app description',
+      },
+      {
+        backgroundColor: 'rgba(0, 130, 255, 1)',
+        image: <Image
+                style={{ resizeMode: 'center', }}
+                source={require('../../assets/women.png')} />,
+        title: "Page 3",
+        subtitle: "app discription",
+
+      },
+      {
+        backgroundColor: 'rgba(0, 130, 255, 1)',
+        image: <Image
+                style={{ resizeMode: 'center', }}
+                source={require('../../assets/man2.png')} />,
+        title: "Page 4",
+        subtitle: "app discription",
+
+      },
+    ]}
+  />
+  );
+>>>>>>> redux-thunk_integration:depression/app/screens/avatar/index.js
 }
 
 const styles = StyleSheet.create({
@@ -133,3 +188,4 @@ const styles = StyleSheet.create({
     },
   }
 );
+export default Avtar;

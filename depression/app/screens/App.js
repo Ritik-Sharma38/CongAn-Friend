@@ -3,11 +3,11 @@ import { StyleSheet, Text, View, StatusBar} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import LoginSignup from './app/LoginSignup';
+import LoginSignup from '../LoginSignup';
 import Loading from './app/Welcome';
 import AppDiscription from './app/AppDiscription';
 import AvtarSelection from './app/Avtar';
-import ThumbnailCarousel from './app/test'
+import ThumbnailCarousel from '../test'
 
 import { createStore } from 'redux'
 import { Provider } from 'react-redux'
