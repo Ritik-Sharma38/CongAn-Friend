@@ -22,11 +22,11 @@ const ProfileScreen = () => {
                  <Text style={[styles.text, { fontWeight: "200", fontSize: 36  }]}>{user.fullname}</Text>
                 <Text style={[styles.text, { color: "#AEB5BC", fontSize: 14 ,textDecorationLine: 'underline'}]}>{user.email}</Text>
             </View>
-        <TouchableOpacity
+        {/**<TouchableOpacity
         onPress={()=> dispatch(userSignout)}
       >
         <Text style={{ alignSelf: "center" }}>Logout</Text>
-      </TouchableOpacity>
+      </TouchableOpacity>**/}
         </ScrollView>
      </SafeAreaView>
   );
