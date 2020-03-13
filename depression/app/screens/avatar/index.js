@@ -5,7 +5,7 @@ import Carousel from 'react-native-snap-carousel';
 
 const { width, height } = Dimensions.get('window');
 
-export default class SelectAvatar extends Component {
+export default class AvtarSelection extends Component {
 
   constructor(props){
     super();
@@ -21,19 +21,36 @@ export default class SelectAvatar extends Component {
     this.state = {
       videos: [
         { 
-          id: 1,
-          uri: 'https://reactnative.dev/img/tiny_logo.png',
-          title: 'Write something about the avatar.'
+          uri: require('../../assets/teenGirl2.png'),
+          title: 'Write something about the TeenGirl.'
         },
         { 
-          id: 2,
-          uri: 'https://reactnative.dev/img/tiny_logo.png',
-          title: 'Write something about the teen.' 
+          uri: require('../../assets/teenBoy2.png'),
+          title: 'Write something about the TeenBoy.' 
         },
         { 
-          id: 2,
-          uri: 'https://reactnative.dev/img/tiny_logo.png',
-          title: 'Write something about the teen.' 
+          uri: require('../../assets/women.png'),
+          title: 'Write something about the Woman.' 
+        },
+        { 
+          uri: require('../../assets/man2.png'),
+          title: 'Write something about the Man.' 
+        },
+        { 
+          uri: require('../../assets/teenboy.png'),
+          title: 'Write something about the avatar.' 
+        },
+        { 
+          uri: require('../../assets/teenGirl.jpg'),
+          title: 'Write something about the avatar.' 
+        },
+        { 
+          uri: require('../../assets/unname.png'),
+          title: 'Write something about the avatar.' 
+        },
+        { 
+          uri: require('../../assets/man.jpg'),
+          title: 'Write something about the avatar.' 
         },
       ]
     };
@@ -45,18 +62,18 @@ export default class SelectAvatar extends Component {
   }
 
   _renderItem = ( {item, index} ) => {
-    console.log("rendering,", index, item)
     return (
       <Card
         containerStyle={{borderRadius: 30, height: height/2, width: width/1.1,}}>
         <Image
           style={{width: width/1.2, height: height/3,}}
-          source={{uri: item.uri}}
+          source={item.uri}
         />
         <Text style={{marginBottom: '2%', marginVertical: '2%'}}>
           {item.title}
         </Text>
         <Button
+          onPress = { () => alert("Further app under development")}
           buttonStyle={{borderRadius: 25 , marginVertical: height/15 }}
           title='This is me' />
       </Card>  
@@ -64,6 +81,7 @@ export default class SelectAvatar extends Component {
   }
 
   render = () => {
+    console.log("rendering Avtar selection page")
     return (
       <View style = {styles.container}>
         <View style = {styles.FirstHalf}>
@@ -74,6 +92,7 @@ export default class SelectAvatar extends Component {
             sliderWidth={width}
             itemWidth={width}
             layout={'stack'}
+            layoutCardOffset={8}
             firstItem={0}
           />
         </View>
@@ -114,3 +133,4 @@ const styles = StyleSheet.create({
     },
   }
 );
+

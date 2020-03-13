@@ -1,5 +1,5 @@
 package com.depression;
-
+import androidx.multidex.MultiDexApplication;
 import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
@@ -13,7 +13,7 @@ import com.facebook.soloader.SoLoader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-public class MainApplication extends Application implements ReactApplication {
+public class MainApplication extends MultiDexApplication implements ReactApplication {
 
   private final ReactNativeHost mReactNativeHost =
       new ReactNativeHost(this) {

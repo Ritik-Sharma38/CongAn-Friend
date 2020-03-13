@@ -3,7 +3,8 @@ import { View, Text, StyleSheet, Dimensions, StatusBar, TouchableOpacity } from 
 import Svg, { Image, Circle, ClipPath } from 'react-native-svg';
 import Animated, { Easing } from 'react-native-reanimated';
 import { TapGestureHandler, State, TextInput } from 'react-native-gesture-handler';
-
+import { connect } from 'react-redux';
+import {fbSignin} from '../../actions/authAction';
 const { width, height } = Dimensions.get('window');
 
 const {
@@ -53,7 +54,7 @@ function runTiming(clock, value, dest) {
   ]);
 }
 
-class Depression extends React.Component {
+class LoginSignup extends React.Component {
   constructor() {
     super();
 
@@ -140,7 +141,7 @@ class Depression extends React.Component {
             <Circle r={height + 50} cx={width / 2} />
           </ClipPath>
           <Image
-            href={require('../assets/bgg.png')}
+            href={require('../../assets/bgg.png')}
             width={width}
             height={height + 50}
             preserveAspectRatio="xMidYMid slice"
@@ -173,8 +174,9 @@ class Depression extends React.Component {
             </Animated.View>
           </TapGestureHandler>
           </View>
-          <TapGestureHandler onHandlerStateChange={this.onStateChange}>
-          <Animated.View
+        {/**<TapGestureHandler onHandlerStateChange={this.onStateChange}>**/}
+          <TouchableOpacity onPress={this.props.fbSignin}>
+            <Animated.View
             style={{
               ...styles.button,
               backgroundColor: '#2E71DC',
@@ -186,7 +188,8 @@ class Depression extends React.Component {
               SIGN IN WITH FACEBOOK
             </Text>
           </Animated.View>
-          </TapGestureHandler>
+        </TouchableOpacity>
+        {/**</TapGestureHandler>**/}
           <TapGestureHandler onHandlerStateChange={this.onStateChange}>
             <Animated.View
               style={{
@@ -208,8 +211,8 @@ class Depression extends React.Component {
             <TapGestureHandler onHandlerStateChange=
             {this.onCloseState}>
               <Animated.View style={styles.closeButton}>
-                <Animated.Text 
-                  style={{fontSize: 15, 
+                <Animated.Text
+                  style={{fontSize: 15,
                   transform: [{rotate: concat(this.rotateCross, 'deg') }] }}>
                     X
                 </Animated.Text>
@@ -231,7 +234,7 @@ class Depression extends React.Component {
               secureTextEntry={true}
             />
             <Animated.View style={styles.button}>
-              <TouchableOpacity onPress={() => this.props.navigation.navigate('SelectYourAvtar')}>
+              <TouchableOpacity onPress={() => this.props.navigation.navigate('avatar')}>
               <Text Style= {{ fontsize: 20, fontWeight: 'bold' }}>SIGN IN</Text>
               </TouchableOpacity>
             </Animated.View>
@@ -241,7 +244,6 @@ class Depression extends React.Component {
     );
   }
 }
-export default Depression;
 
 const styles = StyleSheet.create({
   container: {
@@ -317,5 +319,7 @@ const styles = StyleSheet.create({
     paddingLeft:10,
     marginVertical:5,
     borderColor:'rgba(0,0,0,0.2)',
-  } 
+  }
 });
+
+export default connect(null,{fbSignin})(LoginSignup)
