@@ -1,9 +1,26 @@
-import {START_GOOGLE_SIGN_IN, GOOGLE_SIGN_IN_SUCCESS, GOOGLE_SIGN_IN_FAILED,START_FB_SIGNIN,FB_SIGNIN_SUCCESS,FB_SIGNIN_FAILED,START_USER_FETCH_FROM_ASYNC,USER_FETCH_FROM_ASYNC_FAILED,USER_FETCH_FROM_ASYNC_SUCCESS, SIGN_OUT_SUCCESS, SIGN_OUT_FAILED, START_SIGN_OUT} from '../actions/types';
+import {START_GOOGLE_SIGN_IN, 
+    GOOGLE_SIGN_IN_SUCCESS, 
+    GOOGLE_SIGN_IN_FAILED,
+    START_FB_SIGNIN,
+    FB_SIGNIN_SUCCESS,
+    FB_SIGNIN_FAILED,
+    START_USER_FETCH_FROM_ASYNC,
+    USER_FETCH_FROM_ASYNC_FAILED,
+    USER_FETCH_FROM_ASYNC_SUCCESS, 
+    SIGN_OUT_SUCCESS, 
+    SIGN_OUT_FAILED, 
+    START_SIGN_OUT, 
+    START_EMAIL_PASSWORD_LOGIN,
+    EMAIL_PASSWORD_LOGIN_SUCCESS,
+    EMAIL_PASSWORD_LOGIN_FAILED
+} from '../actions/types';
 
 const DEFAULT_STATE={
     isAuthenticated: false,
     errorMessage: '',
-    user:{}
+    user:{},
+    email: '',
+    password: '',
 }
 export default (state=DEFAULT_STATE, action)=>{
     switch(action.type){
@@ -60,6 +77,24 @@ export default (state=DEFAULT_STATE, action)=>{
             return{
                 ...state,
                 errorMessage: action.payload
+            }
+        case START_EMAIL_PASSWORD_LOGIN:
+            return{
+                ...state,
+                isAuthenticated: false,
+                user: {}
+            }
+        case EMAIL_PASSWORD_LOGIN_SUCCESS:
+            return{
+                ...state,
+                isAuthenticated: true,
+                user: action.payload
+            }
+        case EMAIL_PASSWORD_LOGIN_FAILED:
+            return{
+                ...state,
+                isAuthenticated: false,
+                user: {}
             }
         default:
             return state

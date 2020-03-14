@@ -4,7 +4,7 @@ import Svg, { Image, Circle, ClipPath } from 'react-native-svg';
 import Animated, { Easing } from 'react-native-reanimated';
 import { TapGestureHandler, State, TextInput } from 'react-native-gesture-handler';
 import { connect } from 'react-redux';
-import {fbSignin} from '../../actions/authAction';
+import {fbSignin, EmailSignup} from '../../actions/authAction';
 const { width, height } = Dimensions.get('window');
 
 const {
@@ -120,8 +120,14 @@ class LoginSignup extends React.Component {
       extrapolate: Extrapolate.CLAMP
     });
   }
+
+  state = {
+    email: '',
+    password: '',
+  }
+
   render() {
-    console.log("rendering LoginSignup page")
+    console.log("rendering LoginSignup page", this.state.password, this.state.email)
     return (
       <View
         style={{
@@ -150,30 +156,19 @@ class LoginSignup extends React.Component {
         </Svg>
         </Animated.View>
         <View style={{ height: height / 3, justifyContent: 'center' }}>
-          <View style={{ flexDirection: 'row', }}>
+          
           <TapGestureHandler onHandlerStateChange={this.onStateChange}>
             <Animated.View
               style={{
-                ...styles.Lbutton,
+                ...styles.button,
                 opacity: this.buttonOpacity,
                 transform: [{ translateY: this.buttonY }]
               }}
             >
-              <Text style={{ fontSize: 20, }}>SIGN IN</Text>
+              <Text style={{ fontSize: 20, }}>SIGN IN / LOG IN</Text>
             </Animated.View>
           </TapGestureHandler>
-          <TapGestureHandler onHandlerStateChange={this.onStateChange}>
-            <Animated.View
-              style={{
-                ...styles.Rbutton,
-                opacity: this.buttonOpacity,
-                transform: [{ translateY: this.buttonY }]
-              }}
-            >
-              <Text style={{ fontSize: 20, }}>LOG IN</Text>
-            </Animated.View>
-          </TapGestureHandler>
-          </View>
+    
         {/**<TapGestureHandler onHandlerStateChange={this.onStateChange}>**/}
           <TouchableOpacity onPress={this.props.fbSignin}>
             <Animated.View
@@ -225,6 +220,8 @@ class LoginSignup extends React.Component {
               autoCompleteType='email'
               autoCorrect={true}
               keyboardType='email-address'
+              onChangeText={email => this.setState({ email })}
+          		value={this.state.email}
             />
             <TextInput
               placeholder="Password"
@@ -232,12 +229,21 @@ class LoginSignup extends React.Component {
               placeholderTextColor='white'
               autoCompleteType='password'
               secureTextEntry={true}
+              onChangeText={password => this.setState({ password })}
+              value={this.state.password}
             />
-            <Animated.View style={styles.button}>
-              <TouchableOpacity onPress={() => this.props.navigation.navigate('avatar')}>
+            <View style={{ flexDirection: 'row', }}>
+            <Animated.View style={styles.Lbutton}>
+              <TouchableOpacity onPress={() => this.props.EmailSignup(this.state.email, this.state.password)}>
               <Text Style= {{ fontsize: 20, fontWeight: 'bold' }}>SIGN IN</Text>
               </TouchableOpacity>
             </Animated.View>
+            <Animated.View style={styles.Rbutton}>
+              <TouchableOpacity onPress={() => this.props.navigation.navigate('avatar')}>
+              <Text Style= {{ fontsize: 20, fontWeight: 'bold' }}>LOG IN</Text>
+              </TouchableOpacity>
+            </Animated.View>
+            </View>
           </Animated.View>
         </View>
       </View>
@@ -322,4 +328,10 @@ const styles = StyleSheet.create({
   }
 });
 
-export default connect(null,{fbSignin})(LoginSignup)
+const mapState = (state) => ({
+  email: state.email,
+  password: state.password
+})
+
+const mapDispatch = { fbSignin, EmailSignup };
+export default connect(mapState,mapDispatch)(LoginSignup)

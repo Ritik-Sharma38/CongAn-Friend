@@ -2,8 +2,22 @@ import { LoginManager,AccessToken } from 'react-native-fbsdk';
 import { firebase } from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import { AsyncStorage } from "react-native";
-import {START_FB_SIGNIN,FB_SIGNIN_SUCCESS,FB_SIGNIN_FAILED, START_GOOGLE_SIGN_IN,GOOGLE_SIGN_IN_SUCCESS,GOOGLE_SIGN_IN_FAILED,START_EMAIL_PASSWORD_LOGIN,EMAIL_PASSWORD_LOGIN_SUCCESS,EMAIL_PASSWORD_LOGIN_FAILED,START_USER_FETCH_FROM_ASYNC,USER_FETCH_FROM_ASYNC_FAILED,USER_FETCH_FROM_ASYNC_SUCCESS,
-    SIGN_OUT_SUCCESS,SIGN_OUT_FAILED,START_SIGN_OUT} from './types';
+import {START_FB_SIGNIN,
+    FB_SIGNIN_SUCCESS,
+    FB_SIGNIN_FAILED,
+    START_GOOGLE_SIGN_IN,
+    GOOGLE_SIGN_IN_SUCCESS,
+    GOOGLE_SIGN_IN_FAILED,
+    START_EMAIL_PASSWORD_LOGIN,
+    EMAIL_PASSWORD_LOGIN_SUCCESS,
+    EMAIL_PASSWORD_LOGIN_FAILED,
+    START_USER_FETCH_FROM_ASYNC,
+    USER_FETCH_FROM_ASYNC_FAILED,
+    USER_FETCH_FROM_ASYNC_SUCCESS,
+    SIGN_OUT_SUCCESS,
+    SIGN_OUT_FAILED,
+    START_SIGN_OUT
+} from './types';
 
 async function saveUser (user) {
   try {
@@ -141,3 +155,24 @@ export const fbSignin=()=>{
     }
 }
 
+export const EmailSignup = (email, password) => {
+    return async dispatch => {
+        dispatch({ type: START_EMAIL_PASSWORD_LOGIN });
+        try {
+            console.log(this.state.email, this.state.password)
+            const doLogin = await firebase.auth().createUserWithEmailAndPassword(email, password);
+            if(doLogin.user) {
+                console.log("login done User:", user)
+                dispatch({
+                    type: EMAIL_PASSWORD_LOGIN_SUCCESS,
+                    payload: user
+                });
+            }
+        } catch (error) {
+            dispatch({ 
+                type: EMAIL_PASSWORD_LOGIN_FAILED,
+                payload: error
+            });
+        }
+    }
+};
