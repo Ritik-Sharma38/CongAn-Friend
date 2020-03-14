@@ -1,17 +1,19 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import Profile from "../screens/profile";
-import Avtar from "../screens/avatar";
+import AvtarSelection from "../screens/avatar";
+import Loading from "../screens/welcome";
 import ProfileScreen from "../screens/profile";
 const Stack = createStackNavigator();
 
 export const SignedIn =()=> (
     <Stack.Navigator
-        initialRouteName="Avatar"
+        initialRouteName="welcome"
         screenOptions={{
         header: () => null,
     }}>
-        <Stack.Screen name="Avatar" component={Avtar} />
+        <Stack.Screen name="welcome" component={Loading} />
+        <Stack.Screen name="Avatar" component={AvtarSelection} />
         <Stack.Screen name="Profile" component={ProfileScreen} />
     </Stack.Navigator>
 );
