@@ -3,51 +3,67 @@ import {StyleSheet, Text, View, Image, TouchableOpacity,SafeAreaView,ScrollView}
 import {useSelector} from 'react-redux';
 import {userSignout} from '../../actions/authAction';
 import {useDispatch} from 'react-redux';
-
+import { Button } from 'react-native-elements';
+import Icon from 'react-native-vector-icons/FontAwesome';
 const ProfileScreen = () => {
     const user = useSelector(state => state.auth.user)
     const dispatch = useDispatch();
     console.log("profile detils",user)
     return (
-     <SafeAreaView style={styles.container}>
-        <ScrollView showsVerticalScrollIndicator={false}>
-            <View style={{ alignItems: "center",flex:2,justifyContent:'space-between',padding:10  }}>
-			</View>
-            <View style={{ alignSelf: "center" }}>
-                <View style={styles.profileImage}>
-                    <Image source={{uri: user.profileURL}} style={styles.image} resizeMode="center"></Image>
+        <View style={{height: 667, backgroundColor: "#192879"}}>
+            <View style={styles.mainbody}>
+            <Image style={styles.imgprofile} source={{uri: user.profileURL}} />
+                <Text style={styles.name}>
+                    {user.fullname}
+                </Text>
+                <View style={styles.itemprofile}>
+                    <Icon
+                    name='user' color="white" />
+                    <Text style={styles.name}>
+                    {user.email}
+                    </Text>
                 </View>
+                <Button onPress={()=>{dispatch(userSignout())}} style={styles.btnlogout} title="LogOut"/>
             </View>
-            <View style={styles.infoContainer}>
-                 <Text style={[styles.text, { fontWeight: "200", fontSize: 36  }]}>{user.fullname}</Text>
-                <Text style={[styles.text, { color: "#AEB5BC", fontSize: 14 ,textDecorationLine: 'underline'}]}>{user.email}</Text>
-            </View>
-        {/**<TouchableOpacity
-        onPress={()=> dispatch(userSignout)}
-      >
-        <Text style={{ alignSelf: "center" }}>Logout</Text>
-      </TouchableOpacity>**/}
-        </ScrollView>
-     </SafeAreaView>
-  );
+		</View>
+      );
 };
 
 export default ProfileScreen;
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#fff",
-        },
-    profileImage: {
-        width: 200,
-        height: 200,
-        borderRadius: 100,
-        overflow: "hidden"
+    mainbody: {
+        marginTop: 30,
+        marginLeft: 24,
+        marginRight: 24,
+        marginBottom: 70
     },
-    infoContainer: {
-        alignSelf: "center",
-        alignItems: "center",
-        marginTop: 16
+    imgprofile:{
+        marginLeft: 100,
+        marginTop: 50,
+        height: 120,
+        width: 120,
+        borderRadius: 60
     },
-});
+    name:{
+        color: "white",
+        fontSize: 18,
+        marginLeft: 100,
+        marginTop:12,
+    },
+    itemprofile:{
+        marginTop: 30,
+    },
+    btnlogout:{
+        width: 300,
+        height: 50,
+        marginLeft: 14,
+        marginBottom: 40,
+        backgroundColor: "#50D9EA"
+    },
+    labelbtn:{
+        color: "#FFFFFF",
+        fontSize: 20,
+        fontWeight:"bold"
+    }
+   });

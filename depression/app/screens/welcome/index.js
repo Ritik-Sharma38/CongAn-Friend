@@ -39,13 +39,13 @@ class ImageLoader extends Component {
 }
 
 export default class Loading extends Component {
-    call = () => {
-        {this.props.navigation.navigate('appdescription')}
-    }
+    //call = () => {
+      //  {this.props.navigation.navigate('Profile')}
+    //}
 
-  callToDepression(){
-    setTimeout(this.call, 3000);
-  }
+  //callToDepression(){
+    //setTimeout(this.call, 3000);
+ // }
 
   render() {
     console.log('rendering welcome page');
@@ -57,7 +57,7 @@ export default class Loading extends Component {
           source={require('../../assets/Logo.png')}
         />
         <Text style={styles.logoText}>CogAn Friend</Text>
-        {this.callToDepression()}
+        {/**this.callToDepression()**/}
       </View>
     );
   }

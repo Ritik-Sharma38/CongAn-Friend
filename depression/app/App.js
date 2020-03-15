@@ -1,21 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import {useSelector, useDispatch} from 'react-redux';
+import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
-import {SignedIn} from './navigators/SignedIn';
-import {SignedOut} from './navigators/SignedOut';
-import {fetchUser} from './actions/authAction'
+import AuthStack from './navigators/authStack';
 
 function App(){
-    const dispatch = useDispatch();
-    useEffect(()=>{
-        dispatch(fetchUser())
-    })
-    const Stack = createStackNavigator();
-    const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
     return (
             <NavigationContainer>
-                {isAuthenticated ? <SignedIn/> : <SignedOut/>}
+                <AuthStack/>
             </NavigationContainer>
     );
   }

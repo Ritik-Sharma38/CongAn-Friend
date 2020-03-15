@@ -8,7 +8,7 @@ const Stack = createStackNavigator();
 
 export const SignedIn =()=> (
     <Stack.Navigator
-        initialRouteName="welcome"
+        initialRouteName="Profile"
         screenOptions={{
         header: () => null,
     }}>

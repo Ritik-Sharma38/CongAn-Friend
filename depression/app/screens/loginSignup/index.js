@@ -4,7 +4,8 @@ import Svg, { Image, Circle, ClipPath } from 'react-native-svg';
 import Animated, { Easing } from 'react-native-reanimated';
 import { TapGestureHandler, State, TextInput } from 'react-native-gesture-handler';
 import { connect } from 'react-redux';
-import {fbSignin} from '../../actions/authAction';
+import {fbSignin,googleSignin} from '../../actions/authAction';
+import Loader from '../../components/Loader'
 const { width, height } = Dimensions.get('window');
 
 const {
@@ -149,6 +150,7 @@ class LoginSignup extends React.Component {
           />
         </Svg>
         </Animated.View>
+        <Loader animating={this.props.loading}/>
         <View style={{ height: height / 3, justifyContent: 'center' }}>
           <View style={{ flexDirection: 'row', }}>
           <TapGestureHandler onHandlerStateChange={this.onStateChange}>
@@ -190,7 +192,8 @@ class LoginSignup extends React.Component {
           </Animated.View>
         </TouchableOpacity>
         {/**</TapGestureHandler>**/}
-          <TapGestureHandler onHandlerStateChange={this.onStateChange}>
+        {/** <TapGestureHandler onHandlerStateChange={this.onStateChange}>**/}
+        <TouchableOpacity onPress={this.props.googleSignin}>
             <Animated.View
               style={{
                 ...styles.button,
@@ -200,7 +203,8 @@ class LoginSignup extends React.Component {
             >
               <Text style={{ fontSize: 20, }}>SIGN IN WITH GOOGLE</Text>
             </Animated.View>
-          </TapGestureHandler>
+        </TouchableOpacity>
+        {/**</TapGestureHandler>**/}
           <Animated.View
             style={{zIndex: this.textInputZindex,
             opacity: this.textInputOpacity,
@@ -321,5 +325,10 @@ const styles = StyleSheet.create({
     borderColor:'rgba(0,0,0,0.2)',
   }
 });
+function mapStateToProps(state){
+    return{
+        loading: state.auth.loading
+    }
+}
 
-export default connect(null,{fbSignin})(LoginSignup)
+export default connect(mapStateToProps,{fbSignin,googleSignin})(LoginSignup)
