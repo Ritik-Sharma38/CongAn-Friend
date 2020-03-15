@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Dimensions, StatusBar, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, StatusBar, TouchableOpacity, ProgressBarAndroid} from 'react-native';
 import Svg, { Image, Circle, ClipPath } from 'react-native-svg';
 import Animated, { Easing } from 'react-native-reanimated';
 import { TapGestureHandler, State, TextInput } from 'react-native-gesture-handler';
@@ -124,9 +124,23 @@ class LoginSignup extends React.Component {
   state = {
     email: '',
     password: '',
+    progressBarStatus: false,
+  }
+
+  signupCall() {
+    this.setState({progressBarStatus: this.props.progressBarStatus }) 
+    console.log("progressbar statues changed to : ", this.state.progressBarStatus) 
+    {this.props.emailSignup(this.state.email, this.state.password)}
+  }
+
+  loginCall() {
+    this.setState({progressBarStatus: this.props.progressBarStatus }) 
+    console.log("progressbar statues changed to : ", this.state.progressBarStatus)
+    {this.props.emailLogin(this.state.email, this.state.password)}
   }
 
   render() {
+    const { progressBarStatus } = this.state;
     console.log("rendering LoginSignup page", this.state.password, this.state.email)
     return (
       <View
@@ -233,17 +247,20 @@ class LoginSignup extends React.Component {
               value={this.state.password}
             />
             <View style={{ flexDirection: 'row', }}>
-            <Animated.View style={styles.Lbutton}>
-              <TouchableOpacity onPress={() => this.props.emailSignup(this.state.email, this.state.password)}>
-              <Text Style= {{ fontsize: 20, fontWeight: 'bold' }}>SIGN IN</Text>
-              </TouchableOpacity>
-            </Animated.View>
-            <Animated.View style={styles.Rbutton}>
-              <TouchableOpacity onPress={() => this.props.emailLogin(this.state.email, this.state.password)}>
-              <Text Style= {{ fontsize: 20, fontWeight: 'bold' }}>LOG IN</Text>
-              </TouchableOpacity>
-            </Animated.View>
+            <TouchableOpacity onPress={() => this.signupCall()}>
+              <Animated.View style={styles.Lbutton}>
+                <Text Style= {{ fontsize: 20, fontWeight: 'bold' }}>SIGN IN</Text>
+              </Animated.View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => this.loginCall()}>
+              <Animated.View style={styles.Rbutton}> 
+                <Text Style= {{ fontsize: 20, fontWeight: 'bold' }}>LOG IN</Text>
+              </Animated.View>
+            </TouchableOpacity>
             </View>
+            {progressBarStatus && (
+              <ProgressBarAndroid styleAttr="Horizontal" color="#fff" />
+            )}
           </Animated.View>
         </View>
       </View>
@@ -330,7 +347,8 @@ const styles = StyleSheet.create({
 
 const mapState = (state) => ({
   email: state.email,
-  password: state.password
+  password: state.password,
+  progressBarStatus: state.auth.progressBarStatus
 })
 
 const mapDispatch = { fbSignin, emailSignup, emailLogin};

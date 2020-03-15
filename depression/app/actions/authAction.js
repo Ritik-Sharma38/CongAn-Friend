@@ -18,6 +18,7 @@ import {START_FB_SIGNIN,
     SIGN_OUT_FAILED,
     START_SIGN_OUT
 } from './types';
+import { act } from 'react-test-renderer';
 
 async function saveUser (user) {
   try {
@@ -190,22 +191,26 @@ export const emailSignup = (email, password) => {
 export const emailLogin = (email, password) => {
     return async dispatch => {
         dispatch({ type: START_EMAIL_PASSWORD_LOGIN });
-        try {
             console.log(email, password, "starting login")
-            firebase
+            await firebase
             .auth()
             .signInWithEmailAndPassword(email, password)
-            .then( dispatch ({
-                type: EMAIL_PASSWORD_LOGIN_SUCCESS,
-            }))         
-        }
-        catch ( error ) {
-            console.log( error )
-            dispatch({
-                type: EMAIL_PASSWORD_LOGIN_FAILED,
-                payload: error
+            .then(function() {
+                console.log("Login successful")
+                dispatch({
+                    type: EMAIL_PASSWORD_LOGIN_SUCCESS,
+                })
             })
-        }
+            .catch(function(error)
+            {   
+                
+                dispatch({
+                    type: EMAIL_PASSWORD_LOGIN_FAILED,
+                    payload: error
+                })
+                alert("Login Failed ", error)
+            })
+            
 
     }
 };

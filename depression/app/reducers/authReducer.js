@@ -21,6 +21,7 @@ const DEFAULT_STATE={
     user:{},
     email: '',
     password: '',
+    progressBarStatus: true,
 }
 export default (state=DEFAULT_STATE, action)=>{
     switch(action.type){
@@ -95,8 +96,8 @@ export default (state=DEFAULT_STATE, action)=>{
         case EMAIL_PASSWORD_LOGIN_FAILED:
             return{
                 ...state,
-                isAuthenticated: false,
-                user: {}
+                progressBarStatus: false,
+                errorMessage: action.payload
             }
         default:
             return state
