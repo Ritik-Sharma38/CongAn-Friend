@@ -4,7 +4,7 @@ import Svg, { Image, Circle, ClipPath } from 'react-native-svg';
 import Animated, { Easing } from 'react-native-reanimated';
 import { TapGestureHandler, State, TextInput } from 'react-native-gesture-handler';
 import { connect } from 'react-redux';
-import {fbSignin, EmailSignup} from '../../actions/authAction';
+import {fbSignin, emailSignup, emailLogin} from '../../actions/authAction';
 const { width, height } = Dimensions.get('window');
 
 const {
@@ -234,12 +234,12 @@ class LoginSignup extends React.Component {
             />
             <View style={{ flexDirection: 'row', }}>
             <Animated.View style={styles.Lbutton}>
-              <TouchableOpacity onPress={() => this.props.EmailSignup(this.state.email, this.state.password)}>
+              <TouchableOpacity onPress={() => this.props.emailSignup(this.state.email, this.state.password)}>
               <Text Style= {{ fontsize: 20, fontWeight: 'bold' }}>SIGN IN</Text>
               </TouchableOpacity>
             </Animated.View>
             <Animated.View style={styles.Rbutton}>
-              <TouchableOpacity onPress={() => this.props.navigation.navigate('avatar')}>
+              <TouchableOpacity onPress={() => this.props.emailLogin(this.state.email, this.state.password)}>
               <Text Style= {{ fontsize: 20, fontWeight: 'bold' }}>LOG IN</Text>
               </TouchableOpacity>
             </Animated.View>
@@ -333,5 +333,5 @@ const mapState = (state) => ({
   password: state.password
 })
 
-const mapDispatch = { fbSignin, EmailSignup };
+const mapDispatch = { fbSignin, emailSignup, emailLogin};
 export default connect(mapState,mapDispatch)(LoginSignup)

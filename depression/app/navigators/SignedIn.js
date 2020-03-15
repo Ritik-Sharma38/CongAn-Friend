@@ -4,15 +4,17 @@ import Profile from "../screens/profile";
 import AvtarSelection from "../screens/avatar";
 import Loading from "../screens/welcome";
 import ProfileScreen from "../screens/profile";
+import LoginSignup from "../screens/loginSignup";
+
 const Stack = createStackNavigator();
 
 export const SignedIn =()=> (
     <Stack.Navigator
-        initialRouteName="welcome"
+        initialRouteName="Avatar"
         screenOptions={{
         header: () => null,
     }}>
-        <Stack.Screen name="welcome" component={Loading} />
+        
         <Stack.Screen name="Avatar" component={AvtarSelection} />
         <Stack.Screen name="Profile" component={ProfileScreen} />
     </Stack.Navigator>

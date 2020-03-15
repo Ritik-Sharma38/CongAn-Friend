@@ -80,20 +80,20 @@ export const fetchUser=()=>{
             type: START_USER_FETCH_FROM_ASYNC
         })
         try {
-            const value = await AsyncStorage.getItem('user_details');
-            if (value !== null) {
-            // We have data!!
-            console.log(" value from async storage",value);
-            dispatch({
-                type: USER_FETCH_FROM_ASYNC_SUCCESS,
-                payload: JSON.parse(value)
-            })
-            }else{
-                console.log("value not saved its null")
-                dispatch({
-                    type: USER_FETCH_FROM_ASYNC_FAILED
-                })
-            }
+            const value = await firebase.auth().onAuthStateChanged(function(user) {
+               if (user) {
+                    console.log("user is signed in, user data: " ,user)
+                    dispatch({
+                        type: USER_FETCH_FROM_ASYNC_SUCCESS,
+                    });
+               }
+               else {
+                   console.log(" no user signed in")
+                   dispatch({
+                       type: USER_FETCH_FROM_ASYNC_FAILED,
+                   })
+               }
+            });
         } catch (error) {
             console.log("error loading timestamp")
             dispatch({
@@ -132,11 +132,13 @@ export const fbSignin=()=>{
                         email: user.email,
                         profileURL: user.photoURL
                     };
+                console.log("uploading data on firestore")
                 firestore()
                   .collection("users")
                   .doc(user.uid)
                   .set(userDict);
                  saveUser(userDict)
+                console.log("upload finished")
                 dispatch({
                   type: FB_SIGNIN_SUCCESS,
                   payload: userDict
@@ -155,24 +157,55 @@ export const fbSignin=()=>{
     }
 }
 
-export const EmailSignup = (email, password) => {
+export const emailSignup = (email, password) => {
     return async dispatch => {
         dispatch({ type: START_EMAIL_PASSWORD_LOGIN });
         try {
-            console.log(this.state.email, this.state.password)
             const doLogin = await firebase.auth().createUserWithEmailAndPassword(email, password);
-            if(doLogin.user) {
-                console.log("login done User:", user)
+                var userDict = {
+                    id: doLogin.user.uid,
+                    email: doLogin.user.email,
+                }
+            console.log("uploading data on firestore")
+            firestore()
+                .collection("users")
+                .doc(doLogin.user.uid)
+                .set(userDict);
+                saveUser(userDict)
+                console.log("upload finished")
                 dispatch({
                     type: EMAIL_PASSWORD_LOGIN_SUCCESS,
-                    payload: user
+                    payload: doLogin
                 });
             }
-        } catch (error) {
+        catch (error) {
             dispatch({ 
                 type: EMAIL_PASSWORD_LOGIN_FAILED,
                 payload: error
             });
         }
+    }
+};
+
+export const emailLogin = (email, password) => {
+    return async dispatch => {
+        dispatch({ type: START_EMAIL_PASSWORD_LOGIN });
+        try {
+            console.log(email, password, "starting login")
+            firebase
+            .auth()
+            .signInWithEmailAndPassword(email, password)
+            .then( dispatch ({
+                type: EMAIL_PASSWORD_LOGIN_SUCCESS,
+            }))         
+        }
+        catch ( error ) {
+            console.log( error )
+            dispatch({
+                type: EMAIL_PASSWORD_LOGIN_FAILED,
+                payload: error
+            })
+        }
+
     }
 };

@@ -47,6 +47,7 @@ export default (state=DEFAULT_STATE, action)=>{
         case USER_FETCH_FROM_ASYNC_FAILED:
             return{
                 ...state,
+                isAuthenticated: false,
                 user:{}
             }
         case USER_FETCH_FROM_ASYNC_SUCCESS:
@@ -88,7 +89,8 @@ export default (state=DEFAULT_STATE, action)=>{
             return{
                 ...state,
                 isAuthenticated: true,
-                user: action.payload
+                user: action.payload,
+                
             }
         case EMAIL_PASSWORD_LOGIN_FAILED:
             return{

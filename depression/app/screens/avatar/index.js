@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, FlatList, Text, StyleSheet, StatusBar,Image, Dimensions, TouchableOpacity } from 'react-native';
 import { Avatar, Card, Button, Icon  } from 'react-native-elements';
 import Carousel from 'react-native-snap-carousel'; 
+import { firebase } from '@react-native-firebase/auth';
 
 const { width, height } = Dimensions.get('window');
 
@@ -61,6 +62,16 @@ export default class AvtarSelection extends Component {
     this._carousel.snapToItem(2);
   }
 
+  signout = () => {
+    firebase.auth().signOut().then(function() {
+      console.log("singned out")
+      dispatch({
+        type: SIGN_OUT_SUCCESS,
+      });
+    }).catch(function(error) {
+      console.log(error)
+    });
+  }
   _renderItem = ( {item, index} ) => {
     return (
       <Card
@@ -73,7 +84,7 @@ export default class AvtarSelection extends Component {
           {item.title}
         </Text>
         <Button
-          onPress = { () => alert("Further app under development")}
+          onPress={this.signout}
           buttonStyle={{borderRadius: 25 , marginVertical: height/15 }}
           title='This is me' />
       </Card>  
