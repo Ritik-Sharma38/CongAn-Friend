@@ -1,6 +1,7 @@
 import { LoginManager,AccessToken } from 'react-native-fbsdk';
 import { firebase } from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
+import { GoogleSignin } from '@react-native-community/google-signin';
 import { AsyncStorage } from "react-native";
 import {START_FB_SIGNIN,
     FB_SIGNIN_SUCCESS,
@@ -20,6 +21,28 @@ import {START_FB_SIGNIN,
 } from './types';
 import { act } from 'react-test-renderer';
 
+
+function bootstrap() {
+   GoogleSignin.configure({
+    scopes: ['profile', 'email'],
+    webClientId: '183699983634-m4vtpe1dhvcftno84ksgsm5ttemdqo17.apps.googleusercontent.com'
+  });
+}
+
+async function logout(){
+    firebase.auth().signOut()
+        .then(function() {
+            // Sign-out successful.
+            alert("Signed out")
+            return true
+        })
+        .catch(function(error) {
+            console.log("signout failed",error)
+            return false
+            // An error happened
+        });
+}
+
 async function saveUser (user) {
   try {
     await AsyncStorage.setItem('user_details', JSON.stringify(user));
@@ -29,6 +52,7 @@ async function saveUser (user) {
     // Error saving data
   }
 };
+
 async function clearUser(){
 try {
     console.log("clear data")
@@ -41,37 +65,31 @@ try {
   }
 
 }
+
 export const userSignout=()=>{
-    return async (dispatch) =>{
+    console.log("signout start")
+    return async dispatch =>{
         dispatch({
             type: START_SIGN_OUT
         })
         try{
-        console.log("signout start")
-        firebase.auth().signOut()
-        .then(function() {
-            // Sign-out successful.
-            alert("Signed out")
-            clearUser()
-            dispatch({
-                type: SIGN_OUT_SUCCESS
-            })
-
-        })
-        .catch(function(error) {
+            if(logout){
+                console.log("signout success")
+                clearUser()
+                dispatch({
+                    type: SIGN_OUT_SUCCESS
+                 })
+            }else{
+                 console.log("signout failed")
+                 dispatch({
+                    type: SIGN_OUT_FAILED
+                })
+            }
+        }catch(error){
             console.log("signout failed",error)
             dispatch({
                 type: SIGN_OUT_FAILED
             })
-
-            // An error happened
-        });
-        }catch(error){
-             console.log("signout failed",error)
-            dispatch({
-                type: SIGN_OUT_FAILED
-            })
-
         }
     }
 }
@@ -81,11 +99,12 @@ export const fetchUser=()=>{
             type: START_USER_FETCH_FROM_ASYNC
         })
         try {
-            const value = await firebase.auth().onAuthStateChanged(function(user) {
+            {/*const value = await firebase.auth().onAuthStateChanged(function(user) {
                if (user) {
                     console.log("user is signed in, user data: " ,user)
                     dispatch({
                         type: USER_FETCH_FROM_ASYNC_SUCCESS,
+                        payload: user
                     });
                }
                else {
@@ -95,12 +114,88 @@ export const fetchUser=()=>{
                    })
                }
             });
+        */}
+            const value = await AsyncStorage.getItem('user_details');
+            if (value !== null) {
+            // We have data!!
+            console.log(" value from async storage",value);
+            dispatch({
+                type: USER_FETCH_FROM_ASYNC_SUCCESS,
+                payload: JSON.parse(value)
+            })
+            }else{
+                console.log("value not saved its null")
+                dispatch({
+                    type: USER_FETCH_FROM_ASYNC_FAILED
+                })
+            }
+
         } catch (error) {
             console.log("error loading timestamp")
             dispatch({
                     type: USER_FETCH_FROM_ASYNC_FAILED
                 })
             // Error retrieving data
+        }
+    }
+}
+export const googleSignin=()=>{
+
+    bootstrap()
+    return async dispatch =>{
+        dispatch({
+            type: START_GOOGLE_SIGN_IN
+        })
+        try{
+            //await GoogleSignin.hasPlayServices();
+            const user = await GoogleSignin.signIn();
+            console.log("user fetch google login",user)
+            console.log("fetch tokens",GoogleSignin.getTokens())
+            const credential = firebase.auth.GoogleAuthProvider.credential(user.idToken, user.accessToken);
+            firebase.auth().signInWithCredential(credential).then(result =>{
+                var user = result.user;
+                var userDict = {
+                        id: user.uid,
+                        fullname: user.displayName,
+                        email: user.email,
+                        profileURL: user.photoURL
+                    };
+
+                var temp = {
+                        id: user.uid,
+                        google:{
+                            fullname: user.displayName,
+                            email: user.email,
+                            profileURL: user.photoURL
+                        }
+                    };
+                firestore()
+                  .collection("users")
+                  .doc(user.uid)
+                  .set(temp);
+                 saveUser(userDict)
+                dispatch({
+                  type: GOOGLE_SIGN_IN_SUCCESS,
+                  payload: userDict
+                });
+
+
+            }).catch(error => {
+                    dispatch({
+                    type: GOOGLE_SIGN_IN_FAILED,
+                        payload: error.code
+                    })
+
+                    alert("Please try again! " + error.code);
+              });
+        }catch(error){
+            console.log("google login error",error)
+            dispatch({
+                type:GOOGLE_SIGN_IN_FAILED,
+                payload: error.message
+            })
+            alert("Please try again! " + error.code);
+
         }
     }
 }
@@ -134,10 +229,19 @@ export const fbSignin=()=>{
                         profileURL: user.photoURL
                     };
                 console.log("uploading data on firestore")
+                    var temp = {
+                        id: user.uid,
+                        fb:{
+                            fullname: user.displayName,
+                            email: user.email,
+                            profileURL: user.photoURL
+                        }
+                    };
+
                 firestore()
                   .collection("users")
                   .doc(user.uid)
-                  .set(userDict);
+                  .set(temp);
                  saveUser(userDict)
                 console.log("upload finished")
                 dispatch({

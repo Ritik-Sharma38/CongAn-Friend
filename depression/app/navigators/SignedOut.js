@@ -6,7 +6,7 @@ import AppDiscription from '../screens/appdescription';
 const Stack = createStackNavigator();
 export const  SignedOut = () =>(
     <Stack.Navigator
-        initialRouteName="welcome"
+        initialRouteName="loginSignup"
         screenOptions={{
         header: () => null,
     }}>

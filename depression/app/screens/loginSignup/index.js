@@ -4,7 +4,8 @@ import Svg, { Image, Circle, ClipPath } from 'react-native-svg';
 import Animated, { Easing } from 'react-native-reanimated';
 import { TapGestureHandler, State, TextInput } from 'react-native-gesture-handler';
 import { connect } from 'react-redux';
-import {fbSignin, emailSignup, emailLogin} from '../../actions/authAction';
+import {fbSignin, emailSignup, emailLogin, googleSignin} from '../../actions/authAction';
+
 const { width, height } = Dimensions.get('window');
 
 const {
@@ -124,24 +125,22 @@ class LoginSignup extends React.Component {
   state = {
     email: '',
     password: '',
-    progressBarStatus: false,
   }
 
   signupCall() {
-    this.setState({progressBarStatus: this.props.progressBarStatus }) 
-    console.log("progressbar statues changed to : ", this.state.progressBarStatus) 
+   
+    
     {this.props.emailSignup(this.state.email, this.state.password)}
   }
 
   loginCall() {
-    this.setState({progressBarStatus: this.props.progressBarStatus }) 
-    console.log("progressbar statues changed to : ", this.state.progressBarStatus)
+ 
+    
     {this.props.emailLogin(this.state.email, this.state.password)}
   }
 
   render() {
-    const { progressBarStatus } = this.state;
-    console.log("rendering LoginSignup page", this.state.password, this.state.email)
+    console.log("rendering LoginSignup page", this.props.progressBarStatus, this.state.password, this.state.email)
     return (
       <View
         style={{
@@ -169,8 +168,7 @@ class LoginSignup extends React.Component {
           />
         </Svg>
         </Animated.View>
-        <View style={{ height: height / 3, justifyContent: 'center' }}>
-          
+          <View style={{ height: height / 3, justifyContent: 'center' }}>
           <TapGestureHandler onHandlerStateChange={this.onStateChange}>
             <Animated.View
               style={{
@@ -199,7 +197,8 @@ class LoginSignup extends React.Component {
           </Animated.View>
         </TouchableOpacity>
         {/**</TapGestureHandler>**/}
-          <TapGestureHandler onHandlerStateChange={this.onStateChange}>
+        {/** <TapGestureHandler onHandlerStateChange={this.onStateChange}>**/}
+        <TouchableOpacity onPress={this.props.googleSignin}>
             <Animated.View
               style={{
                 ...styles.button,
@@ -208,8 +207,12 @@ class LoginSignup extends React.Component {
               }}
             >
               <Text style={{ fontSize: 20, }}>SIGN IN WITH GOOGLE</Text>
+              {this.state.progressBarStatus && (
+              <ProgressBarAndroid styleAttr="Normal" color="#2E71DC" />
+            )}
             </Animated.View>
-          </TapGestureHandler>
+        </TouchableOpacity>
+        {/**</TapGestureHandler>**/}
           <Animated.View
             style={{zIndex: this.textInputZindex,
             opacity: this.textInputOpacity,
@@ -258,7 +261,7 @@ class LoginSignup extends React.Component {
               </Animated.View>
             </TouchableOpacity>
             </View>
-            {progressBarStatus && (
+            {this.props.progressBarStatus && (
               <ProgressBarAndroid styleAttr="Horizontal" color="#fff" />
             )}
           </Animated.View>
@@ -344,6 +347,11 @@ const styles = StyleSheet.create({
     borderColor:'rgba(0,0,0,0.2)',
   }
 });
+function mapStateToProps(state){
+    return{
+        loading: state.auth.loading
+    }
+}
 
 const mapState = (state) => ({
   email: state.email,
@@ -351,5 +359,5 @@ const mapState = (state) => ({
   progressBarStatus: state.auth.progressBarStatus
 })
 
-const mapDispatch = { fbSignin, emailSignup, emailLogin};
+const mapDispatch = { fbSignin, emailSignup, emailLogin, googleSignin};
 export default connect(mapState,mapDispatch)(LoginSignup)

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, FlatList, Text, StyleSheet, StatusBar,Image, Dimensions, TouchableOpacity } from 'react-native';
 import { Avatar, Card, Button, Icon  } from 'react-native-elements';
 import Carousel from 'react-native-snap-carousel'; 
-import { firebase } from '@react-native-firebase/auth';
+import {useDispatch} from 'react-redux';
 
 const { width, height } = Dimensions.get('window');
 
@@ -55,23 +55,16 @@ export default class AvtarSelection extends Component {
         },
       ]
     };
-
   }
-
+ 
   componentDidMount() {
     this._carousel.snapToItem(2);
   }
 
-  signout = () => {
-    firebase.auth().signOut().then(function() {
-      console.log("singned out")
-      dispatch({
-        type: SIGN_OUT_SUCCESS,
-      });
-    }).catch(function(error) {
-      console.log(error)
-    });
+  profilePage = () => {
+    {this.props.navigation.navigate('Profile')}
   }
+
   _renderItem = ( {item, index} ) => {
     return (
       <Card
@@ -84,7 +77,7 @@ export default class AvtarSelection extends Component {
           {item.title}
         </Text>
         <Button
-          onPress={this.signout}
+          onPress={this.profilePage}
           buttonStyle={{borderRadius: 25 , marginVertical: height/15 }}
           title='This is me' />
       </Card>  
@@ -108,7 +101,9 @@ export default class AvtarSelection extends Component {
           />
         </View>
         <View style = {styles.SecondHalf}>
-          <Text style={{fontSize: 50}}>Write about why do user need to select avatar ?</Text>
+          <Text style={{fontSize: 50}}>
+            Write about why do user need to select avatar ?
+          </Text>
         </View>
       </View>
     );
