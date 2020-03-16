@@ -1,70 +1,112 @@
 import React from 'react';
-import {StyleSheet, Text, View, Image, TouchableOpacity,SafeAreaView,ScrollView} from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity,SafeAreaView,ScrollView, Dimensions} from 'react-native';
 import {useSelector} from 'react-redux';
 import {userSignout} from '../../actions/authAction';
 import {useDispatch} from 'react-redux';
-import { Button } from 'react-native-elements';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { Button, Avatar, Card, Image} from 'react-native-elements';
+
+const { width, height } = Dimensions.get('window');
 
 const ProfileScreen = () => {
     const user = useSelector(state => state.auth.user)
     const dispatch = useDispatch();
     console.log("profile detils",user)
     return (
-        <View style={{height: 667, backgroundColor: "#192879"}}>
-            <View style={styles.mainbody}>
-            <Image style={styles.imgprofile} source={{uri: user.profileURL}} />
-                <Text style={styles.name}>
-                    {user.fullname}
-                </Text>
-                <View style={styles.itemprofile}>
-                    <Icon
-                    name='user' color="white" />
-                    <Text style={styles.name}>
-                    {user.email}
-                    </Text>
-                </View>
-                <Button onPress={()=>{dispatch(userSignout())}} style={styles.btnlogout} title="LogOut"/>
+        <SafeAreaView style = {styles.container}>
+            <View style = {styles.FirstHalf}>
+                <Avatar
+                    size="large"
+                    rounded
+                    source={{
+                        uri: user.profileURL
+                    }}
+                    showEditButton
+                />
+                <Text style={{fontSize: 18,color: '#fff' }}>{user.fullname}</Text>
             </View>
-		</View>
+            <ScrollView contentContainerStyle={styles.SecondHalf}>
+                <Card
+                    containerStyle={styles.Cards}>
+                    <Image
+                    style={{width: width/1.1, height: height/2.6,}}
+                    source={require('../../assets/healty0.png')}
+                    />
+                    <Text style={{marginBottom: '2%', marginVertical: '3%', color: '#fff', alignSelf: 'center', fontSize: 22}}>Check your health timeline</Text>
+                </Card>
+                <Card
+                    containerStyle={styles.Cards}>
+                    <Image
+                    style={{width: width/1.1, height: height/2.6,}}
+                    source={require('../../assets/healty3.png')}
+                    />
+                    <Text style={{marginBottom: '2%', marginVertical: '2%', color: '#fff', alignSelf: 'center', fontSize: 22}}>Daily Activity</Text>
+                </Card>
+                <Card
+                    containerStyle={styles.Cards}>
+                    <Image
+                    style={{width: width/1.1, height: height/2.6,}}
+                    source={require('../../assets/healty7.png')}
+                    />
+                    <Text style={{marginBottom: '2%', marginVertical: '2%', color: '#fff', alignSelf: 'center', fontSize: 22}}>Talk to Avatar</Text>
+                </Card>
+                <Card
+                    containerStyle={styles.Cards}>
+                    <Image
+                    style={{width: width/1.1, height: height/2.5, fontSize: 22}}
+                    source={require('../../assets/healty9.png')}
+                    />
+                    <Text style={{marginBottom: '2%', marginVertical: '2%', color: '#fff', alignSelf: 'center', fontSize: 22}}>Find Depressed people around you</Text>
+                </Card>
+                <Card
+                    containerStyle={styles.Cards}>
+                    <Image
+                    style={{width: width/1.1, height: height/2.6,}}
+                    source={require('../../assets/healty8.png')}
+                    />
+                    <Text style={{marginBottom: '2%', marginVertical: '2%', color: '#fff', alignSelf: 'center', fontSize: 22}}>Medical prescription</Text>
+                </Card>
+                <Card
+                    containerStyle={{backgroundColor: '#2E71DC', height: height/2.5, width: width/1.08, borderRadius: 15, alignItems: 'center', justifyContent: 'center',}}>
+                    <Image
+                    style={{width: width, height: height/3,}}
+                    source={require('../../assets/healty12.png')}
+                    />
+                    <Text style={{marginBottom: '2%', marginVertical: '2%', color: '#fff', alignSelf: 'center', fontSize: 22}}>Profile and account setting</Text>
+                </Card>
+                <Button onPress={()=>{dispatch(userSignout())}}  title="LogOut"/>
+            </ScrollView>
+		</SafeAreaView>
       );
 };
 
 export default ProfileScreen;
 
+
 const styles = StyleSheet.create({
-    mainbody: {
-        marginTop: 30,
-        marginLeft: 24,
-        marginRight: 24,
-        marginBottom: 70
+    container: {
+      flex: 1,
     },
-    imgprofile:{
-        marginLeft: 100,
-        marginTop: 50,
-        height: 120,
-        width: 120,
-        borderRadius: 60
+    FirstHalf: {
+      height: height/8,
+      alignItems: 'center',
+      alignContent: 'center',
+      backgroundColor: '#2E71DC',
     },
-    name:{
-        color: "white",
-        fontSize: 18,
-        marginLeft: 100,
-        marginTop:12,
+    SecondHalf: {
+     
     },
-    itemprofile:{
-        marginTop: 30,
+    Cards: {
+      backgroundColor: '#2E71DC',
+      height: height/2,
+      width: width/1.08,
+      borderRadius: 15,
+      alignItems: 'center',
+      justifyContent: 'center',
+      shadowOffset: { width: 0, height: 3 },
+      shadowColor: '#000',
+      shadowOpacity: 0.4,
+      elevation: 4,
     },
-    btnlogout:{
-        width: 300,
-        height: 50,
-        marginLeft: 14,
-        marginBottom: 40,
-        backgroundColor: "#50D9EA"
-    },
-    labelbtn:{
-        color: "#FFFFFF",
-        fontSize: 20,
-        fontWeight:"bold"
-    }
-   });
+});
+  
+  

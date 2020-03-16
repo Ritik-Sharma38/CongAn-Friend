@@ -113,30 +113,29 @@ export default class AvtarSelection extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    },
-    FirstHalf: {
-      flexDirection: 'row',
-      flexWrap: 'nowrap',
-      height: height/1.5,
-      alignItems: 'center',
-      alignContent: 'center',
-      backgroundColor: '#2E71DC',
-    },
-    SecondHalf: {
-      alignItems: 'center',
-    },
-    Cards: {
-      backgroundColor: 'white',
-      height: height/3,
-      width: width/1.5,
-      borderRadius: 75,
-      alignItems: 'center',
-      justifyContent: 'center',
-      shadowOffset: { width: 0, height: 3 },
-      shadowColor: '#000',
-      shadowOpacity: 0.4,
-      elevation: 4,
-    },
-  }
-);
+  },
+  FirstHalf: {
+    flexDirection: 'row',
+    flexWrap: 'nowrap',
+    height: height/1.5,
+    alignItems: 'center',
+    alignContent: 'center',
+    backgroundColor: '#2E71DC',
+  },
+  SecondHalf: {
+    alignItems: 'center',
+  },
+  Cards: {
+    backgroundColor: 'white',
+    height: height/3,
+    width: width/1.5,
+    borderRadius: 75,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowOffset: { width: 0, height: 3 },
+    shadowColor: '#000',
+    shadowOpacity: 0.4,
+    elevation: 4,
+  },
+});
 
