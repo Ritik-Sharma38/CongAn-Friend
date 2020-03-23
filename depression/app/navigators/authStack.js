@@ -13,7 +13,6 @@ function AuthStack(){
         dispatch(fetchUser())
     },[])
     const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
-    const userFetchLoading = useSelector(state => state.auth.userFetchLoading)
     console.log("value of isAuth", isAuthenticated)
     if(isAuthenticated){
         return(

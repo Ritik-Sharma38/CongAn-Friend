@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect } from 'react';
 import { StyleSheet, View, Text, Image, StatusBar, Animated, Alert} from 'react-native';
 
 class ImageLoader extends Component {
@@ -38,11 +38,11 @@ class ImageLoader extends Component {
   }
 }
 
-export default class SignedOutWelcome extends Component {
+export default class Welcome extends Component {
 
   appDescriptionCall(){
     setTimeout(() => {
-      {this.props.navigation.navigate('appdescription')}
+      {this.props.navigation.navigate('authStack')}
     }, 3000);
   }
   
