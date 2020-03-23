@@ -68,7 +68,7 @@ export default class AvtarSelection extends Component {
   _renderItem = ( {item, index} ) => {
     return (
       <Card
-        containerStyle={{borderRadius: 30, height: height/2, width: width/1.1,}}>
+        containerStyle={{borderRadius: 25, height: height/2, width: width/1.1,}}>
         <Image
           style={{width: width/1.2, height: height/3,}}
           source={item.uri}
@@ -124,18 +124,6 @@ const styles = StyleSheet.create({
   },
   SecondHalf: {
     alignItems: 'center',
-  },
-  Cards: {
-    backgroundColor: 'white',
-    height: height/3,
-    width: width/1.5,
-    borderRadius: 75,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowOffset: { width: 0, height: 3 },
-    shadowColor: '#000',
-    shadowOpacity: 0.4,
-    elevation: 4,
   },
 });
 

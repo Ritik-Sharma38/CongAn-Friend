@@ -2,6 +2,7 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import LoginSignup from '../screens/loginSignup';
 import AppDiscription from '../screens/appdescription';
+
 const Stack = createStackNavigator();
 export const  SignedOut = () =>(
     <Stack.Navigator

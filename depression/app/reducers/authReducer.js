@@ -88,6 +88,7 @@ export default (state=DEFAULT_STATE, action)=>{
         case START_GOOGLE_SIGN_IN:
             return{
                 ...state,
+                loading: true,
                 progressBarStatus: true,
             }
         case GOOGLE_SIGN_IN_SUCCESS:
