@@ -55,7 +55,7 @@ const ProfileScreen = () => {
                     style={{width: width/1.1, height: height/2.5, fontSize: 22}}
                     source={require('../../assets/healty9.png')}
                     />
-                    <Text style={{marginBottom: '2%', marginVertical: '2%', color: '#fff', alignSelf: 'center', fontSize: 22}}>Find Depressed people around you</Text>
+                    <Text style={{marginBottom: '2%', marginVertical: '2%', color: '#fff', alignSelf: 'center', fontSize: 22}}>Social life </Text>
                 </Card>
                 <Card
                     containerStyle={styles.Cards}>

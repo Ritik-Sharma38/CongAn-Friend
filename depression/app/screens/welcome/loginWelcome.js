@@ -38,7 +38,13 @@ class ImageLoader extends Component {
   }
 }
 
-export default class Loading extends Component {
+export default class SignedOutWelcome extends Component {
+
+  appDescriptionCall(){
+    setTimeout(() => {
+      {this.props.navigation.navigate('appdescription')}
+    }, 3000);
+  }
   
   render() {
     console.log('rendering welcome page');
@@ -50,6 +56,7 @@ export default class Loading extends Component {
           source={require('../../assets/Logo.png')}
         />
         <Text style={styles.logoText}>CogAn Friend</Text>
+        {this.appDescriptionCall()}
       </View>
     );
   }

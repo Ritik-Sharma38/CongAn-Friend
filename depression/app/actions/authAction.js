@@ -288,6 +288,7 @@ export const emailSignup = (email, password) => {
                 type: EMAIL_PASSWORD_LOGIN_FAILED,
                 payload: error
             });
+            alert("Failed : The email-id is already used")
         }
     }
 };
