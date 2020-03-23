@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Dimensions, StatusBar, TouchableOpacity, ProgressBarAndroid} from 'react-native';
+import { View, Text, StyleSheet, Dimensions, StatusBar, TouchableOpacity, ProgressBarAndroid, PermissionsAndroid} from 'react-native';
 import Svg, { Image, Circle, ClipPath } from 'react-native-svg';
 import Animated, { Easing } from 'react-native-reanimated';
 import { TapGestureHandler, State, TextInput } from 'react-native-gesture-handler';
@@ -56,6 +56,31 @@ function runTiming(clock, value, dest) {
 }
 
 class LoginSignup extends React.Component {
+
+  async componentDidMount() {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        {
+          title: 'Cool Photo App Camera Permission',
+          message:
+            'Cool Photo App needs access to your camera ' +
+            'so you can take awesome pictures.',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('You can use the camera');
+      } else {
+        console.log('Camera permission denied');
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+ }
+
   constructor() {
     super();
 
@@ -125,18 +150,6 @@ class LoginSignup extends React.Component {
   state = {
     email: '',
     password: '',
-  }
-
-  signupCall() {
-   
-    
-    {this.props.emailSignup(this.state.email, this.state.password)}
-  }
-
-  loginCall() {
- 
-    
-    {this.props.emailLogin(this.state.email, this.state.password)}
   }
 
   render() {
@@ -250,12 +263,12 @@ class LoginSignup extends React.Component {
               value={this.state.password}
             />
             <View style={{ flexDirection: 'row', }}>
-            <TouchableOpacity onPress={() => this.signupCall()}>
+            <TouchableOpacity onPress={() => this.props.emailSignup(this.state.email, this.state.password)}>
               <Animated.View style={styles.Lbutton}>
                 <Text Style= {{ fontsize: 20, fontWeight: 'bold' }}>SIGN IN</Text>
               </Animated.View>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.loginCall()}>
+            <TouchableOpacity onPress={() => this.props.emailLogin(this.state.email, this.state.password)}>
               <Animated.View style={styles.Rbutton}> 
                 <Text Style= {{ fontsize: 20, fontWeight: 'bold' }}>LOG IN</Text>
               </Animated.View>

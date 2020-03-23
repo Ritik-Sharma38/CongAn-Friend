@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect } from 'react';
 import { StyleSheet, View, Text, Image, StatusBar, Animated, Alert} from 'react-native';
 
 class ImageLoader extends Component {
@@ -38,15 +38,14 @@ class ImageLoader extends Component {
   }
 }
 
-export default class Loading extends Component {
-    //call = () => {
-      //  {this.props.navigation.navigate('Profile')}
-    //}
+export default class Welcome extends Component {
 
-  //callToDepression(){
-    //setTimeout(this.call, 3000);
- // }
-
+  appDescriptionCall(){
+    setTimeout(() => {
+      {this.props.navigation.navigate('authStack')}
+    }, 3000);
+  }
+  
   render() {
     console.log('rendering welcome page');
     return (
@@ -57,7 +56,7 @@ export default class Loading extends Component {
           source={require('../../assets/Logo.png')}
         />
         <Text style={styles.logoText}>CogAn Friend</Text>
-        {/**this.callToDepression()**/}
+        {this.appDescriptionCall()}
       </View>
     );
   }
