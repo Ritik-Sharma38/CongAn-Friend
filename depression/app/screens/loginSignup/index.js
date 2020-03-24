@@ -153,6 +153,7 @@ class LoginSignup extends React.Component {
   }
 
   render() {
+    console.log("image sourece", this.props.imageSource)
     console.log("rendering LoginSignup page", this.props.progressBarStatus, this.state.password, this.state.email)
     return (
       <View
@@ -221,7 +222,7 @@ class LoginSignup extends React.Component {
             >
               <Text style={{ fontSize: 20, }}>SIGN IN WITH GOOGLE</Text>
               {this.state.progressBarStatus && (
-              <ProgressBarAndroid styleAttr="Normal" color="#2E71DC" />
+              <ProgressBarAndroid styleAttr="Horizontal" color="#2E71DC" />
             )}
             </Animated.View>
         </TouchableOpacity>
@@ -360,16 +361,19 @@ const styles = StyleSheet.create({
     borderColor:'rgba(0,0,0,0.2)',
   }
 });
+
+{/*
 function mapStateToProps(state){
     return{
         loading: state.auth.loading
     }
 }
-
+*/}
 const mapState = (state) => ({
   email: state.email,
   password: state.password,
-  progressBarStatus: state.auth.progressBarStatus
+  progressBarStatus: state.auth.progressBarStatus,
+  imageSource: state.auth.imageSource
 })
 
 const mapDispatch = { fbSignin, emailSignup, emailLogin, googleSignin};

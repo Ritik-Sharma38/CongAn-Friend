@@ -17,7 +17,8 @@ import {START_FB_SIGNIN,
     USER_FETCH_FROM_ASYNC_SUCCESS,
     SIGN_OUT_SUCCESS,
     SIGN_OUT_FAILED,
-    START_SIGN_OUT
+    START_SIGN_OUT,
+    PICKER_IMAGE_SOURCE_SUCCESS
 } from './types';
 import { act } from 'react-test-renderer';
 
@@ -296,26 +297,43 @@ export const emailSignup = (email, password) => {
 export const emailLogin = (email, password) => {
     return async dispatch => {
         dispatch({ type: START_EMAIL_PASSWORD_LOGIN });
-            console.log(email, password, "starting login")
-            await firebase
-            .auth()
-            .signInWithEmailAndPassword(email, password)
-            .then(function() {
-                console.log("Login successful")
-                dispatch({
-                    type: EMAIL_PASSWORD_LOGIN_SUCCESS,
-                })
+        console.log(email, password, "starting login")
+        await firebase
+        .auth()
+        .signInWithEmailAndPassword(email, password)
+        .then(function() {
+            console.log("Login successful")
+            dispatch({
+                type: EMAIL_PASSWORD_LOGIN_SUCCESS,
             })
-            .catch(function(error)
-            {   
+        })
+        .catch(function(error)
+        {   
                 
-                dispatch({
-                    type: EMAIL_PASSWORD_LOGIN_FAILED,
-                    payload: error
-                })
-                alert("Login Failed ", error)
+            dispatch({
+                type: EMAIL_PASSWORD_LOGIN_FAILED,
+                payload: error
             })
+            alert("Login Failed ", error)
+        })
             
 
     }
 };
+
+export const pickImage = () => {
+    ImagePicker.showImagePicker(options, response => {
+      if (response.didCancel) {
+        alert('You cancelled image picker 😟');
+      } else if (response.error) {
+        alert('And error occured: ', response.error);
+      } else {
+        const source = { uri: response.uri };
+        dispatch({
+            type: PICKER_IMAGE_SOURCE_SUCCESS,
+            payload: source
+        })
+        console.log("printing image source", source)
+      }
+    });
+  };
