@@ -1,6 +1,6 @@
 import React, { Component, useState } from 'react';
-import {StyleSheet, Text, View, TouchableOpacity, SafeAreaView, ScrollView, Dimensions, Animated} from 'react-native';
-import {useSelector, connect, useDispatch} from 'react-redux';
+import {StyleSheet, Text, View, TouchableOpacity, SafeAreaView, ScrollView, Dimensions, Animated, ProgressBarAndroid} from 'react-native';
+import {useSelector, useDispatch} from 'react-redux';
 import {userSignout, pickImage} from '../../actions/authAction';
 import { Button, Avatar, Card, } from 'react-native-elements';
 
@@ -43,6 +43,7 @@ class ImageLoader extends Component {
     }
 }
 
+
 const ProfileScreen = () => {
     const [talkToAvatarState, setTalkToAvatarState] = useState(false);
     const [trigerImg, setTrigerImg] = useState(true)
@@ -52,6 +53,8 @@ const ProfileScreen = () => {
     const [trigerMps, setTrigerMps] = useState(true)
     const [trigerProfile, setTrigerProfile] = useState(true)
     const user = useSelector(state => state.auth.user)
+    const imageSource = useSelector(state => state.auth.imageSource)
+    const progressBar = useSelector(state => state.auth.progressBarStatus) 
     const dispatch = useDispatch();
     console.log("profile detils",user)
     return (
@@ -185,8 +188,14 @@ const ProfileScreen = () => {
                 { !trigerImg && (
                     <View style={{alignItems: 'center', alignContent: 'center'}}>
                         <Text>triger form image</Text>
-                        <Button onPress={() => this.props.pickImage()} title="Upload image"/>
-                        <Text>{this.props.imageSource}</Text>
+                        <Button onPress={()=>dispatch(pickImage(user.id, user.fullname))} title="Upload image"/>
+                        <ImageLoader
+                            style={{width: width/2, height: height/3}}
+                            source={{ uri: imageSource.uri }}
+                        />
+                        { progressBar && (
+                            <ProgressBarAndroid styleAttr="Horizontal" color="#2E71DC" />
+                        )}
                     </View>
                 )}
                 { !trigerDact && (
@@ -246,9 +255,11 @@ const styles = StyleSheet.create({
     },
 });
 
-const mapState = (state) => ({
-    imageSource: state.auth.imageSource,
-  })
+export default ProfileScreen
 
-const mapDispatch = {pickImage};
-export default connect(mapState, mapDispatch)(ProfileScreen)
+//const mapState = (state) => ({
+ //   imageSource: state.auth.imageSource,
+ // })
+
+//const mapDispatch = {pickImage};
+//export default connect(mapState, mapDispatch)(ProfileScreen)

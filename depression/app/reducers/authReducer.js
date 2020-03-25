@@ -13,7 +13,9 @@ import {START_GOOGLE_SIGN_IN,
     START_EMAIL_PASSWORD_LOGIN,
     EMAIL_PASSWORD_LOGIN_SUCCESS,
     EMAIL_PASSWORD_LOGIN_FAILED,
-    PICKER_IMAGE_SOURCE_SUCCESS
+    PICKER_IMAGE_SOURCE_SUCCESS,
+    UPLOAD_IMAGE_STARTED,
+    UPLOAD_IMAGE_FINISHED,
 } from '../actions/types';
 
 const DEFAULT_STATE={
@@ -25,7 +27,7 @@ const DEFAULT_STATE={
     progressBarStatus: false,
     userFetchLoading: false,
     loading: false,
-    imageSource: 'ritik',
+    imageSource: '',
 }
 export default (state=DEFAULT_STATE, action)=>{
     switch(action.type){
@@ -131,6 +133,16 @@ export default (state=DEFAULT_STATE, action)=>{
             return{
                 ...state,
                 imageSource: action.payload
+            }
+        case UPLOAD_IMAGE_STARTED:
+            return{
+                ...state,
+                progressBarStatus: true,
+            }
+        case UPLOAD_IMAGE_FINISHED:
+            return{
+                ...state,
+                progressBarStatus: false,
             }
         default:
             return state

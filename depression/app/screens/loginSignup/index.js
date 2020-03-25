@@ -62,10 +62,8 @@ class LoginSignup extends React.Component {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.CAMERA,
         {
-          title: 'Cool Photo App Camera Permission',
-          message:
-            'Cool Photo App needs access to your camera ' +
-            'so you can take awesome pictures.',
+          title: 'Camera Permission',
+          message: 'App needs access to your camera ',
           buttonNeutral: 'Ask Me Later',
           buttonNegative: 'Cancel',
           buttonPositive: 'OK',
@@ -75,6 +73,63 @@ class LoginSignup extends React.Component {
         console.log('You can use the camera');
       } else {
         console.log('Camera permission denied');
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+        {
+          title: 'Storage write Permission',
+          message: 'App needs access to your write storage ',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('You can write to storage');
+      } else {
+        console.log('write storage permission denied');
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+        {
+          title: 'Microphone Permission',
+          message: 'App needs access to your microphone ',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('You can access to record audio');
+      } else {
+        console.log('Record audio permission denied');
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+        {
+          title: 'Storage read Permission',
+          message: 'App needs access to your read storage ',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('You can read to storage');
+      } else {
+        console.log('read storage permission denied');
       }
     } catch (err) {
       console.warn(err);
@@ -153,7 +208,6 @@ class LoginSignup extends React.Component {
   }
 
   render() {
-    console.log("image sourece", this.props.imageSource)
     console.log("rendering LoginSignup page", this.props.progressBarStatus, this.state.password, this.state.email)
     return (
       <View
