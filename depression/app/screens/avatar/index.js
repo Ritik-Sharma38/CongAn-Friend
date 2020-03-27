@@ -66,6 +66,7 @@ export default class AvtarSelection extends Component {
   }
 
   _renderItem = ( {item, index} ) => {
+    var buttonHeight = height/2
     return (
       <Card
         containerStyle={{borderRadius: 25, height: height/2, width: width/1.1,}}>
@@ -73,12 +74,12 @@ export default class AvtarSelection extends Component {
           style={{width: width/1.2, height: height/3,}}
           source={item.uri}
         />
-        <Text style={{marginBottom: '2%', marginVertical: '2%'}}>
+        <Text style={{marginBottom: '2%', marginVertical: '2%', alignSelf: 'center'}}>
           {item.title}
         </Text>
         <Button
           onPress={this.profilePage}
-          buttonStyle={{borderRadius: 25 , marginVertical: height/15 }}
+          buttonStyle={{borderRadius: 25, marginVertical: buttonHeight/14}}
           title='This is me' />
       </Card>  
     );

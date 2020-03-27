@@ -175,6 +175,12 @@ export const googleSignin=()=>{
                             fullname: user.displayName,
                             email: user.email,
                             profileURL: user.photoURL,
+                        },
+                        imageData:{
+                            imageSubData:{
+                                imageName: '',
+                                imageDownloadUrl: '',
+                            }
                         }
                     };
                 firestore()
@@ -244,6 +250,12 @@ export const fbSignin=()=>{
                             fullname: user.displayName,
                             email: user.email,
                             profileURL: user.photoURL
+                        },
+                        imageData:{
+                            imageSubData:{
+                                imageName: '',
+                                imageDownloadUrl: '',
+                            }
                         }
                     };
 
@@ -279,6 +291,12 @@ export const emailSignup = (email, password) => {
                     id: doLogin.user.uid,
                     email: doLogin.user.email,
                     imageNumber: 0,
+                    imageData:{
+                        imageSubData:{
+                            imageName: '',
+                            imageDownloadUrl: '',
+                        }
+                    }
                 }
             console.log("uploading data on firestore")
             firestore()
@@ -354,7 +372,18 @@ async function uploadImge(uri, userId, imageName){
         const docRef = await firestore().collection("users").doc(userId);
         const Count = await (await docRef.get()).data().imageNumber
         const imgRef =await storage().ref('userData/uploadImage/'+userId).child(imageName+Count).putFile(uri)
-        await firestore().collection("users").doc(userId).update({ imageNumber: Count+1 })
+        const imgReff = await storage().ref(imgRef.metadata.fullPath)
+        const url = await imgReff.getDownloadURL();
+        console.log("download url", url)
+        await firestore().collection("users").doc(userId).update({
+            imageNumber: Count+1,
+            imageData: {
+                imageName: {
+                    imageDownloadUrl: url,
+                    imageName: imageName+Count
+                }
+            }
+            });
         console.log("finished uploading image and image counter incremented") 
     {
         /*const Blob = RNFetchBlob.polyfill.Blob
