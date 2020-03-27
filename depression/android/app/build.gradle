@@ -189,6 +189,7 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.3'
     implementation 'com.google.firebase:firebase-auth:19.3.0'
     implementation "com.facebook.react:react-native:+"  // From node_modules
+    implementation 'com.google.firebase:firebase-storage:19.1.1'
 
     if (enableHermes) {
         def hermesPath = "../../node_modules/hermes-engine/android/";

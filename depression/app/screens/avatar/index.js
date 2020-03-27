@@ -66,19 +66,20 @@ export default class AvtarSelection extends Component {
   }
 
   _renderItem = ( {item, index} ) => {
+    var buttonHeight = height/2
     return (
       <Card
-        containerStyle={{borderRadius: 30, height: height/2, width: width/1.1,}}>
+        containerStyle={{borderRadius: 25, height: height/2, width: width/1.1,}}>
         <Image
           style={{width: width/1.2, height: height/3,}}
           source={item.uri}
         />
-        <Text style={{marginBottom: '2%', marginVertical: '2%'}}>
+        <Text style={{marginBottom: '2%', marginVertical: '2%', alignSelf: 'center'}}>
           {item.title}
         </Text>
         <Button
           onPress={this.profilePage}
-          buttonStyle={{borderRadius: 25 , marginVertical: height/15 }}
+          buttonStyle={{borderRadius: 25, marginVertical: buttonHeight/14}}
           title='This is me' />
       </Card>  
     );
@@ -124,18 +125,6 @@ const styles = StyleSheet.create({
   },
   SecondHalf: {
     alignItems: 'center',
-  },
-  Cards: {
-    backgroundColor: 'white',
-    height: height/3,
-    width: width/1.5,
-    borderRadius: 75,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowOffset: { width: 0, height: 3 },
-    shadowColor: '#000',
-    shadowOpacity: 0.4,
-    elevation: 4,
   },
 });
 

@@ -1,8 +1,12 @@
 import { LoginManager,AccessToken } from 'react-native-fbsdk';
 import { firebase } from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
+import storage from '@react-native-firebase/storage';
 import { GoogleSignin } from '@react-native-community/google-signin';
-import { AsyncStorage } from "react-native";
+import { AsyncStorage, Platform } from "react-native";
+import ImagePicker from 'react-native-image-picker';
+import RNFetchBlob from 'react-native-fetch-blob';
+import {useSelector, useDispatch} from 'react-redux';
 import {START_FB_SIGNIN,
     FB_SIGNIN_SUCCESS,
     FB_SIGNIN_FAILED,
@@ -17,10 +21,13 @@ import {START_FB_SIGNIN,
     USER_FETCH_FROM_ASYNC_SUCCESS,
     SIGN_OUT_SUCCESS,
     SIGN_OUT_FAILED,
-    START_SIGN_OUT
+    START_SIGN_OUT,
+    PICKER_IMAGE_SOURCE_SUCCESS,
+    UPLOAD_IMAGE_STARTED,
+    UPLOAD_IMAGE_FINISHED,
 } from './types';
 import { act } from 'react-test-renderer';
-
+import { exp } from 'react-native-reanimated';
 
 function bootstrap() {
    GoogleSignin.configure({
@@ -140,7 +147,6 @@ export const fetchUser=()=>{
     }
 }
 export const googleSignin=()=>{
-
     bootstrap()
     return async dispatch =>{
         dispatch({
@@ -158,15 +164,23 @@ export const googleSignin=()=>{
                         id: user.uid,
                         fullname: user.displayName,
                         email: user.email,
-                        profileURL: user.photoURL
+                        profileURL: user.photoURL,
+                        
                     };
 
                 var temp = {
                         id: user.uid,
+                        imageNumber: 0,
                         google:{
                             fullname: user.displayName,
                             email: user.email,
-                            profileURL: user.photoURL
+                            profileURL: user.photoURL,
+                        },
+                        imageData:{
+                            imageSubData:{
+                                imageName: '',
+                                imageDownloadUrl: '',
+                            }
                         }
                     };
                 firestore()
@@ -226,15 +240,22 @@ export const fbSignin=()=>{
                         id: user.uid,
                         fullname: user.displayName,
                         email: user.email,
-                        profileURL: user.photoURL
+                        profileURL: user.photoURL,
                     };
                 console.log("uploading data on firestore")
                     var temp = {
                         id: user.uid,
+                        imageNumber: 0,
                         fb:{
                             fullname: user.displayName,
                             email: user.email,
                             profileURL: user.photoURL
+                        },
+                        imageData:{
+                            imageSubData:{
+                                imageName: '',
+                                imageDownloadUrl: '',
+                            }
                         }
                     };
 
@@ -254,7 +275,6 @@ export const fbSignin=()=>{
                     type: FB_SIGNIN_FAILED,
                         payload: error
                     })
-
                     alert("Please try again! " + error);
               });
             }
@@ -270,6 +290,13 @@ export const emailSignup = (email, password) => {
                 var userDict = {
                     id: doLogin.user.uid,
                     email: doLogin.user.email,
+                    imageNumber: 0,
+                    imageData:{
+                        imageSubData:{
+                            imageName: '',
+                            imageDownloadUrl: '',
+                        }
+                    }
                 }
             console.log("uploading data on firestore")
             firestore()
@@ -296,26 +323,119 @@ export const emailSignup = (email, password) => {
 export const emailLogin = (email, password) => {
     return async dispatch => {
         dispatch({ type: START_EMAIL_PASSWORD_LOGIN });
-            console.log(email, password, "starting login")
-            await firebase
-            .auth()
-            .signInWithEmailAndPassword(email, password)
-            .then(function() {
-                console.log("Login successful")
-                dispatch({
-                    type: EMAIL_PASSWORD_LOGIN_SUCCESS,
-                })
+        console.log(email, password, "starting login")
+        await firebase
+        .auth()
+        .signInWithEmailAndPassword(email, password)
+        .then(function() {
+            console.log("Login successful")
+            dispatch({
+                type: EMAIL_PASSWORD_LOGIN_SUCCESS,
             })
-            .catch(function(error)
-            {   
-                
-                dispatch({
-                    type: EMAIL_PASSWORD_LOGIN_FAILED,
-                    payload: error
-                })
-                alert("Login Failed ", error)
+        })
+        .catch(function(error)
+        {         
+            dispatch({
+                type: EMAIL_PASSWORD_LOGIN_FAILED,
+                payload: error
             })
-            
-
+            alert("Login Failed ", error)
+        })     
     }
 };
+
+export const pickImage = (uid, userName) => {
+    return async dispatch => {
+        ImagePicker.showImagePicker(response => {
+        if (response.didCancel) {
+            console.log("user cancelled the image operation")
+        } else if (response.error) {
+            alert("Error: ", response.error)
+        } else {
+            const source = { uri: response.uri };
+            console.log("printing image uri: ", source)
+            dispatch({
+                type: PICKER_IMAGE_SOURCE_SUCCESS,
+                payload: source
+            })
+            console.log("calling uploadImage function")
+            const state = uploadImge(source.uri, uid, userName)
+            console.log("waiting for upload", state)
+        }
+        });
+    }
+  };
+
+async function uploadImge(uri, userId, imageName){   
+        
+        console.log("started image upload")
+        const docRef = await firestore().collection("users").doc(userId);
+        const Count = await (await docRef.get()).data().imageNumber
+        const imgRef =await storage().ref('userData/uploadImage/'+userId).child(imageName+Count).putFile(uri)
+        const imgReff = await storage().ref(imgRef.metadata.fullPath)
+        const url = await imgReff.getDownloadURL();
+        console.log("download url", url)
+        await firestore().collection("users").doc(userId).update({
+            imageNumber: Count+1,
+            imageData: {
+                imageName: {
+                    imageDownloadUrl: url,
+                    imageName: imageName+Count
+                }
+            }
+            });
+        console.log("finished uploading image and image counter incremented") 
+    {
+        /*const Blob = RNFetchBlob.polyfill.Blob
+        const fs = RNFetchBlob.fs
+        window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest
+        window.Blob = Blob
+        const Fetch = RNFetchBlob.polyfill.Fetch
+        window.fetch = new Fetch({
+            auto : true,
+            binaryContentTypes : [
+                'image/',
+                'video/',
+                'audio/',
+                'foo/',
+            ]
+        }).build()
+        return new Promise((resolve, reject) => {
+            const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri
+            let uploadBlob = null
+            const imageRef = storage().ref('userData/uploadImage/'+userId).child(imageName)
+            fs.readFile(uploadUri, 'base64')
+            .then((data) => {
+                return Blob.build(data, { type: '${mime};BASE64' })
+            })
+            .then((blob) => {
+                uploadBlob = blob
+                return imageRef.put(blob, { contentType: mime })
+            })
+            .then(() => {
+                uploadBlob.close()
+                return imageRef.getDownloadURL()
+            })
+            .then((url) => {
+                resolve(url)
+                console.log("Calling storeDownloadURL function")
+                storeDownloadURL(url, sessionId, userId)
+            })
+            .catch((error) => {
+                reject(error)
+            })
+        })*/
+    }
+}
+   
+export const storeDownloadURL = (getDownloadUrl, sessionId, uid) => {
+    console.log("inside download url function with parameters: download url, sessionId, uid", getDownloadUrl, sessionId, uid)
+    var tempData = {
+        DownloadUrl : getDownloadUrl,
+        SessionId: sessionId
+    }
+    firestore()
+        .collection("users")
+        .doc(uid)
+        .set(tempData)
+}

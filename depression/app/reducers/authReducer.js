@@ -12,7 +12,10 @@ import {START_GOOGLE_SIGN_IN,
     START_SIGN_OUT, 
     START_EMAIL_PASSWORD_LOGIN,
     EMAIL_PASSWORD_LOGIN_SUCCESS,
-    EMAIL_PASSWORD_LOGIN_FAILED
+    EMAIL_PASSWORD_LOGIN_FAILED,
+    PICKER_IMAGE_SOURCE_SUCCESS,
+    UPLOAD_IMAGE_STARTED,
+    UPLOAD_IMAGE_FINISHED,
 } from '../actions/types';
 
 const DEFAULT_STATE={
@@ -24,6 +27,7 @@ const DEFAULT_STATE={
     progressBarStatus: false,
     userFetchLoading: false,
     loading: false,
+    imageSource: '',
 }
 export default (state=DEFAULT_STATE, action)=>{
     switch(action.type){
@@ -88,20 +92,21 @@ export default (state=DEFAULT_STATE, action)=>{
         case START_GOOGLE_SIGN_IN:
             return{
                 ...state,
+                loading: true,
                 progressBarStatus: true,
             }
         case GOOGLE_SIGN_IN_SUCCESS:
             return{
                 ...state,
-                loading: false,
+                progressBarStatus: false,
                 user: action.payload,
                 isAuthenticated: true
             }
         case GOOGLE_SIGN_IN_FAILED:
             return{
                 ...state,
-                loading: false,
-                errorMessage: action.payload
+                errorMessage: action.payload,
+                progressBarStatus: false
             }
         case START_EMAIL_PASSWORD_LOGIN:
             return{
@@ -123,6 +128,21 @@ export default (state=DEFAULT_STATE, action)=>{
                 ...state,
                 progressBarStatus: false,
                 errorMessage: action.payload
+            }
+        case PICKER_IMAGE_SOURCE_SUCCESS:
+            return{
+                ...state,
+                imageSource: action.payload
+            }
+        case UPLOAD_IMAGE_STARTED:
+            return{
+                ...state,
+                progressBarStatus: true,
+            }
+        case UPLOAD_IMAGE_FINISHED:
+            return{
+                ...state,
+                progressBarStatus: false,
             }
         default:
             return state
