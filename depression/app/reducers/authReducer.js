@@ -16,6 +16,12 @@ import {START_GOOGLE_SIGN_IN,
     PICKER_IMAGE_SOURCE_SUCCESS,
     UPLOAD_IMAGE_STARTED,
     UPLOAD_IMAGE_FINISHED,
+    FIRESTORE_UPLOAD_STARTED,
+    FIRESTORE_UPLOAD_FAILED,
+    FIRESTORE_UPLOAD_SUCCESS,
+    START_EMAIL_PASSWORD_SIGNIN,
+    EMAIL_PASSWORD_SIGNIN_SUCCESS,
+    EMAIL_PASSWORD_SIGNIN_FAILED,
 } from '../actions/types';
 
 const DEFAULT_STATE={
@@ -28,6 +34,7 @@ const DEFAULT_STATE={
     userFetchLoading: false,
     loading: false,
     imageSource: '',
+    SignIn: false,
 }
 export default (state=DEFAULT_STATE, action)=>{
     switch(action.type){
@@ -42,7 +49,8 @@ export default (state=DEFAULT_STATE, action)=>{
                 ...state,
                 user:{},
                 loading: false,
-                isAuthenticated: false
+                isAuthenticated: false,
+                SignIn: false,
             }
         case SIGN_OUT_FAILED:
             return{
@@ -72,21 +80,21 @@ export default (state=DEFAULT_STATE, action)=>{
             return{
                 ...state,
                 loading: true,
-                isAuthenticated: false,
+                SignIn: false,
                 user:{}
             }
         case FB_SIGNIN_SUCCESS:
             return{
                 ...state,
                 loading: false,
-                isAuthenticated: true,
+                SignIn: true,
                 user: action.payload
             }
         case FB_SIGNIN_FAILED:
             return{
                 ...state,
                 loading: false,
-                isAuthenticated: false,
+                SignIn: false,
                 user:{}
             }
         case START_GOOGLE_SIGN_IN:
@@ -100,13 +108,33 @@ export default (state=DEFAULT_STATE, action)=>{
                 ...state,
                 progressBarStatus: false,
                 user: action.payload,
-                isAuthenticated: true
+                SignIn: true
             }
         case GOOGLE_SIGN_IN_FAILED:
             return{
                 ...state,
                 errorMessage: action.payload,
                 progressBarStatus: false
+            }
+        case START_EMAIL_PASSWORD_SIGNIN:
+            return{
+                ...state,
+                SignIn: false,
+                progressBarStatus: true,
+                user: {}
+            }
+        case EMAIL_PASSWORD_SIGNIN_SUCCESS:
+            return{
+                ...state, 
+                SignIn: true,
+                user: action.payload,
+                progressBarStatus: false,   
+            }
+        case EMAIL_PASSWORD_SIGNIN_FAILED:
+            return{
+                ...state,
+                progressBarStatus: false,
+                errorMessage: action.payload
             }
         case START_EMAIL_PASSWORD_LOGIN:
             return{
@@ -117,7 +145,7 @@ export default (state=DEFAULT_STATE, action)=>{
             }
         case EMAIL_PASSWORD_LOGIN_SUCCESS:
             return{
-                ...state,
+                ...state, 
                 isAuthenticated: true,
                 user: action.payload,
                 progressBarStatus: false,
@@ -139,10 +167,26 @@ export default (state=DEFAULT_STATE, action)=>{
                 ...state,
                 progressBarStatus: true,
             }
-        case UPLOAD_IMAGE_FINISHED:
+        case UPLOAD_IMAGE_FINISHED: 
             return{
                 ...state,
                 progressBarStatus: false,
+            }
+        case FIRESTORE_UPLOAD_STARTED:
+            return{
+                ...state,
+                progressBarStatus: true,
+            }
+        case FIRESTORE_UPLOAD_FAILED:
+            return{
+                ...state,
+                progressBarStatus: false,
+            }
+        case FIRESTORE_UPLOAD_SUCCESS:
+            return{
+                ...state,
+                progressBarStatus: false,
+                isAuthenticated: true,
             }
         default:
             return state

@@ -6,11 +6,16 @@ import {useSelector, useDispatch} from 'react-redux';
 import {createStackNavigator} from '@react-navigation/stack';
 
 const Stack = createStackNavigator();
-function AuthStack(){
+const AuthStack = () => {
     const dispatch = useDispatch();
     useEffect(()=>{
-        console.log("auth stack")
-        dispatch(fetchUser())
+        async function fetchUserAuth() {
+            console.log("auth stack")
+            await dispatch(fetchUser())
+            console.log("fetch user success")
+            
+        }
+        fetchUserAuth()
     },[])
     const isAuthenticated = useSelector(state => state.auth.isAuthenticated)
     console.log("value of isAuth", isAuthenticated)

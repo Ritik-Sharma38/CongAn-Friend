@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-import { View, FlatList, Text, StyleSheet, StatusBar,Image, Dimensions, TouchableOpacity } from 'react-native';
-import { Avatar, Card, Button, Icon  } from 'react-native-elements';
+import { View, Text, StyleSheet, Image, Dimensions, ProgressBarAndroid } from 'react-native';
+import { Card, Button  } from 'react-native-elements';
 import Carousel from 'react-native-snap-carousel'; 
-import {useDispatch} from 'react-redux';
+import {connect} from 'react-redux';
+import {firestoreUpload} from '../../actions/authAction';
 
 const { width, height } = Dimensions.get('window');
 
-export default class AvtarSelection extends Component {
+class AvtarSelection extends Component {
 
   constructor(props){
     super();
@@ -23,35 +24,43 @@ export default class AvtarSelection extends Component {
       videos: [
         { 
           uri: require('../../assets/teenGirl2.png'),
-          title: 'Write something about the TeenGirl.'
+          title: 'Write something about the TeenGirl.',
+          name: 'teenGirl2.png'
         },
         { 
           uri: require('../../assets/teenBoy2.png'),
-          title: 'Write something about the TeenBoy.' 
+          title: 'Write something about the TeenBoy.',
+          name: 'teenBoy2.png'
         },
         { 
           uri: require('../../assets/women.png'),
-          title: 'Write something about the Woman.' 
+          title: 'Write something about the Woman.',
+          name: 'women.png'
         },
         { 
           uri: require('../../assets/man2.png'),
-          title: 'Write something about the Man.' 
+          title: 'Write something about the Man.',
+          name: 'man2.png' 
         },
         { 
           uri: require('../../assets/teenboy.png'),
-          title: 'Write something about the avatar.' 
+          title: 'Write something about the avatar.',
+          name: 'teenboy.png' 
         },
         { 
           uri: require('../../assets/teenGirl.jpg'),
-          title: 'Write something about the avatar.' 
+          title: 'Write something about the avatar.',
+          name: 'teenGirl.jpg'
         },
         { 
           uri: require('../../assets/unname.png'),
-          title: 'Write something about the avatar.' 
+          title: 'Write something about the avatar.',
+          name: 'unname.png'
         },
         { 
           uri: require('../../assets/man.jpg'),
-          title: 'Write something about the avatar.' 
+          title: 'Write something about the avatar.',
+          name: 'man.jpg'
         },
       ]
     };
@@ -61,11 +70,15 @@ export default class AvtarSelection extends Component {
     this._carousel.snapToItem(2);
   }
 
-  profilePage = () => {
-    {this.props.navigation.navigate('Profile')}
+  profilePage = async(name) => {
+    var uid = this.props.user.id
+    console.log("user uid = ", uid)
+    console.log(name)
+    await this.props.firestoreUpload(name, uid)
+    console.log("upload success")
   }
 
-  _renderItem = ( {item, index} ) => {
+  _renderItem = ( {item} ) => {
     var buttonHeight = height/2
     return (
       <Card
@@ -78,15 +91,16 @@ export default class AvtarSelection extends Component {
           {item.title}
         </Text>
         <Button
-          onPress={this.profilePage}
+          onPress={()=>this.profilePage(item.name)}
           buttonStyle={{borderRadius: 25, marginVertical: buttonHeight/14}}
           title='This is me' />
+        
       </Card>  
     );
   }
 
   render = () => {
-    console.log("rendering Avtar selection page")
+    console.log("rendering Avtar selection page", this.props.user)
     return (
       <View style = {styles.container}>
         <View style = {styles.FirstHalf}>
@@ -128,3 +142,9 @@ const styles = StyleSheet.create({
   },
 });
 
+const mapStateToProps = (state) => ({
+  user: state.auth.user,
+  progressBarStatus: state.auth.progressBarStatus
+});
+const mapDispatch = { firestoreUpload };
+export default connect(mapStateToProps,mapDispatch)(AvtarSelection);

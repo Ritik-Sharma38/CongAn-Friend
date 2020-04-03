@@ -208,7 +208,7 @@ class LoginSignup extends React.Component {
   }
 
   render() {
-    console.log("rendering LoginSignup page", this.props.progressBarStatus, this.state.password, this.state.email)
+    console.log("rendering LoginSignup page", this.props.SignIn)
     return (
       <View
         style={{
@@ -272,14 +272,14 @@ class LoginSignup extends React.Component {
                 ...styles.button,
                 opacity: this.buttonOpacity,
                 transform: [{ translateY: this.buttonY }]
-              }}
-            >
+              }}>
               <Text style={{ fontSize: 20, }}>SIGN IN WITH GOOGLE</Text>
-              {this.state.progressBarStatus && (
+            </Animated.View>
+            { this.props.progressBarStatus && (
               <ProgressBarAndroid styleAttr="Horizontal" color="#2E71DC" />
             )}
-            </Animated.View>
         </TouchableOpacity>
+        
         {/**</TapGestureHandler>**/}
           <Animated.View
             style={{zIndex: this.textInputZindex,
@@ -331,6 +331,9 @@ class LoginSignup extends React.Component {
             </View>
             {this.props.progressBarStatus && (
               <ProgressBarAndroid styleAttr="Horizontal" color="#fff" />
+            )}
+            {this.props.SignIn && (
+              this.props.navigation.navigate('Avatar')
             )}
           </Animated.View>
         </View>
@@ -427,7 +430,7 @@ const mapState = (state) => ({
   email: state.email,
   password: state.password,
   progressBarStatus: state.auth.progressBarStatus,
-  imageSource: state.auth.imageSource
+  SignIn: state.auth.SignIn
 })
 
 const mapDispatch = { fbSignin, emailSignup, emailLogin, googleSignin};

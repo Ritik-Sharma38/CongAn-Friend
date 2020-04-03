@@ -25,6 +25,12 @@ import {START_FB_SIGNIN,
     PICKER_IMAGE_SOURCE_SUCCESS,
     UPLOAD_IMAGE_STARTED,
     UPLOAD_IMAGE_FINISHED,
+    FIRESTORE_UPLOAD_STARTED,
+    FIRESTORE_UPLOAD_FAILED,
+    FIRESTORE_UPLOAD_SUCCESS,
+    START_EMAIL_PASSWORD_SIGNIN,
+    EMAIL_PASSWORD_SIGNIN_SUCCESS,
+    EMAIL_PASSWORD_SIGNIN_FAILED,
 } from './types';
 import { act } from 'react-test-renderer';
 import { exp } from 'react-native-reanimated';
@@ -59,6 +65,16 @@ async function saveUser (user) {
     // Error saving data
   }
 };
+
+async function updateUser (user) {
+    try {
+      await AsyncStorage.mergeItem('user_details', JSON.stringify(user));
+        console.log("saved user")
+    } catch (error) {
+        console.log("error saving user",error)
+      // Error saving data
+    }
+  };
 
 async function clearUser(){
 try {
@@ -199,8 +215,8 @@ export const googleSignin=()=>{
                     type: GOOGLE_SIGN_IN_FAILED,
                         payload: error.code
                     })
-
-                    alert("Please try again! " + error.code);
+                    console.log("google signin failed", error.error)
+                    alert("Please try again! " + error.error);
               });
         }catch(error){
             console.log("google login error",error)
@@ -275,7 +291,7 @@ export const fbSignin=()=>{
                     type: FB_SIGNIN_FAILED,
                         payload: error
                     })
-                    alert("Please try again! " + error);
+                    alert("Please try again! " + error.code);
               });
             }
         }
@@ -284,7 +300,7 @@ export const fbSignin=()=>{
 
 export const emailSignup = (email, password) => {
     return async dispatch => {
-        dispatch({ type: START_EMAIL_PASSWORD_LOGIN });
+        dispatch({ type: START_EMAIL_PASSWORD_SIGNIN });
         try {
             const doLogin = await firebase.auth().createUserWithEmailAndPassword(email, password);
                 var userDict = {
@@ -304,18 +320,19 @@ export const emailSignup = (email, password) => {
                 .doc(doLogin.user.uid)
                 .set(userDict);
                 saveUser(userDict)
-                console.log("upload finished")
+                console.log("upload finished , user saved: ", userDict)
                 dispatch({
-                    type: EMAIL_PASSWORD_LOGIN_SUCCESS,
-                    payload: doLogin
+                    type: EMAIL_PASSWORD_SIGNIN_SUCCESS,
+                    payload: userDict
                 });
             }
         catch (error) {
             dispatch({ 
-                type: EMAIL_PASSWORD_LOGIN_FAILED,
+                type: EMAIL_PASSWORD_SIGNIN_FAILED,
                 payload: error
             });
-            alert("Failed : The email-id is already used")
+            alert(error.code)
+            console.log("login failed : ", error, error.code)
         }
     }
 };
@@ -324,28 +341,25 @@ export const emailLogin = (email, password) => {
     return async dispatch => {
         dispatch({ type: START_EMAIL_PASSWORD_LOGIN });
         console.log(email, password, "starting login")
-        await firebase
-        .auth()
-        .signInWithEmailAndPassword(email, password)
-        .then(function() {
-            console.log("Login successful")
+        try {
+            const loginData = await firebase.auth().signInWithEmailAndPassword(email, password);
+            console.log("Login successful", loginData)
             dispatch({
                 type: EMAIL_PASSWORD_LOGIN_SUCCESS,
+                payload: loginData
             })
-        })
-        .catch(function(error)
-        {         
-            dispatch({
-                type: EMAIL_PASSWORD_LOGIN_FAILED,
-                payload: error
-            })
-            alert("Login Failed ", error)
-        })     
+        }
+        catch (error) {
+            console.log("auth stack")
+        await dispatch(fetchUser())
+        console.log("fetch user success")
+        }   
     }
 };
 
 export const pickImage = (uid, userName) => {
     return async dispatch => {
+        dispatch({ type: UPLOAD_IMAGE_STARTED })
         ImagePicker.showImagePicker(response => {
         if (response.didCancel) {
             console.log("user cancelled the image operation")
@@ -359,23 +373,79 @@ export const pickImage = (uid, userName) => {
                 payload: source
             })
             console.log("calling uploadImage function")
-            const state = uploadImge(source.uri, uid, userName)
-            console.log("waiting for upload", state)
+            dispatch(uploadImge(source.uri, uid, userName))
         }
         });
     }
-  };
+};
 
-async function uploadImge(uri, userId, imageName){   
-        
-        console.log("started image upload")
+export const pickVideo = (uid, userName) => {
+    return async dispatch => {
+        dispatch({ type: UPLOAD_IMAGE_STARTED })
+        const options = {
+            title: 'Video Picker', 
+            mediaType: 'video', 
+            storageOptions:{
+              skipBackup:true,
+              path:'images'
+            }
+        };
+        ImagePicker.showImagePicker( options, (response) => {
+        if (response.didCancel) {
+            console.log("user cancelled the image operation")
+        } else if (response.error) {
+            alert("Error: ", response.error)
+        } else {
+            const source = { uri: response.uri };
+            console.log("printing video uri: ", source)
+            dispatch({
+                type: PICKER_IMAGE_SOURCE_SUCCESS,
+                payload: source
+            })
+            console.log("calling uploadImage function")
+            dispatch(uploadImge(source.uri, uid, userName))
+        }
+        });
+    }
+};
+
+export const firestoreUpload = (name, uid) => {
+    return async dispatch => {
+        dispatch({ type: FIRESTORE_UPLOAD_STARTED });
+        try {
+            console.log("firestoreUpload function running: parameters", name, uid)
+            await firestore().collection("users").doc(uid).update({ AvatarImg: name})
+            console.log("name written to firebase")
+            const imgReff = await storage().ref('userData/assets/'+name)
+            const url = await imgReff.getDownloadURL();
+            console.log(url)
+            var userDict = {
+                AvatarImg: url
+            }
+            updateUser(userDict)
+            dispatch(fetchUser())
+            dispatch({ type: FIRESTORE_UPLOAD_SUCCESS })
+            //also save locally
+        } 
+        catch (error) {
+            dispatch({ type: FIRESTORE_UPLOAD_FAILED });
+            console.log(" firebase upload error", error)
+            dispatch(userSignout())
+            alert("Error: Restarting application may fix", error.error)
+        }
+    }
+};
+export const uploadImge = (uri, userId, imageName) => {   
+    console.log("control here")
+    return async dispatch => {
+        console.log("started image upload", uri)
         const docRef = await firestore().collection("users").doc(userId);
         const Count = await (await docRef.get()).data().imageNumber
         const imgRef =await storage().ref('userData/uploadImage/'+userId).child(imageName+Count).putFile(uri)
         const imgReff = await storage().ref(imgRef.metadata.fullPath)
         const url = await imgReff.getDownloadURL();
         console.log("download url", url)
-        await firestore().collection("users").doc(userId).update({
+        await firestore().collection("users").doc(userId).set({
             imageNumber: Count+1,
             imageData: {
                 imageName: {
@@ -383,8 +453,10 @@ async function uploadImge(uri, userId, imageName){
                     imageName: imageName+Count
                 }
             }
-            });
-        console.log("finished uploading image and image counter incremented") 
+            }, {merge: true});
+        dispatch({ type: UPLOAD_IMAGE_FINISHED })
+        console.log("finished uploading image and image counter incremented")
+    } 
     {
         /*const Blob = RNFetchBlob.polyfill.Blob
         const fs = RNFetchBlob.fs
