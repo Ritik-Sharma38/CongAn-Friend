@@ -1,7 +1,7 @@
 import React, { Component, useState } from 'react';
 import {StyleSheet, Text, View, TouchableOpacity, SafeAreaView, ScrollView, Dimensions, Animated, ProgressBarAndroid} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
-import {userSignout, pickImage} from '../../actions/authAction';
+import {userSignout, pickImage, pickVideo} from '../../actions/authAction';
 import { Button, Avatar, Card, } from 'react-native-elements';
 
 const { width, height } = Dimensions.get('window');
@@ -52,7 +52,9 @@ const ProfileScreen = () => {
     const [trigerSlyf, setTrigerSlyf] = useState(true)
     const [trigerMps, setTrigerMps] = useState(true)
     const [trigerProfile, setTrigerProfile] = useState(true)
+    const [trigerAvtarVideo, setTrigerAvatarVideo] = useState(true)
     const user = useSelector(state => state.auth.user)
+    console.log("url", user.AvatarImg)
     const imageSource = useSelector(state => state.auth.imageSource)
     const progressBar = useSelector(state => state.auth.progressBarStatus) 
     const dispatch = useDispatch();
@@ -60,18 +62,26 @@ const ProfileScreen = () => {
     return (
         <SafeAreaView style = {styles.container}>
             <View style = {styles.FirstHalf}>
-                <Avatar
-                    size="large"
-                    rounded
-                    source={{
-                        uri: user.profileURL
-                    }}
-                    showEditButton
-                />
+                <View style={{flexDirection: 'row', }}>
+                    <Avatar
+                        size="large"
+                        rounded
+                        source={{
+                            uri: user.profileURL
+                        }}
+                    />
+                    <Avatar
+                        size="large"
+                        rounded
+                        source={{
+                            uri: user.AvatarImg
+                        }}
+                    />
+                    </View>
                 <Text style={{fontSize: 18,color: '#fff' }}>{user.fullname}</Text>
             </View>
             <ScrollView contentContainerStyle={styles.SecondHalf}>
-                { trigerImg && trigerHltme &&trigerDact && trigerSlyf && trigerMps && trigerProfile && (
+                { trigerImg && trigerHltme &&trigerDact && trigerSlyf && trigerMps && trigerProfile && trigerAvtarVideo && (
                     <View>
                         <Card
                             containerStyle={styles.Cards}>
@@ -108,7 +118,7 @@ const ProfileScreen = () => {
                                 <View>
                                     <ImageLoader 
                                         style={{width: width/1.2, height: height/2.6, alignContent: 'center'}}
-                                        source={require('../../assets/healty7.png')}
+                                        source={{ uri: user.AvatarImg}}
                                     />
                                     <TouchableOpacity onPress={() => setTalkToAvatarState(true)}>
                                         <Text style={{marginBottom: '2%', marginVertical: '2%', color: '#fff', alignSelf: 'center', fontSize: 22}}>Talk to Avatar</Text>
@@ -125,7 +135,7 @@ const ProfileScreen = () => {
                                             />
                                             <Text style={{alignSelf: 'center', fontSize: 18, color: '#fff'}}>Message</Text>
                                         </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => alert("under development")}>
+                                        <TouchableOpacity onPress={() => setTrigerAvatarVideo(false)}>
                                             <ImageLoader
                                                 style={{ marginHorizontal: '5%', width: width/2.5, height: height/5.3}}
                                                 source={require('../../assets/videocall3.png')}
@@ -187,8 +197,29 @@ const ProfileScreen = () => {
                 )}
                 { !trigerImg && (
                     <View style={{alignItems: 'center', alignContent: 'center'}}>
-                        <Text>triger form image</Text>
-                        <Button onPress={()=>dispatch(pickImage(user.id, user.fullname))} title="Upload image"/>
+                        <View style={{flexDirection: 'row', alignItems: 'center', alignContent: 'center'}}>
+                            <Button onPress={()=>dispatch(pickImage(user.id, user.fullname))} title="Upload image"/>
+                            <Button
+                                style={{marginHorizontal: '2%'}}
+                                onPress={()=> setTrigerImg(true)} title="back"/>
+                        </View>
+                        <ImageLoader
+                            style={{width: width/2, height: height/3}}
+                            source={{ uri: imageSource.uri }}
+                        />
+                        { progressBar && (
+                            <ProgressBarAndroid styleAttr="Horizontal" color="#2E71DC" />
+                        )}
+                    </View>
+                )}
+                { !trigerAvtarVideo && (
+                    <View style={{alignItems: 'center', alignContent: 'center'}}>
+                        <Button
+                        style={{marginHorizontal: '2%'}}
+                        onPress={()=>dispatch(pickVideo(user.id, user.fullname))} title="Upload video"/>
+                        <Button
+                        style={{marginHorizontal: '2%'}}
+                        onPress={()=> setTrigerAvatarVideo(true)} title="back"/>
                         <ImageLoader
                             style={{width: width/2, height: height/3}}
                             source={{ uri: imageSource.uri }}
