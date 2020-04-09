@@ -27,7 +27,15 @@ import {START_GOOGLE_SIGN_IN,
     DOCTOR_FB_SIGNIN_SUCCESS,
     DOCTOR_EMAIL_PASSWORD_SIGNIN_SUCCESS,
     DOCTOR_USER_FETCH_FROM_ASYNC_SUCCESS,
+    DOCTOR_PROFILE_CREATE_START,
+    DOCTOR_PROFILE_CREATE_UPDATE,
+    DOCTOR_PROFILE_CREATE_SUCCESS,
+    DOCTOR_PROFILE_CREATE_FAILED,
+    DOCTOR_AVAILABLE_LIST_FETCH_START,
+    DOCTOR_AVAILABLE_LIST_FETCH_SUCCESS,
+    DOCTOR_AVAILABLE_LIST_FETCH_FAILED,
 } from '../actions/types';
+import { act } from 'react-test-renderer';
 
 const DEFAULT_STATE={
     isAuthenticated: '',
@@ -40,6 +48,7 @@ const DEFAULT_STATE={
     loading: false,
     imageSource: '',
     SignIn: false,
+    DoctorList: [],
 }
 export default (state=DEFAULT_STATE, action)=>{
     switch(action.type){
@@ -227,6 +236,45 @@ export default (state=DEFAULT_STATE, action)=>{
                 ...state,
                 progressBarStatus: false,
                 isAuthenticated: true,
+            }
+        case DOCTOR_PROFILE_CREATE_START:
+            return{
+                ...state,
+                progressBarStatus: true,
+            }
+        case DOCTOR_PROFILE_CREATE_SUCCESS:
+            return{
+                ...state,
+                progressBarStatus: false,
+                isAuthenticated: 'doctor'
+            }
+        case DOCTOR_PROFILE_CREATE_UPDATE:
+            return{
+                ...state,
+                progressBarStatus: false,
+            }
+        case DOCTOR_PROFILE_CREATE_FAILED:
+            return{
+                ...state,
+                progressBarStatus: false,
+                errorMessage: action.payload
+            }
+        case DOCTOR_AVAILABLE_LIST_FETCH_START:
+            return{
+                ...state,
+                progressBarStatus: true,
+            }
+        case DOCTOR_AVAILABLE_LIST_FETCH_SUCCESS:
+            return{
+                ...state,
+                progressBarStatus: false,
+                DoctorList: action.payload,
+            }
+        case DOCTOR_AVAILABLE_LIST_FETCH_FAILED:
+            return{
+                ...state,
+                progressBarStatus: false,
+                errorMessage: action.payload
             }
         default:
             return state

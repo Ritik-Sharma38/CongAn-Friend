@@ -1,7 +1,7 @@
 import React, { Component, useState } from 'react';
 import {StyleSheet, Text, View, TouchableOpacity, SafeAreaView, ScrollView, Dimensions, Animated, ProgressBarAndroid, StatusBar} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
-import {userSignout, pickImage, pickVideo} from '../../actions/authAction';
+import {userSignout, } from '../../actions/authAction';
 import { Button, Avatar, Card } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -70,15 +70,15 @@ const ProfileScreen = () => {
                             size="large"
                             rounded
                             source={{
-                                uri: user.profileURL
+                                uri: user.profilePicture
                             }}
                             showEditButton
-                            onEditPress={() => alert("not allowed now")}
+                            onEditPress={() => navigation.navigate('Profile_Update')}
                         />
                     </View>
                 </View>
                 <View style={{alignItems: 'center'}}>
-                    <Text style={{fontSize: 18,color: '#fff'}}>{user.fullname}</Text>
+                    <Text style={{fontSize: 18,color: '#fff'}}>{user.Full_Name}</Text>
                 </View>
             </View>
             <ScrollView contentContainerStyle={styles.SecondHalf}>

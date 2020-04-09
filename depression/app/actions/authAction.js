@@ -3,10 +3,9 @@ import { firebase } from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import { GoogleSignin } from '@react-native-community/google-signin';
-import { AsyncStorage, Platform } from "react-native";
+import { AsyncStorage, Platform, Alert } from "react-native";
 import ImagePicker from 'react-native-image-picker';
 import RNFetchBlob from 'react-native-fetch-blob';
-import {useSelector, useDispatch} from 'react-redux';
 import {START_FB_SIGNIN,
     FB_SIGNIN_SUCCESS,
     FB_SIGNIN_FAILED,
@@ -36,9 +35,17 @@ import {START_FB_SIGNIN,
     DOCTOR_FB_SIGNIN_SUCCESS,
     DOCTOR_EMAIL_PASSWORD_SIGNIN_SUCCESS,
     DOCTOR_USER_FETCH_FROM_ASYNC_SUCCESS,
+    DOCTOR_PROFILE_CREATE_UPDATE,
+    DOCTOR_PROFILE_CREATE_START,
+    DOCTOR_PROFILE_CREATE_SUCCESS,
+    DOCTOR_PROFILE_CREATE_FAILED,
+    DOCTOR_AVAILABLE_LIST_FETCH_START,
+    DOCTOR_AVAILABLE_LIST_FETCH_SUCCESS,
+    DOCTOR_AVAILABLE_LIST_FETCH_FAILED,
 } from './types';
 import { act } from 'react-test-renderer';
 import { exp } from 'react-native-reanimated';
+
 
 function bootstrap() {
    GoogleSignin.configure({
@@ -437,7 +444,7 @@ export const emailLogin = (email, password, profileType) => {
                             payload: doc.data(),
                         })
                         saveUser(doc.data())
-                        console.log("login successful")
+                        console.log("Doctor login successful")
                     }
                 })
             }
@@ -545,24 +552,23 @@ export const firestoreUpload = (name, uid) => {
     }
 };
 export const uploadImge = (uri, userId, imageName) => {   
-    console.log("control here")
     return async dispatch => {
-        console.log("started image upload", uri)
+        console.log("started image upload", uri, imageName)
         const docRef = await firestore().collection("users").doc(userId);
         const Count = await (await docRef.get()).data().imageNumber
         const imgRef =await storage().ref('userData/uploadImage/'+userId).child(imageName+Count).putFile(uri)
         const imgReff = await storage().ref(imgRef.metadata.fullPath)
         const url = await imgReff.getDownloadURL();
         console.log("download url", url)
-        await firestore().collection("users").doc(userId).set({
-            imageNumber: Count+1,
-            imageData: {
-                imageName: {
-                    imageDownloadUrl: url,
-                    imageName: imageName+Count
-                }
+        var imageData = {
+            imageName: {
+                imageDownloadUrl: url,
+                imageName: imageName+Count
             }
-            }, {merge: true});
+        }
+        await firestore().collection("users").doc(userId).update({
+            imageData: firebase.firestore.FieldValue.arrayUnion(imageData)
+        })
         dispatch({ type: UPLOAD_IMAGE_FINISHED })
         console.log("finished uploading image and image counter incremented")
     } 
@@ -619,4 +625,118 @@ export const storeDownloadURL = (getDownloadUrl, sessionId, uid) => {
         .collection("users")
         .doc(uid)
         .set(tempData)
+}
+
+export const doctorProfileUpload = (
+    uid,
+    firstName,
+    lastNmae,
+    hospitalClinic,
+    specialization,
+    messagePatient
+    ) => {
+    return async dispatch => {
+        dispatch({ type: DOCTOR_PROFILE_CREATE_START })
+        try {
+            var basicInfo = {
+                First_Name: firstName,
+                Last_Name: lastNmae,
+                Full_Name: firstName+" "+lastNmae,
+                Hospital_Clinic_Name: hospitalClinic,
+                Specialization: specialization,
+                Message_for_patient: messagePatient,
+                channel: lastNmae+firstName,
+                profilePicture: ''
+            }
+            updateUser(basicInfo)
+            ImagePicker.showImagePicker(response => {
+                if (response.didCancel) {
+                    console.log("user cancelled the image operation")
+                } else if (response.error) {
+                    alert("Error: ", response.error)
+                } else {
+                    const source = { uri: response.uri };
+                    console.log("printing image uri: ", source)
+                    dispatch(DoctorProfile(basicInfo, source.uri, uid))
+                }
+            })   
+        }
+        catch (error) {
+            console.log("Profile creation failed : ", error.code, error)
+            Alert.alert('Something went worng', error.code)
+            dispatch({
+               type: DOCTOR_PROFILE_CREATE_FAILED,
+                payload: error,
+            })
+        }  
+    }
+}
+
+export const DoctorProfile = (basicInfo, uri ,uid) =>{
+    return async dispatch => {
+        try {
+            const imgRef =await storage().ref('userData/Doctors/'+uid).child('profilePic').putFile(uri)
+            const imgReff = await storage().ref(imgRef.metadata.fullPath)
+            const url = await imgReff.getDownloadURL();
+            await firestore().collection("doctors").doc(uid).update({ 
+                First_Name: basicInfo.First_Name,
+                Last_Name: basicInfo.Last_Name,
+                Full_Name: basicInfo.Full_Name,
+                Hospital_Clinic_Name: basicInfo.Hospital_Clinic_Name,
+                Specialization: basicInfo.Specialization,
+                Message_for_patient: basicInfo.Message_for_patient,
+                channel: basicInfo.channel,
+                profilePicture: url
+
+            }) 
+            var userDict = {
+                First_Name: basicInfo.First_Name,
+                Last_Name: basicInfo.Last_Name,
+                Full_Name: basicInfo.Full_Name,
+                Hospital_Clinic_Name: basicInfo.Hospital_Clinic_Name,
+                Specialization: basicInfo.Specialization,
+                Message_for_patient: basicInfo.Message_for_patient,
+                channel: basicInfo.channel,
+                profilePicture: url
+            }
+            updateUser(userDict)
+            await firestore().collection("DoctorsData").doc("AvailabeleDoctor").update({ 
+                DoctorsList: firebase.firestore.FieldValue.arrayUnion(userDict)
+            })
+            dispatch({
+                type: DOCTOR_PROFILE_CREATE_SUCCESS,
+            })
+            console.log("created proflie and updated doctors list")
+        }
+        catch (error) {
+            console.log("Profile creation failed : ", error.code, error)
+            Alert.alert('Something went worng', error.code)
+            dispatch({
+               type: DOCTOR_PROFILE_CREATE_FAILED,
+                payload: error,
+            })
+        }
+    }
+}
+
+export const fetchDoctorList = () => {
+    return async dispatch => {
+        dispatch({ type: DOCTOR_AVAILABLE_LIST_FETCH_START})
+        try {
+            const docRef = await firestore().collection("DoctorsData").doc("AvailabeleDoctor")
+            const DoctorList = await (await docRef.get()).data().DoctorsList
+            console.log(DoctorList)
+            dispatch({
+                type: DOCTOR_AVAILABLE_LIST_FETCH_SUCCESS,
+                payload: DoctorList
+            })
+        }
+        catch (error) {
+            console.log("Error in fetching Doctor List", error.code, error)
+            dispatch({
+                type: DOCTOR_AVAILABLE_LIST_FETCH_FAILED,
+                payload: error
+            })
+        }
+    }
 }
