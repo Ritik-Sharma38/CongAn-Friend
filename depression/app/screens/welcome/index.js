@@ -50,7 +50,7 @@ export default class Welcome extends Component {
     console.log('rendering welcome page');
     return (
       <View style={styles.container}>
-        <StatusBar backgroundColor='#2E71DC'/>
+        <StatusBar backgroundColor='rgba(0, 130, 255, 1)'/>
         <ImageLoader
           style={{ flex:1, resizeMode: 'center', }}
           source={require('../../assets/Logo.png')}

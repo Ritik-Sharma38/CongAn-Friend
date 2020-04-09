@@ -12,6 +12,7 @@ import {START_GOOGLE_SIGN_IN,
     START_SIGN_OUT, 
     START_EMAIL_PASSWORD_LOGIN,
     EMAIL_PASSWORD_LOGIN_SUCCESS,
+    DOCTOR_EMAIL_PASSWORD_LOGIN_SUCCESS,
     EMAIL_PASSWORD_LOGIN_FAILED,
     PICKER_IMAGE_SOURCE_SUCCESS,
     UPLOAD_IMAGE_STARTED,
@@ -22,10 +23,14 @@ import {START_GOOGLE_SIGN_IN,
     START_EMAIL_PASSWORD_SIGNIN,
     EMAIL_PASSWORD_SIGNIN_SUCCESS,
     EMAIL_PASSWORD_SIGNIN_FAILED,
+    DOCTOR_GOOGLE_SIGN_IN_SUCCESS,
+    DOCTOR_FB_SIGNIN_SUCCESS,
+    DOCTOR_EMAIL_PASSWORD_SIGNIN_SUCCESS,
+    DOCTOR_USER_FETCH_FROM_ASYNC_SUCCESS,
 } from '../actions/types';
 
 const DEFAULT_STATE={
-    isAuthenticated: false,
+    isAuthenticated: '',
     errorMessage: '',
     user:{},
     email: '',
@@ -67,12 +72,20 @@ export default (state=DEFAULT_STATE, action)=>{
             return{
                 ...state,
                 userFetchLoading: false,
+                isAuthenticated: false,
                 user:{}
             }
         case USER_FETCH_FROM_ASYNC_SUCCESS:
             return{
                 ...state,
                 isAuthenticated: true,
+                userFetchLoading: false,
+                user: action.payload
+            }
+        case DOCTOR_USER_FETCH_FROM_ASYNC_SUCCESS:
+            return{
+                ...state,
+                isAuthenticated: 'doctor',
                 userFetchLoading: false,
                 user: action.payload
             }
@@ -84,6 +97,13 @@ export default (state=DEFAULT_STATE, action)=>{
                 user:{}
             }
         case FB_SIGNIN_SUCCESS:
+            return{
+                ...state,
+                loading: false,
+                SignIn: true,
+                user: action.payload
+            }
+        case DOCTOR_FB_SIGNIN_SUCCESS:
             return{
                 ...state,
                 loading: false,
@@ -110,6 +130,13 @@ export default (state=DEFAULT_STATE, action)=>{
                 user: action.payload,
                 SignIn: true
             }
+        case DOCTOR_GOOGLE_SIGN_IN_SUCCESS:
+            return{
+                ...state,
+                progressBarStatus: false,
+                user: action.payload,
+                SignIn: true
+            }
         case GOOGLE_SIGN_IN_FAILED:
             return{
                 ...state,
@@ -124,6 +151,13 @@ export default (state=DEFAULT_STATE, action)=>{
                 user: {}
             }
         case EMAIL_PASSWORD_SIGNIN_SUCCESS:
+            return{
+                ...state, 
+                SignIn: true,
+                user: action.payload,
+                progressBarStatus: false,   
+            }
+        case DOCTOR_EMAIL_PASSWORD_SIGNIN_SUCCESS:
             return{
                 ...state, 
                 SignIn: true,
@@ -149,7 +183,13 @@ export default (state=DEFAULT_STATE, action)=>{
                 isAuthenticated: true,
                 user: action.payload,
                 progressBarStatus: false,
-                
+            }
+        case DOCTOR_EMAIL_PASSWORD_LOGIN_SUCCESS:
+            return{
+                ...state, 
+                isAuthenticated: 'doctor',
+                user: action.payload,
+                progressBarStatus: false,
             }
         case EMAIL_PASSWORD_LOGIN_FAILED:
             return{

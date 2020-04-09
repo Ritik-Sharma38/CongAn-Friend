@@ -1,15 +1,14 @@
 import React from 'react';
 import { ActivityIndicator, View,StyleSheet } from 'react-native';
 
-function Loader(props){
-    console.log("loader props",props)
+const Loader = () => {
+    console.log("loader props")
     return(
         <View style = {styles.container}>
             <ActivityIndicator
-               animating = {props.animating}
-               color = '#fff'
+               color = '#000'
                size = "large"
-               style = {styles.activityIndicator}/>
+            />
         </View>
     )
 }

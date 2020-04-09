@@ -1,8 +1,10 @@
 import React, { Component, useState } from 'react';
-import {StyleSheet, Text, View, TouchableOpacity, SafeAreaView, ScrollView, Dimensions, Animated, ProgressBarAndroid} from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity, SafeAreaView, ScrollView, Dimensions, Animated, ProgressBarAndroid, StatusBar} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import {userSignout, pickImage, pickVideo} from '../../actions/authAction';
-import { Button, Avatar, Card, } from 'react-native-elements';
+import { Button, Avatar, Card } from 'react-native-elements';
+import { useNavigation } from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const { width, height } = Dimensions.get('window');
 
@@ -43,7 +45,7 @@ class ImageLoader extends Component {
     }
 }
 
-
+ 
 const ProfileScreen = () => {
     const [talkToAvatarState, setTalkToAvatarState] = useState(false);
     const [trigerImg, setTrigerImg] = useState(true)
@@ -54,31 +56,45 @@ const ProfileScreen = () => {
     const [trigerProfile, setTrigerProfile] = useState(true)
     const [trigerAvtarVideo, setTrigerAvatarVideo] = useState(true)
     const user = useSelector(state => state.auth.user)
-    console.log("url", user.AvatarImg)
+    const navigation = useNavigation();
     const imageSource = useSelector(state => state.auth.imageSource)
     const progressBar = useSelector(state => state.auth.progressBarStatus) 
     const dispatch = useDispatch();
     console.log("profile detils",user)
     return (
         <SafeAreaView style = {styles.container}>
+            <StatusBar backgroundColor='#2E71DC'/>
             <View style = {styles.FirstHalf}>
-                <View style={{flexDirection: 'row', }}>
-                    <Avatar
-                        size="large"
-                        rounded
-                        source={{
-                            uri: user.profileURL
-                        }}
+                <View style={{flexDirection: 'row', justifyContent: 'flex-start'}}>
+                    <Icon.Button 
+                        backgroundColor="#2E71DC"
+                        name="menu"
+                        onPress={() => navigation.openDrawer()}
                     />
-                    <Avatar
-                        size="large"
-                        rounded
-                        source={{
-                            uri: user.AvatarImg
-                        }}
-                    />
+                    <View style={{flexDirection: 'row', marginHorizontal: '20%'}}>
+                        <Avatar
+                            size="large"
+                            rounded
+                            source={{
+                                uri: user.profileURL
+                            }}
+                            showEditButton
+                            onEditPress={() => alert("not allowed now")}
+                        />
+                        <Avatar
+                            size="large"
+                            rounded
+                            source={{
+                                uri: user.AvatarImg
+                            }}
+                            showEditButton
+                            onEditPress={() => navigation.navigate('Avatar')}
+                        />
                     </View>
-                <Text style={{fontSize: 18,color: '#fff' }}>{user.fullname}</Text>
+                </View>
+                <View style={{alignItems: 'center'}}>
+                    <Text style={{fontSize: 18,color: '#fff'}}>{user.fullname}</Text>
+                </View>
             </View>
             <ScrollView contentContainerStyle={styles.SecondHalf}>
                 { trigerImg && trigerHltme &&trigerDact && trigerSlyf && trigerMps && trigerProfile && trigerAvtarVideo && (
@@ -139,7 +155,7 @@ const ProfileScreen = () => {
                                             <ImageLoader
                                                 style={{ marginHorizontal: '5%', width: width/2.5, height: height/5.3}}
                                                 source={require('../../assets/videocall3.png')}
-                                            />
+                                            /> 
                                             <Text style={{alignSelf: 'center', fontSize: 18, color: '#fff'}}>video call</Text>
                                         </TouchableOpacity>
                                     </View>
@@ -172,7 +188,7 @@ const ProfileScreen = () => {
                                 <Text style={{marginBottom: '2%', marginVertical: '2%', color: '#fff', alignSelf: 'center', fontSize: 22}}>Social life </Text>
                             </TouchableOpacity>
                         </Card>
-                        <Card
+                        <Card 
                             containerStyle={styles.Cards}>
                             <ImageLoader
                             style={{width: width/1.1, height: height/2.6,}}
@@ -215,11 +231,17 @@ const ProfileScreen = () => {
                 { !trigerAvtarVideo && (
                     <View style={{alignItems: 'center', alignContent: 'center'}}>
                         <Button
-                        style={{marginHorizontal: '2%'}}
-                        onPress={()=>dispatch(pickVideo(user.id, user.fullname))} title="Upload video"/>
+                            style={{marginHorizontal: '2%'}}
+                            onPress={()=>dispatch(pickVideo(user.id, user.fullname))} title="Upload video"/>
                         <Button
-                        style={{marginHorizontal: '2%'}}
-                        onPress={()=> setTrigerAvatarVideo(true)} title="back"/>
+                            style={{marginHorizontal: '2%'}}
+                            onPress={()=> setTrigerAvatarVideo(true)} title="back"/>
+                        <Button
+                            style={{marginHorizontal: '2%'}}
+                            onPress={()=> setTrigerAvatarVideo(true)} title="Start a video call to Avatar"/>
+                        <Button
+                            style={{marginHorizontal: '2%'}}
+                            onPress={()=> navigation.navigate('Video')} title="Start a video call to Doctor"/>
                         <ImageLoader
                             style={{width: width/2, height: height/3}}
                             source={{ uri: imageSource.uri }}
@@ -265,8 +287,6 @@ const styles = StyleSheet.create({
     },
     FirstHalf: {
       height: height/8,
-      alignItems: 'center',
-      alignContent: 'center',
       backgroundColor: '#2E71DC',
     },
     SecondHalf: {

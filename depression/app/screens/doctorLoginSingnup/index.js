@@ -55,7 +55,7 @@ function runTiming(clock, value, dest) {
   ]);
 }
 
-class LoginSignup extends React.Component {
+class DoctorLoginSignup extends React.Component {
 
   async componentDidMount() {
     try {
@@ -217,6 +217,7 @@ class LoginSignup extends React.Component {
           justifyContent: 'flex-end'
         }}
       >
+        <StatusBar backgroundColor='#fff'/>
         <Animated.View
           style={{
             ...StyleSheet.absoluteFill,
@@ -250,7 +251,7 @@ class LoginSignup extends React.Component {
           </TapGestureHandler>
     
         {/**<TapGestureHandler onHandlerStateChange={this.onStateChange}>**/}
-          <TouchableOpacity onPress={this.props.fbSignin}>
+          <TouchableOpacity onPress={() => this.props.fbSignin("doctor")}>
             <Animated.View
             style={{
               ...styles.button,
@@ -266,7 +267,7 @@ class LoginSignup extends React.Component {
         </TouchableOpacity>
         {/**</TapGestureHandler>**/}
         {/** <TapGestureHandler onHandlerStateChange={this.onStateChange}>**/}
-        <TouchableOpacity onPress={this.props.googleSignin}>
+        <TouchableOpacity onPress={() => this.props.googleSignin("doctor")}>
             <Animated.View
               style={{
                 ...styles.button,
@@ -318,12 +319,12 @@ class LoginSignup extends React.Component {
               value={this.state.password}
             />
             <View style={{ flexDirection: 'row', }}>
-            <TouchableOpacity onPress={() => this.props.emailSignup(this.state.email, this.state.password)}>
+            <TouchableOpacity onPress={() => this.props.emailSignup(this.state.email, this.state.password, "doctor")}>
               <Animated.View style={styles.Lbutton}>
                 <Text Style= {{ fontsize: 20, fontWeight: 'bold' }}>SIGN IN</Text>
               </Animated.View>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.props.emailLogin(this.state.email, this.state.password)}>
+            <TouchableOpacity onPress={() => this.props.emailLogin(this.state.email, this.state.password, "doctor")}>
               <Animated.View style={styles.Rbutton}> 
                 <Text Style= {{ fontsize: 20, fontWeight: 'bold' }}>LOG IN</Text>
               </Animated.View>
@@ -333,7 +334,7 @@ class LoginSignup extends React.Component {
               <ProgressBarAndroid styleAttr="Horizontal" color="#fff" />
             )}
             {this.props.SignIn && (
-              this.props.navigation.navigate('Avatar')
+              this.props.navigation.navigate('doctorCreateProfile')
             )}
           </Animated.View>
         </View>
@@ -434,4 +435,4 @@ const mapState = (state) => ({
 })
 
 const mapDispatch = { fbSignin, emailSignup, emailLogin, googleSignin};
-export default connect(mapState,mapDispatch)(LoginSignup)
+export default connect(mapState,mapDispatch)(DoctorLoginSignup)

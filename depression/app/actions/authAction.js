@@ -15,6 +15,7 @@ import {START_FB_SIGNIN,
     GOOGLE_SIGN_IN_FAILED,
     START_EMAIL_PASSWORD_LOGIN,
     EMAIL_PASSWORD_LOGIN_SUCCESS,
+    DOCTOR_EMAIL_PASSWORD_LOGIN_SUCCESS,
     EMAIL_PASSWORD_LOGIN_FAILED,
     START_USER_FETCH_FROM_ASYNC,
     USER_FETCH_FROM_ASYNC_FAILED,
@@ -31,6 +32,10 @@ import {START_FB_SIGNIN,
     START_EMAIL_PASSWORD_SIGNIN,
     EMAIL_PASSWORD_SIGNIN_SUCCESS,
     EMAIL_PASSWORD_SIGNIN_FAILED,
+    DOCTOR_GOOGLE_SIGN_IN_SUCCESS,
+    DOCTOR_FB_SIGNIN_SUCCESS,
+    DOCTOR_EMAIL_PASSWORD_SIGNIN_SUCCESS,
+    DOCTOR_USER_FETCH_FROM_ASYNC_SUCCESS,
 } from './types';
 import { act } from 'react-test-renderer';
 import { exp } from 'react-native-reanimated';
@@ -141,11 +146,20 @@ export const fetchUser=()=>{
             const value = await AsyncStorage.getItem('user_details');
             if (value !== null) {
             // We have data!!
-            console.log(" value from async storage",value);
-            dispatch({
-                type: USER_FETCH_FROM_ASYNC_SUCCESS,
-                payload: JSON.parse(value)
-            })
+                console.log(" value from async storage",value);
+                var user = JSON.parse(value)
+                if (user.profile === 'doctor'){
+                    dispatch({
+                        type: DOCTOR_USER_FETCH_FROM_ASYNC_SUCCESS,
+                        payload: JSON.parse(value)
+                    })
+                }
+                else{
+                    dispatch({
+                        type: USER_FETCH_FROM_ASYNC_SUCCESS,
+                        payload: JSON.parse(value)
+                    })
+                }
             }else{
                 console.log("value not saved its null")
                 dispatch({
@@ -162,7 +176,7 @@ export const fetchUser=()=>{
         }
     }
 }
-export const googleSignin=()=>{
+export const googleSignin=( profileType )=>{
     bootstrap()
     return async dispatch =>{
         dispatch({
@@ -176,17 +190,46 @@ export const googleSignin=()=>{
             const credential = firebase.auth.GoogleAuthProvider.credential(user.idToken, user.accessToken);
             firebase.auth().signInWithCredential(credential).then(result =>{
                 var user = result.user;
-                var userDict = {
+                if(profileType === 'doctor'){
+                    console.log("writting data to doctor profile and firebase.")
+                    var userDict = {
                         id: user.uid,
                         fullname: user.displayName,
                         email: user.email,
                         profileURL: user.photoURL,
-                        
+                        profile: profileType,
                     };
-
+                    var temp = {
+                        id: user.uid,
+                        profile: profileType,
+                        google:{
+                            fullname: user.displayName,
+                            email: user.email,
+                            profileURL: user.photoURL,
+                        },
+                    };
+                    firestore()
+                        .collection("doctors")
+                        .doc(user.uid)
+                        .set(temp);
+                    saveUser(userDict)
+                    dispatch({
+                        type: DOCTOR_GOOGLE_SIGN_IN_SUCCESS,
+                        payload: userDict
+                    });
+                }
+                else{
+                    var userDict = {
+                        id: user.uid,
+                        fullname: user.displayName,
+                        email: user.email,
+                        profileURL: user.photoURL,
+                        profile: profileType,
+                    };
                 var temp = {
                         id: user.uid,
                         imageNumber: 0,
+                        profile: profileType,
                         google:{
                             fullname: user.displayName,
                             email: user.email,
@@ -199,18 +242,19 @@ export const googleSignin=()=>{
                             }
                         }
                     };
-                firestore()
-                  .collection("users")
-                  .doc(user.uid)
-                  .set(temp);
-                 saveUser(userDict)
-                dispatch({
-                  type: GOOGLE_SIGN_IN_SUCCESS,
-                  payload: userDict
-                });
-
-
+                    console.log("google signIn success from patient")
+                    firestore()
+                        .collection("users")
+                        .doc(user.uid)
+                        .set(temp);
+                    saveUser(userDict)
+                    dispatch({
+                        type: GOOGLE_SIGN_IN_SUCCESS,
+                        payload: userDict
+                    });
+                }
             }).catch(error => {
+                    clearUser()
                     dispatch({
                     type: GOOGLE_SIGN_IN_FAILED,
                         payload: error.code
@@ -220,6 +264,7 @@ export const googleSignin=()=>{
               });
         }catch(error){
             console.log("google login error",error)
+            clearUser()
             dispatch({
                 type:GOOGLE_SIGN_IN_FAILED,
                 payload: error.message
@@ -229,7 +274,7 @@ export const googleSignin=()=>{
         }
     }
 }
-export const fbSignin=()=>{
+export const fbSignin=( profileType )=>{
     return async (dispatch) =>{
         dispatch({
             type: START_FB_SIGNIN
@@ -252,61 +297,103 @@ export const fbSignin=()=>{
                 const credential = firebase.auth.FacebookAuthProvider.credential(data.accessToken);
                 firebase.auth().signInWithCredential(credential).then(result => {
                     var user = result.user;
-                    var userDict = {
-                        id: user.uid,
-                        fullname: user.displayName,
-                        email: user.email,
-                        profileURL: user.photoURL,
-                    };
-                console.log("uploading data on firestore")
-                    var temp = {
-                        id: user.uid,
-                        imageNumber: 0,
-                        fb:{
+                    if ( profileType === 'doctor'){
+                        var userDict = {
+                            id: user.uid,
                             fullname: user.displayName,
                             email: user.email,
-                            profileURL: user.photoURL
-                        },
-                        imageData:{
-                            imageSubData:{
-                                imageName: '',
-                                imageDownloadUrl: '',
+                            profileURL: user.photoURL,
+                            profile: profileType,
+                        };
+                        console.log("uploading data on firestore")
+                        var temp = {
+                            id: user.uid,
+                            profile: profileType,
+                            fb:{
+                                fullname: user.displayName,
+                                email: user.email,
+                                profileURL: user.photoURL
+                            },
+                        };
+                        firestore().collection("doctors").doc(user.uid).set(temp);
+                        saveUser(userDict)
+                        console.log("upload finished")
+                        dispatch({
+                            type: DOCTOR_FB_SIGNIN_SUCCESS,
+                            payload: userDict
+                        });
+                    }
+                    else{
+                        var userDict = {
+                            id: user.uid,
+                            fullname: user.displayName,
+                            email: user.email,
+                            profileURL: user.photoURL,
+                            profile: profileType,
+                        };
+                        console.log("uploading data on firestore")
+                        var temp = {
+                            id: user.uid,
+                            imageNumber: 0,
+                            profile: profileType,
+                            fb:{
+                                fullname: user.displayName,
+                                email: user.email,
+                                profileURL: user.photoURL
+                            },
+                            imageData:{
+                                imageSubData:{
+                                    imageName: '',
+                                    imageDownloadUrl: '',
+                                }
                             }
-                        }
-                    };
-
-                firestore()
-                  .collection("users")
-                  .doc(user.uid)
-                  .set(temp);
-                 saveUser(userDict)
-                console.log("upload finished")
-                dispatch({
-                  type: FB_SIGNIN_SUCCESS,
-                  payload: userDict
-                });
-              })
-              .catch(error => {
+                        };
+                        firestore().collection("users").doc(user.uid).set(temp);
+                        saveUser(userDict)
+                        console.log("upload finished")
+                        dispatch({
+                            type: FB_SIGNIN_SUCCESS,
+                            payload: userDict
+                        });
+                    }
+                })
+                .catch(error => {
                     dispatch({
                     type: FB_SIGNIN_FAILED,
                         payload: error
                     })
                     alert("Please try again! " + error.code);
-              });
+                });
             }
         }
     }
 }
 
-export const emailSignup = (email, password) => {
+export const emailSignup = (email, password, profileType) => {
     return async dispatch => {
         dispatch({ type: START_EMAIL_PASSWORD_SIGNIN });
         try {
             const doLogin = await firebase.auth().createUserWithEmailAndPassword(email, password);
+            console.log("uploading data on firestore")
+            if (profileType === 'doctor'){
+                var userDict = {
+                    id: doLogin.user.uid,
+                    email: doLogin.user.email,
+                    profile: profileType,
+                }
+                await firestore().collection("doctors").doc(doLogin.user.uid).set(userDict);
+                saveUser(userDict)
+                console.log("upload finished , user saved: ", userDict)
+                dispatch({
+                    type: DOCTOR_EMAIL_PASSWORD_SIGNIN_SUCCESS,
+                    payload: userDict
+                });
+            }else{
                 var userDict = {
                     id: doLogin.user.uid,
                     email: doLogin.user.email,
                     imageNumber: 0,
+                    profile: profileType,
                     imageData:{
                         imageSubData:{
                             imageName: '',
@@ -314,11 +401,7 @@ export const emailSignup = (email, password) => {
                         }
                     }
                 }
-            console.log("uploading data on firestore")
-            firestore()
-                .collection("users")
-                .doc(doLogin.user.uid)
-                .set(userDict);
+                await firestore().collection("users").doc(doLogin.user.uid).set(userDict);
                 saveUser(userDict)
                 console.log("upload finished , user saved: ", userDict)
                 dispatch({
@@ -326,33 +409,60 @@ export const emailSignup = (email, password) => {
                     payload: userDict
                 });
             }
+        }
         catch (error) {
             dispatch({ 
                 type: EMAIL_PASSWORD_SIGNIN_FAILED,
                 payload: error
             });
             alert(error.code)
-            console.log("login failed : ", error, error.code)
+            console.log("Signup failed : ", error, error.code)
         }
     }
 };
 
-export const emailLogin = (email, password) => {
+export const emailLogin = (email, password, profileType) => {
     return async dispatch => {
         dispatch({ type: START_EMAIL_PASSWORD_LOGIN });
         console.log(email, password, "starting login")
         try {
             const loginData = await firebase.auth().signInWithEmailAndPassword(email, password);
-            console.log("Login successful", loginData)
-            dispatch({
-                type: EMAIL_PASSWORD_LOGIN_SUCCESS,
-                payload: loginData
-            })
+            if (profileType === 'doctor'){
+                const docRef = await firestore().collection("doctors").doc(loginData.user.uid);
+                docRef.get().then(function(doc){
+                    if(doc.exists){
+                        console.log(doc.data())
+                        dispatch({
+                            type: DOCTOR_EMAIL_PASSWORD_LOGIN_SUCCESS,
+                            payload: doc.data(),
+                        })
+                        saveUser(doc.data())
+                        console.log("login successful")
+                    }
+                })
+            }
+            else{
+                const docRef = await firestore().collection("users").doc(loginData.user.uid);
+                docRef.get().then(function(doc){
+                    if(doc.exists){
+                        console.log(doc.data())
+                        dispatch({
+                            type: EMAIL_PASSWORD_LOGIN_SUCCESS,
+                            payload: doc.data(),
+                        })
+                        saveUser(doc.data())
+                        console.log("Login successful")
+                    }
+                })
+            }
         }
         catch (error) {
-            console.log("auth stack")
-        await dispatch(fetchUser())
-        console.log("fetch user success")
+            console.log("Login failed", error.code, error)
+            dispatch({
+                type: EMAIL_PASSWORD_LOGIN_FAILED,
+                payload: error
+            })
+            alert("Login failed ", error.code)
         }   
     }
 };
@@ -414,18 +524,17 @@ export const firestoreUpload = (name, uid) => {
         dispatch({ type: FIRESTORE_UPLOAD_STARTED });
         try {
             console.log("firestoreUpload function running: parameters", name, uid)
-            await firestore().collection("users").doc(uid).update({ AvatarImg: name})
-            console.log("name written to firebase")
             const imgReff = await storage().ref('userData/assets/'+name)
             const url = await imgReff.getDownloadURL();
             console.log(url)
+            await firestore().collection("users").doc(uid).update({ AvatarImg: url})
+            console.log("url written to firestore")
             var userDict = {
                 AvatarImg: url
             }
             updateUser(userDict)
             dispatch(fetchUser())
             dispatch({ type: FIRESTORE_UPLOAD_SUCCESS })
-            //also save locally
         } 
         catch (error) {
             dispatch({ type: FIRESTORE_UPLOAD_FAILED });

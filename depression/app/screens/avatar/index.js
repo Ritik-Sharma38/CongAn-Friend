@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Image, Dimensions, ProgressBarAndroid } from 'react-native';
+import { View, Text, StyleSheet, Image, Dimensions, ProgressBarAndroid, StatusBar } from 'react-native';
 import { Card, Button  } from 'react-native-elements';
 import Carousel from 'react-native-snap-carousel'; 
 import {connect} from 'react-redux';
@@ -94,7 +94,6 @@ class AvtarSelection extends Component {
           onPress={()=>this.profilePage(item.name)}
           buttonStyle={{borderRadius: 25, marginVertical: buttonHeight/14}}
           title='This is me' />
-        
       </Card>  
     );
   }
@@ -103,6 +102,7 @@ class AvtarSelection extends Component {
     console.log("rendering Avtar selection page", this.props.user)
     return (
       <View style = {styles.container}>
+        <StatusBar backgroundColor='#2E71DC'/>
         <View style = {styles.FirstHalf}>
           <Carousel
             ref={ (c) => { this._carousel = c; } }
@@ -114,6 +114,9 @@ class AvtarSelection extends Component {
             layoutCardOffset={8}
             firstItem={0}
           />
+          { this.props.progressBarStatus && (
+              <ProgressBarAndroid styleAttr="Horizontal" color="#fff" />
+          )}
         </View>
         <View style = {styles.SecondHalf}>
           <Text style={{fontSize: 50}}>
@@ -130,11 +133,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   FirstHalf: {
-    flexDirection: 'row',
-    flexWrap: 'nowrap',
     height: height/1.5,
-    alignItems: 'center',
-    alignContent: 'center',
     backgroundColor: '#2E71DC',
   },
   SecondHalf: {
@@ -148,3 +147,4 @@ const mapStateToProps = (state) => ({
 });
 const mapDispatch = { firestoreUpload };
 export default connect(mapStateToProps,mapDispatch)(AvtarSelection);
+ 
