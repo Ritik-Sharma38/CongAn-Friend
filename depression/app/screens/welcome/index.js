@@ -43,7 +43,7 @@ export default class Welcome extends Component {
   appDescriptionCall(){
     setTimeout(() => {
       {this.props.navigation.navigate('authStack')}
-    }, 3000);
+    }, 2000);
   }
   
   render() {

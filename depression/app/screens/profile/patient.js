@@ -1,7 +1,7 @@
-import React, { Component, useState } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import {StyleSheet, Text, View, TouchableOpacity, SafeAreaView, ScrollView, Dimensions, Animated, ProgressBarAndroid, StatusBar} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
-import {userSignout, pickImage, pickVideo} from '../../actions/authAction';
+import {userSignout, pickImage, pickVideo, fetchDoctorList} from '../../actions/authAction';
 import { Button, Avatar, Card } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -60,20 +60,23 @@ const ProfileScreen = () => {
     const imageSource = useSelector(state => state.auth.imageSource)
     const progressBar = useSelector(state => state.auth.progressBarStatus) 
     const dispatch = useDispatch();
+    useEffect(() => {
+        dispatch(fetchDoctorList())
+    }, []);
     console.log("profile detils",user)
     return (
         <SafeAreaView style = {styles.container}>
             <StatusBar backgroundColor='#2E71DC'/>
             <View style = {styles.FirstHalf}>
-                <View style={{flexDirection: 'row', justifyContent: 'flex-start'}}>
-                    <Icon.Button 
+                <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignContent:'center', alignItems: 'center'}}>
+                    <Icon.Button
                         backgroundColor="#2E71DC"
                         name="menu"
                         onPress={() => navigation.openDrawer()}
                     />
                     <View style={{flexDirection: 'row', marginHorizontal: '20%'}}>
                         <Avatar
-                            size="large"
+                            size='large'
                             rounded
                             source={{
                                 uri: user.profileURL
@@ -92,7 +95,7 @@ const ProfileScreen = () => {
                         />
                     </View>
                 </View>
-                <View style={{alignItems: 'center'}}>
+                <View style={{alignItems: 'center', alignContent: 'center', paddingTop: 5,paddingBottom: 5,}}>
                     <Text style={{fontSize: 18,color: '#fff'}}>{user.fullname}</Text>
                 </View>
             </View>
@@ -286,7 +289,6 @@ const styles = StyleSheet.create({
       flex: 1,
     },
     FirstHalf: {
-      height: height/8,
       backgroundColor: '#2E71DC',
     },
     SecondHalf: {

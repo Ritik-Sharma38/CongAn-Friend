@@ -14,7 +14,7 @@ export const DoctorSignedIn =()=> (
         }}>
         <Drawer.Screen name="Profile" component={ProfileScreen} />
         <Drawer.Screen name="Video" component={Video} />
-        <Drawer.Screen name="Testt" component={Test} />
+        <Drawer.Screen name="VideoCall" component={Test} />
         <Drawer.Screen name="Profile_Update" component={DoctorCreateProfile} />
     </Drawer.Navigator>
 );

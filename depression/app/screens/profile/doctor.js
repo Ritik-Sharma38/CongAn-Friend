@@ -59,7 +59,7 @@ const ProfileScreen = () => {
         <SafeAreaView style = {styles.container}>
             <StatusBar backgroundColor='#2E71DC'/>
             <View style = {styles.FirstHalf}>
-                <View style={{flexDirection: 'row', justifyContent: 'flex-start'}}>
+                <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignContent:'center', alignItems: 'center'}}>
                     <Icon.Button 
                         backgroundColor="#2E71DC"
                         name="menu"
@@ -90,7 +90,7 @@ const ProfileScreen = () => {
                             style={{width: width/1.1, height: height/2.6,}}
                             source={require('../../assets/healty0.png')}
                             />
-                            <TouchableOpacity onPress={() => setTrigerTimeline(false)}>
+                            <TouchableOpacity onPress={() => navigation.navigate('VideoCall', { channel: user.channel })}>
                                 <Text style={{marginBottom: '2%', marginVertical: '3%', color: '#fff', alignSelf: 'center', fontSize: 22}}>Timeline and Patient history</Text>
                             </TouchableOpacity>
                         </Card>
@@ -144,7 +144,6 @@ const styles = StyleSheet.create({
       flex: 1,
     },
     FirstHalf: {
-      height: height/8,
       backgroundColor: '#2E71DC',
     },
     SecondHalf: {

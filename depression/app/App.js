@@ -5,7 +5,7 @@ import AuthStack from './navigators/authStack';
 import Welcome from './screens/welcome'; 
 
 const Stack = createStackNavigator();
-
+console.disableYellowBox = true;
 function App(){
     return (
       <NavigationContainer>

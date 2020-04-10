@@ -51,6 +51,17 @@ const DoctorCreateProfile = () => {
     const [specialization, setSpecialization] = useState('')
     const [messagePatient, setMessagePatient] = useState('')
     const progressBar = useSelector(state => state.auth.progressBarStatus)
+    function uploadData(){
+      dispatch(doctorProfileUpload(
+        user.id,
+        firstName,
+        lastNmae,
+        hospitalClinic,
+        specialization,
+        messagePatient
+      ))
+      setUploadImg('Creating profile.....')
+    }
     return (
         <View style={styles.container}>
             <StatusBar backgroundColor="rgba(0, 130, 255, 1)" barStyle="light-content" />
@@ -98,14 +109,7 @@ const DoctorCreateProfile = () => {
                             placeholderTextColor='black'
                             onChangeText = { messagePatient => setMessagePatient(messagePatient)}
                         />
-                        <TouchableOpacity style={styles.button} onPress={() => dispatch(doctorProfileUpload(
-                                user.id,
-                                firstName,
-                                lastNmae,
-                                hospitalClinic,
-                                specialization,
-                                messagePatient
-                            ))}>
+                        <TouchableOpacity style={styles.button} onPress={() => uploadData()}>
                             <Text style={{color: '#fff'}}>{uploadImg}</Text>
                         </TouchableOpacity>
                         {progressBar && (

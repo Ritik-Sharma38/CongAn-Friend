@@ -48,26 +48,28 @@ export default class PatientDoctor extends Component {
             <StatusBar backgroundColor="rgba(0, 130, 255, 1)" barStyle="light-content" />
             <View style = {styles.FirstHalf}>
                 <ImageLoader
-                    style={{resizeMode: 'center'}}
+                    style={{marginTop: '20%', width: '50%', height: '50%'}}
                     source={require('../../assets/Logo.png')}
                 />
-                <Text style={{fontSize: 30, color: '#fff'}}>Let's us know about you</Text>
+                <View>
+                  <Text style={{fontSize: 30, color: '#fff', marginTop:'15%'}}>Let's us know about you</Text>
+                </View>
             </View>
-            <View>
-                <View style={{flexDirection: 'row' , marginLeft: '10%', marginTop: '15%'}}>
-                    <View>
+            <View style={styles.secondHalf}>
+                <View style={{flexDirection: 'row'}}>
+                    <View style={{width: width/2, height: height*0.24, alignItems: 'center'}}>
                         <Avatar
-                            size="xlarge"
+                            size= 'xlarge'
                             rounded
                             source={require('../../assets/doctor.png')}
                             title="Doctor"
                             onPress={() => this.props.navigation.navigate('dloginSignup')}
                         />
                         <View style={{alignSelf:'center'}}>
-                                <Text style={{fontSize: 25,color: '#000'}}>Doctor</Text>
+                          <Text style={{fontSize: 25,color: '#000'}}>Doctor</Text>
                         </View>
                     </View>
-                    <View style={{marginLeft: '8%'}}>
+                    <View style={{width: width/2, height: height*0.24, alignItems: 'center'}}>
                         <Avatar
                             size="xlarge"
                             rounded
@@ -91,10 +93,14 @@ const styles = StyleSheet.create({
       flex: 1,
     },
     FirstHalf: {
-      height: height/1.5,
+      height: '60%',
       backgroundColor: 'rgba(0, 130, 255, 1)',
       alignContent: 'center',
       alignItems: 'center'
     },
+    secondHalf: {
+      height: '40%',
+      marginTop: height*0.09
+    }
 });
   

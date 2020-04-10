@@ -18,7 +18,7 @@ export const PatientSignedIn =()=> (
         <Drawer.Screen name="Profile" component={ProfileScreen} />
         <Drawer.Screen name="Video" component={Video} />
         <Drawer.Screen name="Avatar" component={AvtarSelection} />
-        <Drawer.Screen name="Testt" component={Test} />
+        <Drawer.Screen name="VideoCall" component={Test} />
         <Drawer.Screen name="TalkToDoctor" component={TalkToDoctor} />
     </Drawer.Navigator>
 );
