@@ -100,7 +100,7 @@ const ProfileScreen = () => {
                             style={{width: width/1.1, height: height/2.6,}}
                             source={require('../../assets/healty8.png')}
                             />
-                            <TouchableOpacity onPress={() => setTrigerMps(false)} >
+                            <TouchableOpacity onPress={() => navigation.navigate('BookedAppointment')} >
                                 <Text style={{marginBottom: '2%', marginVertical: '2%', color: '#fff', alignSelf: 'center', fontSize: 22}}>Booked appointments</Text>
                             </TouchableOpacity>
                         </Card>

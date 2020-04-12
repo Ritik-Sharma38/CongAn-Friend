@@ -41,7 +41,7 @@ const TalkToDoctor = () => {
         Hospital_Clinic_Name: "you don't have any appointment",
         BookingTime: '',
     })
-    console.log("profile detils",user)
+    console.log("profile detils",DocInfoCard.Channel)
     return (
         <SafeAreaView style = {styles.container} >
             <StatusBar backgroundColor='#2E71DC'/>
@@ -145,7 +145,7 @@ const TalkToDoctor = () => {
                         <TouchableOpacity style={styles.Lbutton}>
                             <Text style={{color: 'white'}}>Call</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.Rbutton} onPress={() => navigation.navigate('VideoCall', { Channel: DocInfoCard.Channel })}>
+                        <TouchableOpacity style={styles.Rbutton} onPress={() => navigation.navigate('VideoCall', { channel: DocInfoCard.Channel })}>
                             <Text style={{color: 'white'}}>Video Call</Text>
                         </TouchableOpacity>
                         </View>
