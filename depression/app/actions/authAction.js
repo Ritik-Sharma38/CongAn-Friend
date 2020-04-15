@@ -400,6 +400,7 @@ export const emailSignup = (email, password, profileType) => {
                     id: doLogin.user.uid,
                     email: doLogin.user.email,
                     imageNumber: 0,
+                    fullname: 'noName',
                     profile: profileType,
                     imageData:{
                         imageSubData:{
@@ -567,7 +568,8 @@ export const uploadImge = (uri, userId, imageName) => {
             }
         }
         await firestore().collection("users").doc(userId).update({
-            imageData: firebase.firestore.FieldValue.arrayUnion(imageData)
+            imageData: firebase.firestore.FieldValue.arrayUnion(imageData),
+            imageNumber: Count+1
         })
         dispatch({ type: UPLOAD_IMAGE_FINISHED })
         console.log("finished uploading image and image counter incremented")
