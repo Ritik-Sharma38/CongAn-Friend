@@ -152,7 +152,7 @@ const ProfileScreen = () => {
                                                 style={{width: width/2.5, height: height/5.3}}
                                                 source={require('../../assets/chat.png')}
                                             />
-                                            <Text style={{alignSelf: 'center', fontSize: 18, color: '#fff'}}>Message</Text>
+                                            <Text style={{alignSelf: 'center', fontSize: 18, color: '#fff'}}>Questions</Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity onPress={() => setTrigerAvatarVideo(false)}>
                                             <ImageLoader
