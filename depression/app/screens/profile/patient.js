@@ -147,7 +147,7 @@ const ProfileScreen = () => {
                             { talkToAvatarState && (
                                 <View>
                                     <View style={{ flexDirection: 'row',}}>
-                                        <TouchableOpacity onPress={() => alert("under development")}>
+                                        <TouchableOpacity onPress={() => navigation.navigate('SurveyScreen')}>
                                             <ImageLoader
                                                 style={{width: width/2.5, height: height/5.3}}
                                                 source={require('../../assets/chat.png')}

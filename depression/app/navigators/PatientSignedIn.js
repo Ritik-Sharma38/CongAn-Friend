@@ -6,8 +6,9 @@ import Video from '../screens/video';
 import AvtarSelection from "../screens/avatar";
 import Test from '../screens/test';
 import TalkToDoctor from '../screens/PatientScreens/TalkToDoctor';
+import SurveyScreen from '../screens/Survey/SurveyScreen';
 
-const Drawer = createDrawerNavigator();
+const Drawer = createStackNavigator();
 
 export const PatientSignedIn =()=> (
     <Drawer.Navigator
@@ -20,6 +21,7 @@ export const PatientSignedIn =()=> (
         <Drawer.Screen name="Avatar" component={AvtarSelection} />
         <Drawer.Screen name="VideoCall" component={Test} />
         <Drawer.Screen name="TalkToDoctor" component={TalkToDoctor} />
+        <Drawer.Screen name="SurveyScreen" component={SurveyScreen} />
     </Drawer.Navigator>
 );
 
