@@ -1,46 +1,46 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react';
 import {
   StyleSheet,
   Button,
-  ScrollView,
+  ProgressBarAndroid,
   Text,
   TextInput,
-  View
-} from 'react-native'
-import { SimpleSurvey } from 'react-native-simple-survey'
-import { COLORS } from '../../res/validColors'
-import { useNavigation } from '@react-navigation/native'
-
-const GREEN = 'rgba(141,196,63,1)'
-const PURPLE = 'rgba(108,48,237,1)'
-
+  View,
+} from 'react-native';
+import {SimpleSurvey} from 'react-native-simple-survey';
+import {COLORS} from '../../res/validColors';
+import {connect} from 'react-redux';
+import {avatarFormUpload} from '../../actions/authAction';
+import {ScrollView} from 'react-native-gesture-handler';
+const GREEN = 'rgba(141,196,63,1)';
+const PURPLE = 'rgba(108,48,237,1)';
 
 const survey = [
   {
     questionType: 'Info',
     questionText:
-      'Welcome2 to the React Native Simple Survey Example app! Tap next to continue'
+      'Welcome2 to the React Native Simple Survey Example app! Tap next to continue',
   },
   {
     questionType: 'TextInput',
     questionText:
       'Simple Survey supports free form text input.\n\nWhat is your favorite color?',
     questionId: 'favoriteColor',
-    placeholderText: 'Tell me your favorite color!'
+    3: 'Tell me your favorite color!',
   },
   {
     questionType: 'NumericInput',
     questionText:
       'It also supports numeric input. Enter your favorite number here!',
     questionId: 'favoriteNumber',
-    placeholderText: '42'
+    placeholderText: '42',
   },
   {
     questionType: 'NumericInput',
     questionText:
       'New to 3.0, default values!\n\nHow many balls can you juggle at once?',
     questionId: 'jugglingBalls',
-    defaultValue: '0'
+    defaultValue: '0',
   },
   {
     questionType: 'SelectionGroup',
@@ -50,25 +50,25 @@ const survey = [
     options: [
       {
         optionText: 'Dogs',
-        value: 'dog'
+        value: 'dog',
       },
       {
         optionText: 'Cats',
-        value: 'cat'
+        value: 'cat',
       },
       {
         optionText: 'Ferrets',
-        value: 'ferret'
+        value: 'ferret',
       },
       {
         optionText: 'Snakes',
-        value: 'snake'
+        value: 'snake',
       },
       {
         optionText: 'Guinea pigs',
-        value: 'guinea'
-      }
-    ]
+        value: 'guinea',
+      },
+    ],
   },
   {
     questionType: 'MultipleSelectionGroup',
@@ -76,42 +76,42 @@ const survey = [
     questionId: 'favoriteFoods',
     questionSettings: {
       maxMultiSelect: 3,
-      minMultiSelect: 2
+      minMultiSelect: 2,
     },
     options: [
       {
         optionText: 'Sticky rice dumplings',
-        value: 'sticky rice dumplings'
+        value: 'sticky rice dumplings',
       },
       {
         optionText: 'Pad Thai',
-        value: 'pad thai'
+        value: 'pad thai',
       },
       {
         optionText: 'Steak and Eggs',
-        value: 'steak and eggs'
+        value: 'steak and eggs',
       },
       {
         optionText: 'Tofu',
-        value: 'tofu'
+        value: 'tofu',
       },
       {
         optionText: 'Ice cream!',
-        value: 'ice cream'
+        value: 'ice cream',
       },
       {
         optionText: 'Injera',
-        value: 'injera'
+        value: 'injera',
       },
       {
         optionText: 'Biryani',
-        value: 'biryani'
+        value: 'biryani',
       },
       {
         optionText: 'Tamales',
-        value: 'tamales'
-      }
-    ]
+        value: 'tamales',
+      },
+    ],
   },
   {
     questionType: 'MultipleSelectionGroup',
@@ -121,26 +121,26 @@ const survey = [
     questionSettings: {
       maxMultiSelect: 2,
       minMultiSelect: 2,
-      autoAdvance: true
+      autoAdvance: true,
     },
     options: [
       {
         optionText: 'Reading a good book',
-        value: 'reading'
+        value: 'reading',
       },
       {
         optionText: 'Going on vacation',
-        value: 'vacations'
+        value: 'vacations',
       },
       {
         optionText: 'Eating meals with family',
-        value: 'meals'
+        value: 'meals',
       },
       {
         optionText: 'Heading to the ocean',
-        value: 'ocean'
-      }
-    ]
+        value: 'ocean',
+      },
+    ],
   },
   {
     questionType: 'SelectionGroup',
@@ -148,40 +148,40 @@ const survey = [
       'Simple Survey can also simulate radio button behavior. Pick from below: ',
     questionId: 'radio',
     questionSettings: {
-      allowDeselect: false
+      allowDeselect: false,
     },
     options: [
       {
         optionText: 'I was forced to pick option 1',
-        value: 'option 1'
+        value: 'option 1',
       },
       {
         optionText: 'I have to pick option 2',
-        value: 'option 2'
+        value: 'option 2',
       },
       {
         optionText: 'I guess option 3',
-        value: 'option 3'
-      }
-    ]
+        value: 'option 3',
+      },
+    ],
   },
   {
     questionType: 'SelectionGroup',
     questionText: 'Simple Survey also supports default selections: ',
     questionId: 'singleDefault',
     questionSettings: {
-      defaultSelection: 0
+      defaultSelection: 0,
     },
     options: [
       {
         optionText: 'This is the default option',
-        value: 'default'
+        value: 'default',
       },
       {
         optionText: 'This is the alternative option',
-        value: 'alternative'
-      }
-    ]
+        value: 'alternative',
+      },
+    ],
   },
   {
     questionType: 'MultipleSelectionGroup',
@@ -190,89 +190,73 @@ const survey = [
     questionSettings: {
       defaultSelection: [0, 2],
       maxMultiSelect: 2,
-      minMultiSelect: 2
+      minMultiSelect: 2,
     },
     options: [
       {
         optionText: 'This is the first default option',
-        value: 'first default'
+        value: 'first default',
       },
       {
         optionText: 'This is the first alternate option',
-        value: 'first alternative'
+        value: 'first alternative',
       },
       {
         optionText: 'This is the second default option',
-        value: 'second default'
+        value: 'second default',
       },
       {
         optionText: 'This is the second alternate option',
-        value: 'second alternative'
-      }
-    ]
+        value: 'second alternative',
+      },
+    ],
   },
   {
     questionType: 'Info',
-    questionText: 'That is all for the demo, tap finish to see your results!'
-  }
-]
+    questionText: 'That is all for the demo, tap finish to see your results!',
+  },
+];
 
 export default class SurveyScreen extends Component {
-  static navigationOptions = () => {
-    return {
-      headerStyle: {
-        backgroundColor: GREEN,
-        height: 40,
-        elevation: 5
-      },
-      headerTintColor: '#fff',
-      headerTitle: 'Sample Survey',
-      headerTitleStyle: {
-        flex: 1
-      }
-    }
-  }
-
   constructor(props) {
-    super(props)
-    this.state = { backgroundColor: PURPLE, answersSoFar: '' }
+    super(props);
+    this.state = {backgroundColor: PURPLE, answersSoFar: ''};
   }
 
   onSurveyFinished(answers) {
-
-    const infoQuestionsRemoved = [...answers]
+    const infoQuestionsRemoved = [...answers];
 
     // Convert from an array to a proper object. This won't work if you have duplicate questionIds
-    const answersAsObj = {}
+    const answersAsObj = {};
     for (const elem of infoQuestionsRemoved) {
-      answersAsObj[elem.questionId] = elem.value
+      answersAsObj[elem.questionId] = elem.value;
     }
 
     this.props.navigation.navigate('SurveyComplete', {
-      surveyAnswers: answersAsObj
-    }
+      surveyAnswers: answersAsObj,
+    });
   }
 
   onAnswerSubmitted(answer) {
     this.setState({
-      answersSoFar: JSON.stringify(this.surveyRef.getAnswers(), 2)
-    })
+      answersSoFar: JSON.stringify(this.surveyRef.getAnswers(), 2),
+    });
     switch (answer.questionId) {
       case 'favoriteColor': {
         if (COLORS.includes(answer.value.toLowerCase())) {
-          this.setState({ backgroundColor: answer.value.toLowerCase() })
+          this.setState({backgroundColor: answer.value.toLowerCase()});
         }
-        break
+        break;
       }
       default:
-        break
+        break;
     }
   }
 
   renderPreviousButton(onPress, enabled) {
     return (
       <View
-        style={{ flexGrow: 1, maxWidth: 100, marginTop: 10, marginBottom: 10 }}>
+        style={{flexGrow: 1, maxWidth: 100, marginTop: 10, marginBottom: 10}}>
         <Button
           color={GREEN}
           onPress={onPress}
@@ -281,13 +265,13 @@ export default class SurveyScreen extends Component {
           title={'Previous'}
         />
       </View>
-    )
+    );
   }
 
   renderNextButton(onPress, enabled) {
     return (
       <View
-        style={{ flexGrow: 1, maxWidth: 100, marginTop: 10, marginBottom: 10 }}>
+        style={{flexGrow: 1, maxWidth: 100, marginTop: 10, marginBottom: 10}}>
         <Button
           color={GREEN}
           onPress={onPress}
@@ -296,13 +280,13 @@ export default class SurveyScreen extends Component {
           title={'Next'}
         />
       </View>
-    )
+    );
   }
 
   renderFinishedButton(onPress, enabled) {
     return (
       <View
-        style={{ flexGrow: 1, maxWidth: 100, marginTop: 10, marginBottom: 10 }}>
+        style={{flexGrow: 1, maxWidth: 100, marginTop: 10, marginBottom: 10}}>
         <Button
           title={'Finished'}
           onPress={onPress}
@@ -310,33 +294,33 @@ export default class SurveyScreen extends Component {
           color={GREEN}
         />
       </View>
-    )
+    );
   }
 
   renderButton(data, index, isSelected, onPress) {
     return (
       <View
         key={`selection_button_view_${index}`}
-        style={{ marginTop: 5, marginBottom: 5, justifyContent: 'flex-start' }}>
+        style={{marginTop: 5, marginBottom: 5, justifyContent: 'flex-start'}}>
         <Button
           title={data.optionText}
           onPress={onPress}
           color={isSelected ? GREEN : PURPLE}
-          style={isSelected ? { fontWeight: 'bold' } : {}}
+          style={isSelected ? {fontWeight: 'bold'} : {}}
           key={`button_${index}`}
         />
       </View>
-    )
+    );
   }
 
   renderQuestionText(questionText) {
     return (
-      <View style={{ marginLeft: 10, marginRight: 10 }}>
+      <View style={{marginLeft: 10, marginRight: 10}}>
         <Text numLines={1} style={styles.questionText}>
           {questionText}
         </Text>
       </View>
-    )
+    );
   }
 
   renderTextBox(onChange, value, placeholder, onBlur) {
@@ -344,7 +328,7 @@ export default class SurveyScreen extends Component {
       <View>
         <TextInput
           style={styles.textBox}
-          onChangeText={text => onChange(text)}
+          onChangeText={(text) => onChange(text)}
           numberOfLines={1}
           underlineColorAndroid={'white'}
           placeholder={placeholder}
@@ -356,15 +340,15 @@ export default class SurveyScreen extends Component {
           returnKeyType="done"
         />
       </View>
-    )
+    );
   }
 
   renderNumericInput(onChange, value, placeholder, onBlur) {
     return (
       <TextInput
         style={styles.numericInput}
-        onChangeText={text => {
-          onChange(text)
+        onChangeText={(text) => {
+          onChange(text);
         }}
         underlineColorAndroid={'white'}
         placeholderTextColor={'rgba(184,184,184,1)'}
@@ -374,15 +358,15 @@ export default class SurveyScreen extends Component {
         onBlur={onBlur}
         maxLength={3}
       />
-    )
+    );
   }
 
   renderInfoText(infoText) {
     return (
-      <View style={{ marginLeft: 10, marginRight: 10 }}>
+      <View style={{marginLeft: 10, marginRight: 10}}>
         <Text style={styles.infoText}>{infoText}</Text>
       </View>
-    )
+    );
   }
 
   render() {
@@ -390,12 +374,12 @@ export default class SurveyScreen extends Component {
       <View
         style={[
           styles.background,
-          { backgroundColor: this.state.backgroundColor }
+          {backgroundColor: this.state.backgroundColor},
         ]}>
         <View style={styles.container}>
           <SimpleSurvey
-            ref={s => {
-              this.surveyRef = s
+            ref={(s) => {
+              this.surveyRef = s;
             }}
             survey={survey}
             renderSelector={this.renderButton.bind(this)}
@@ -403,26 +387,26 @@ export default class SurveyScreen extends Component {
             selectionGroupContainerStyle={styles.selectionGroupContainer}
             navButtonContainerStyle={{
               flexDirection: 'row',
-              justifyContent: 'space-around'
+              justifyContent: 'space-around',
             }}
             renderPrevious={this.renderPreviousButton.bind(this)}
             renderNext={this.renderNextButton.bind(this)}
             renderFinished={this.renderFinishedButton.bind(this)}
             renderQuestionText={this.renderQuestionText}
-            onSurveyFinished={answers => this.onSurveyFinished(answers)}
-            onAnswerSubmitted={answer => this.onAnswerSubmitted(answer)}
+            onSurveyFinished={(answers) => this.onSurveyFinished(answers)}
+            onAnswerSubmitted={(answer) => this.onAnswerSubmitted(answer)}
             renderTextInput={this.renderTextBox}
             renderNumericInput={this.renderNumericInput}
             renderInfo={this.renderInfoText}
           />
         </View>
-                
+
         <ScrollView style={styles.answersContainer}>
-          <Text style={{ textAlign: 'center' }}>JSON output</Text>
+          <Text style={{textAlign: 'center'}}>JSON output</Text>
           <Text>{this.state.answersSoFar}</Text>
         </ScrollView>
       </View>
-    )
+    );
   }
 }
 
@@ -432,10 +416,9 @@ const styles = StyleSheet.create({
     maxWidth: '90%',
     alignItems: 'stretch',
     justifyContent: 'center',
-        
-    elevation: 20,
+    elevation: 0,
     borderRadius: 10,
-    flex: 1
+    flex: 1,
   },
   answersContainer: {
     width: '90%',
@@ -446,7 +429,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     backgroundColor: 'white',
     elevation: 20,
-    borderRadius: 10
+    borderRadius: 10,
   },
   surveyContainer: {
     width: 'auto',
@@ -458,34 +441,34 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 5,
     alignContent: 'center',
     padding: 5,
-    flexGrow: 0
+    flexGrow: 0,
   },
   selectionGroupContainer: {
     flexDirection: 'column',
     backgroundColor: 'white',
-    alignContent: 'flex-end'
+    alignContent: 'flex-end',
   },
   background: {
     flex: 1,
     minHeight: 800,
     maxHeight: 800,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   questionText: {
     marginBottom: 20,
-    fontSize: 20
+    fontSize: 20,
   },
   textBox: {
     borderWidth: 1,
     borderColor: 'rgba(204,204,204,1)',
     backgroundColor: 'white',
     borderRadius: 10,
-        
+
     padding: 10,
     textAlignVertical: 'top',
     marginLeft: 10,
-    marginRight: 10
+    marginRight: 10,
   },
   numericInput: {
     borderWidth: 1,
@@ -495,11 +478,11 @@ const styles = StyleSheet.create({
     padding: 10,
     textAlignVertical: 'top',
     marginLeft: 10,
-    marginRight: 10
+    marginRight: 10,
   },
   infoText: {
     marginBottom: 20,
     fontSize: 20,
-    marginLeft: 10
-  }
-})
+    marginLeft: 10,
+  },
+});

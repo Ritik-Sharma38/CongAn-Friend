@@ -1,35 +1,17 @@
-import React, { Component } from 'react'
-import { ScrollView, StyleSheet, Text, View } from 'react-native'
+import React, {Component} from 'react';
+import {ScrollView, StyleSheet, Text, View} from 'react-native';
 
-const GREEN = 'rgba(141,196,63,1)'
-const PURPLE = 'rgba(108,48,237,1)'
+const GREEN = 'rgba(141,196,63,1)';
+const PURPLE = 'rgba(108,48,237,1)';
 const defaultAnswers = {
   favoriteColor: 'nothing',
   favoriteNumber: '0',
-  favoritePet: 'nothing'
-}
+  favoritePet: 'nothing',
+};
 export default class SurveyCompletedScreen extends Component {
-  static navigationOptions = () => {
-    return {
-      headerStyle: {
-        backgroundColor: GREEN,
-        height: 40,
-        elevation: 5
-      },
-      headerTintColor: '#fff',
-      headerTitle: 'Survey Results',
-      headerTitleStyle: {
-        flex: 1
-      }
-    }
-  }
-
   render() {
-    const answers = this.props.navigation.getParam(
-      'surveyAnswers',
-      defaultAnswers
-    )
-
+    console.log(this.props);
+    const answers = this.props.route.params.surveyAnswers;
     return (
       <View style={styles.background}>
         <View style={styles.container}>
@@ -68,16 +50,10 @@ export default class SurveyCompletedScreen extends Component {
               {answers.multipleDefaults[0].value} and the{' '}
               {answers.multipleDefaults[1].value}
             </Text>
-            <Text>
-              Raw JSON:{' '}
-              {JSON.stringify(
-                this.props.navigation.getParam('surveyAnswers', {})
-              )}
-            </Text>
           </ScrollView>
         </View>
       </View>
-    )
+    );
   }
 }
 
@@ -86,7 +62,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: PURPLE
+    backgroundColor: PURPLE,
   },
   container: {
     minWidth: '70%',
@@ -96,10 +72,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     elevation: 20,
     borderRadius: 10,
-    maxHeight: '80%'
+    maxHeight: '80%',
   },
   questionText: {
     marginBottom: 20,
-    fontSize: 20
-  }
-})
+    fontSize: 20,
+  },
+});
