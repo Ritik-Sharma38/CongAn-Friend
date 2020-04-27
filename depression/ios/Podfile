@@ -40,6 +40,10 @@ target 'depression' do
 
   pod 'RNSVG', :path => '../node_modules/react-native-svg'
 
+  pod 'TextToSpeech', :path => '../node_modules/react-native-tts'
+
+  pod 'RNVoiceRecorder', :path => '../node_modules/react-native-voice-recorder'
+
   target 'depressionTests' do
     inherit! :search_paths
     # Pods for testing

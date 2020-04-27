@@ -34,6 +34,9 @@ import {START_GOOGLE_SIGN_IN,
     DOCTOR_AVAILABLE_LIST_FETCH_START,
     DOCTOR_AVAILABLE_LIST_FETCH_SUCCESS,
     DOCTOR_AVAILABLE_LIST_FETCH_FAILED,
+    AVATAR_FORM_UPLOAD_STARTED,
+    AVATAR_FORM_UPLOAD_SUCCESS,
+    AVATAR_FORM_UPLOAD_FAILED,
 } from '../actions/types';
 import { act } from 'react-test-renderer';
 
@@ -49,6 +52,7 @@ const DEFAULT_STATE={
     imageSource: '',
     SignIn: false,
     DoctorList: [],
+    backtoProfile: false,
 }
 export default (state=DEFAULT_STATE, action)=>{
     switch(action.type){
@@ -275,6 +279,22 @@ export default (state=DEFAULT_STATE, action)=>{
                 ...state,
                 progressBarStatus: false,
                 errorMessage: action.payload
+            }
+        case AVATAR_FORM_UPLOAD_STARTED:
+            return{
+                ...state,
+                progressBarStatus: true,
+            }
+        case AVATAR_FORM_UPLOAD_SUCCESS:
+            return{
+                ...state,
+                progressBarStatus: false,
+                backtoProfile: true,
+            }
+        case AVATAR_FORM_UPLOAD_FAILED:
+            return{
+                ...state,
+                progressBarStatus: false,
             }
         default:
             return state

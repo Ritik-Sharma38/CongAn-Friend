@@ -42,6 +42,9 @@ import {START_FB_SIGNIN,
     DOCTOR_AVAILABLE_LIST_FETCH_START,
     DOCTOR_AVAILABLE_LIST_FETCH_SUCCESS,
     DOCTOR_AVAILABLE_LIST_FETCH_FAILED,
+    AVATAR_FORM_UPLOAD_STARTED,
+    AVATAR_FORM_UPLOAD_SUCCESS,
+    AVATAR_FORM_UPLOAD_FAILED,
 } from './types';
 import { act } from 'react-test-renderer';
 import { exp } from 'react-native-reanimated';
@@ -742,3 +745,20 @@ export const fetchDoctorList = () => {
         }
     }
 }
+
+export const avatarFormUpload = (uid, answers) => {
+    return async dispatch => {
+        dispatch({ type: AVATAR_FORM_UPLOAD_STARTED });
+        try {
+            console.log("firestoreUpload function running: parameters", uid, answers)
+            await firestore().collection("users").doc(uid).update({ AvatarFormQA: answers})
+            console.log("answers written to firestore")
+            dispatch({ type: AVATAR_FORM_UPLOAD_SUCCESS })
+        } 
+        catch (error) {
+            dispatch({ type: AVATAR_FORM_UPLOAD_FAILED });
+            console.log(" firebase upload error", error)
+            alert("upload failed please check internet connection", error.code)
+        }
+    }
+};

@@ -1127,10 +1127,10 @@
     shortid "^2.2.15"
     use-subscription "^1.3.0"
 
-"@react-navigation/drawer@^5.4.0":
-  version "5.4.0"
-  resolved "https://registry.yarnpkg.com/@react-navigation/drawer/-/drawer-5.4.0.tgz#f9d9091e2de7e11f2bcc742a062ebf1d45509040"
-  integrity sha512-IOXBRfFaURA3o9+fEaC7lwomftGQYoyqzZKkcWI/fybtDwmhSS6QOyZKMm3fWRp1x++m3QLgQHsaMSXjUoRygA==
+"@react-navigation/drawer@^5.5.0":
+  version "5.5.0"
+  resolved "https://registry.yarnpkg.com/@react-navigation/drawer/-/drawer-5.5.0.tgz#21e5d5d0485391bd051b985395c9b03a0857fa54"
+  integrity sha512-c0PZF1AHujw3b67SHxEdc/OSXScV0rBS2dQ/8SlLGpGShzrGW1p1ccOibVYqSZIRu1r0OOXjFM4nKgf8mkNy2g==
   dependencies:
     color "^3.1.2"
     react-native-iphone-x-helper "^1.2.1"
@@ -1394,12 +1394,10 @@ acorn@^7.1.0:
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-7.1.0.tgz#949d36f2c292535da602283586c2477c57eb2d6c"
   integrity sha512-kL5CuoXA/dgxlBbVrflsflzQ3PAas7RYZB52NOm/6839iVYJgKMJ3cQJD+t2i5+qFa8h3MDpEOJiS64E8JLnSQ==
 
-agora-rn-uikit@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/agora-rn-uikit/-/agora-rn-uikit-0.1.0.tgz#f4fcd4efd139247aa3dcd7aa67c102b7e2c18bac"
-  integrity sha512-JO9vQAQmzhqHSNM/eRaWXP1EpdckCanJC4L0Wf33zBbSzirkiyZFHQOxX6JSLx1A3bfI0H8EybmdEMyfiI+ijA==
-  dependencies:
-    react-native-elements "^1.2.7"
+agora-rn-uikit@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/agora-rn-uikit/-/agora-rn-uikit-0.2.2.tgz#dcc410937aa36d0a933ad494426288fe1e4106ec"
+  integrity sha512-WzXLKRMKbJbZdVrPtzEZRI64LLknh2PIWXscdvn/UHW5s/tB6vwTBTwiu8Vcyo5Ze1nbpvq/EI7OeT6RLULFvw==
 
 ajv@^6.10.0, ajv@^6.10.2, ajv@^6.5.5:
   version "6.11.0"
@@ -5606,6 +5604,20 @@ react-native-screens@^2.0.0-beta.4:
   dependencies:
     debounce "^1.2.0"
 
+react-native-selection-group@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-selection-group/-/react-native-selection-group-2.0.0.tgz#8b6ba467d9f000615f20710fd2044118323408ba"
+  integrity sha512-jRnqwOYzPayfB0PvLpgwYCiCPMOp8sXUufeBlI4NXIGHB8MGE/TA8jazq/eER99mTUA5e44JpDEALpEyghhN4A==
+  dependencies:
+    prop-types "^15.6.1"
+
+react-native-simple-survey@^3.1.2:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/react-native-simple-survey/-/react-native-simple-survey-3.1.2.tgz#7cda7d4a7a7f984e4df241eac0389c2f6dbfd16d"
+  integrity sha512-CU+CoDrcegbpk2qf5LanMmrPQs/gVHD9QncZINX/6my5ES0M4KebzjvDlJbuo+RhEUAcW1PfMVlhKY95SF9v4g==
+  dependencies:
+    react-native-selection-group "^2.0.0"
+
 react-native-snap-carousel@^3.8.4:
   version "3.8.4"
   resolved "https://registry.yarnpkg.com/react-native-snap-carousel/-/react-native-snap-carousel-3.8.4.tgz#4c749c6a714d46ed82de527233850cb5da41bc62"
@@ -5634,6 +5646,11 @@ react-native-swiper@^1.6.0:
   dependencies:
     prop-types "^15.5.10"
 
+react-native-tts@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/react-native-tts/-/react-native-tts-3.1.1.tgz#b3eb4133432c70beb6dfb33685737c8cab441e02"
+  integrity sha512-EGwapFt1CMBopawc8WvpHRv/oXZnOQPuS5ZHrKp0zpz7Kosb6aN1cyj6YSUX2LzcqP6glhrvCPS+PPkW2yMbRQ==
+
 react-native-vector-icons@^6.6.0:
   version "6.6.0"
   resolved "https://registry.yarnpkg.com/react-native-vector-icons/-/react-native-vector-icons-6.6.0.tgz#66cf004918eb05d90778d64bd42077c1800d481b"
@@ -5642,6 +5659,11 @@ react-native-vector-icons@^6.6.0:
     lodash "^4.0.0"
     prop-types "^15.6.2"
     yargs "^13.2.2"
+
+react-native-voice-recorder@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/react-native-voice-recorder/-/react-native-voice-recorder-1.0.2.tgz#c9b4b59d1472310cbc9a0b162e39eb2757666320"
+  integrity sha512-oVvrNc81tICmc8X5qti0p294muY8qEa+6x02s26F+PC0dg5YL5/ovDaEHBz0Lwyjks3KnBUYtPs3CeW+4eOBwQ==
 
 react-native-web-swiper@^2.1.0:
   version "2.1.0"

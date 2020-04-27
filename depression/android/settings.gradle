@@ -1,4 +1,8 @@
 rootProject.name = 'depression'
+include ':react-native-voice-recorder'
+project(':react-native-voice-recorder').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-voice-recorder/android')
+include ':react-native-tts'
+project(':react-native-tts').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-tts/android')
 include ':react-native-svg'
 project(':react-native-svg').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-svg/android')
 include ':react-native-gesture-handler'
