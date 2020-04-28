@@ -4,12 +4,26 @@ import {useSelector, useDispatch} from 'react-redux';
 import { Card, Avatar, ListItem  } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import Tts from 'react-native-tts';
+import { RNVoiceRecorder } from 'react-native-voice-recorder';
 
 const { width, height } = Dimensions.get('window');
 
 const VoiceQuestions = () => {
+    useEffect(() => {
+        Tts.getInitStatus().then(() => {
+            Tts.speak('');
+            Tts.setDucking(true);
+          });
+        Tts.voices().then(voices => setVoices(voices));
+    }, []); 
     const user = useSelector(state => state.auth.user)
+    const QuestionList = useSelector(state => state.auth.QuestionList)
+    const [questions, setQuestions] = useState(QuestionList[0]) 
     const navigation = useNavigation();
+    const [items, setVoices] = useState()
+    const [changeVoices, setChangeVoices] = useState(false)
+    console.log("printing doctorlist", questions)
     console.log("rendring voice question page")
     return (
         <SafeAreaView style = {styles.container} >
@@ -45,11 +59,61 @@ const VoiceQuestions = () => {
                 </View>
             </View>
             <ScrollView contentContainerStyle={styles.SecondHalf}>
-               
+                <TouchableOpacity onPress={()=> setChangeVoices(true)}>
+                    <Text style={styles.changeVoiceButton}>Change voice</Text>
+                </TouchableOpacity>
+                <View>
+                    <Card
+                        containerStyle={{borderRadius: 5, width: width/1.1,}}>
+                        <Text style={{marginBottom: '2%', marginVertical: '2%', alignSelf: 'center'}}>
+                            {questions.Question}
+                        </Text>
+                        <Button
+                            onPress={()=> Record()}
+                            buttonStyle={{borderRadius: 5}}
+                            title='Record Answer' 
+                        />
+                    </Card>
+                </View>
+                <View>
+                    {changeVoices && (
+                        <View>
+                            {items.map(item => (
+                                <ListItem
+                                    leftAvatar={{
+                                        title: item.language,
+                                        source: { uri: 'https://cdn2.iconfinder.com/data/icons/calendar-36/64/5-512.png' },
+                                    }}
+                                    title= {item.language}
+                                    subtitle={item.name}
+                                    onPress={()=> setChangeVoices(false)}
+                                    chevron
+                                />
+                            ))}
+                        </View>
+                    )}
+                </View>
             </ScrollView>
 		</SafeAreaView>
     );
 };
+
+const Questions = async(word) => {
+    console.log("printing item", word)
+    await Tts.speak(word)
+}
+
+const Record = async() => {
+    console.log("started recording")
+    RNVoiceRecorder.Record({
+        onDone: (path) => {
+            console.log("recording done", path)
+        },
+        onCancel: () => {
+            console.log("recording cancel")
+        }
+    })
+}
 
 const styles = StyleSheet.create({
     container: {
@@ -136,6 +200,9 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.4,
         elevation: 4,
       },
+      changeVoiceButton: {
+          fontSize: 20,
+      }
 });
 
 export default VoiceQuestions

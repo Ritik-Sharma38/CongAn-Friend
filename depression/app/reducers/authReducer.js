@@ -52,6 +52,7 @@ const DEFAULT_STATE={
     imageSource: '',
     SignIn: false,
     DoctorList: [],
+    QuestionList: [],
     backtoProfile: false,
 }
 export default (state=DEFAULT_STATE, action)=>{
@@ -272,7 +273,8 @@ export default (state=DEFAULT_STATE, action)=>{
             return{
                 ...state,
                 progressBarStatus: false,
-                DoctorList: action.payload,
+                DoctorList: action.payload.DoctorList,
+                QuestionList: action.payload.QuestionsList
             }
         case DOCTOR_AVAILABLE_LIST_FETCH_FAILED:
             return{

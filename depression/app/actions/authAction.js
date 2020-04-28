@@ -730,10 +730,14 @@ export const fetchDoctorList = () => {
         try {
             const docRef = await firestore().collection("DoctorsData").doc("AvailabeleDoctor")
             const DoctorList = await (await docRef.get()).data().DoctorsList
-            console.log(DoctorList)
+            const docRef2 = await firestore().collection("Questions").doc("VoiceQuestions")
+            const QuestionsList = await (await docRef2.get()).data().QuestionList
             dispatch({
                 type: DOCTOR_AVAILABLE_LIST_FETCH_SUCCESS,
-                payload: DoctorList
+                payload: {
+                    DoctorList: DoctorList,
+                    QuestionsList: QuestionsList
+                }
             })
         }
         catch (error) {

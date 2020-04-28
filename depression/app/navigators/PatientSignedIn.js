@@ -9,7 +9,7 @@ import TalkToDoctor from '../screens/PatientScreens/TalkToDoctor';
 import VoiceQuestions from '../screens/PatientScreens/voiceQuestions/VoiceQuestions';
 import SurveyScreen from '../screens/Survey/SurveyScreen';
 
-const Drawer = createStackNavigator();
+const Drawer = createDrawerNavigator();
 
 export const PatientSignedIn =()=> (
     <Drawer.Navigator
