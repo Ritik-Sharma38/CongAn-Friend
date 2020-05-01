@@ -9,13 +9,15 @@ import { RNVoiceRecorder } from 'react-native-voice-recorder';
 
 const { width, height } = Dimensions.get('window');
 
-var d=0
+var questionControl=0
+var voiceControl=0
 
 const VoiceQuestions = () => {
     useEffect(() => {
         Tts.getInitStatus().then(() => {
             Tts.speak('');
             Tts.setDucking(true);
+            voiceControl=1
           });
         Tts.voices().then(voices => setVoices(voices));
     }, []); 
@@ -26,23 +28,28 @@ const VoiceQuestions = () => {
     const [items, setVoices] = useState()
     const [changeVoices, setChangeVoices] = useState(false)
     const [questionFinish, setQuestionFinish] = useState(true)
-    const Questions = async() => {
-        await Tts.speak(questions.Question)
+
+    if (voiceControl){
+        if(questionFinish){
+            setTimeout(() => {
+                console.log("narrating question")
+                Tts.speak(questions.Question)
+            }, 800);
+        }
     }
+
     const Record = async() => {
-        console.log("value of d", d, QuestionList.length)
         console.log("started recording")
         RNVoiceRecorder.Record({
             onDone: (path) => {
                 console.log("recording done", path)
-                if(d===(QuestionList.length)-1){
+                if(questionControl===(QuestionList.length)-1){
                    console.log("finished")
                    setQuestionFinish(false)
                 }
                 else{
-                    d=d+1
-                    console.log("value of d after update",d)
-                    setQuestions(QuestionList[d])
+                    questionControl=questionControl+1
+                    setQuestions(QuestionList[questionControl])
                 }
             },
             onCancel: () => {
@@ -50,12 +57,15 @@ const VoiceQuestions = () => {
             }
         })
     }
+
     const questionFinished = () => {
         console.log("finished")
         navigation.navigate('Profile')
     }
+
     console.log("printing doctorlist", questions)
     console.log("rendring voice question page")
+
     return (
         <SafeAreaView style = {styles.container} >
             <StatusBar backgroundColor='#2E71DC'/>
