@@ -9,6 +9,8 @@ import { RNVoiceRecorder } from 'react-native-voice-recorder';
 
 const { width, height } = Dimensions.get('window');
 
+var d=0
+
 const VoiceQuestions = () => {
     useEffect(() => {
         Tts.getInitStatus().then(() => {
@@ -23,6 +25,35 @@ const VoiceQuestions = () => {
     const navigation = useNavigation();
     const [items, setVoices] = useState()
     const [changeVoices, setChangeVoices] = useState(false)
+    const [questionFinish, setQuestionFinish] = useState(true)
+    const Questions = async() => {
+        await Tts.speak(questions.Question)
+    }
+    const Record = async() => {
+        console.log("value of d", d, QuestionList.length)
+        console.log("started recording")
+        RNVoiceRecorder.Record({
+            onDone: (path) => {
+                console.log("recording done", path)
+                if(d===(QuestionList.length)-1){
+                   console.log("finished")
+                   setQuestionFinish(false)
+                }
+                else{
+                    d=d+1
+                    console.log("value of d after update",d)
+                    setQuestions(QuestionList[d])
+                }
+            },
+            onCancel: () => {
+                console.log("recording cancel")
+            }
+        })
+    }
+    const questionFinished = () => {
+        console.log("finished")
+        navigation.navigate('Profile')
+    }
     console.log("printing doctorlist", questions)
     console.log("rendring voice question page")
     return (
@@ -63,17 +94,34 @@ const VoiceQuestions = () => {
                     <Text style={styles.changeVoiceButton}>Change voice</Text>
                 </TouchableOpacity>
                 <View>
+                { questionFinish && (
                     <Card
                         containerStyle={{borderRadius: 5, width: width/1.1,}}>
                         <Text style={{marginBottom: '2%', marginVertical: '2%', alignSelf: 'center'}}>
                             {questions.Question}
                         </Text>
+                        {/*{Questions()}*/}
                         <Button
                             onPress={()=> Record()}
                             buttonStyle={{borderRadius: 5}}
                             title='Record Answer' 
                         />
                     </Card>
+                )}
+                { !questionFinish && (
+                    <Card
+                        containerStyle={{borderRadius: 5, width: width/1.1,}}>
+                        <Text style={{marginBottom: '2%', marginVertical: '2%', alignSelf: 'center'}}>
+                            Thank you. Your ansers are recorded. You will get reports after sometime in Reports section of profile. 
+                        </Text>
+                        {/*{Questions()}*/}
+                        <Button
+                            onPress={()=> questionFinished()}
+                            buttonStyle={{borderRadius: 5}}
+                            title='Finished' 
+                        />
+                    </Card>
+                )}
                 </View>
                 <View>
                     {changeVoices && (
@@ -97,23 +145,6 @@ const VoiceQuestions = () => {
 		</SafeAreaView>
     );
 };
-
-const Questions = async(word) => {
-    console.log("printing item", word)
-    await Tts.speak(word)
-}
-
-const Record = async() => {
-    console.log("started recording")
-    RNVoiceRecorder.Record({
-        onDone: (path) => {
-            console.log("recording done", path)
-        },
-        onCancel: () => {
-            console.log("recording cancel")
-        }
-    })
-}
 
 const styles = StyleSheet.create({
     container: {

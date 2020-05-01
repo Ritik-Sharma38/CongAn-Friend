@@ -59,11 +59,13 @@ const ProfileScreen = () => {
     const navigation = useNavigation();
     const imageSource = useSelector(state => state.auth.imageSource)
     const progressBar = useSelector(state => state.auth.progressBarStatus) 
+    const QuestionList = useSelector(state => state.auth.QuestionList)
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(fetchDoctorList())
     }, []);
     console.log("profile detils",user)
+    console.log("Questions listt", QuestionList)
     return (
         <SafeAreaView style = {styles.container}>
             <StatusBar backgroundColor='#2E71DC'/>

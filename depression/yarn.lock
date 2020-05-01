@@ -1326,7 +1326,7 @@ acorn@^7.1.1:
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-7.1.1.tgz#e35668de0b402f359de515c5482a1ab9f89a69bf"
   integrity sha512-add7dgA5ppRPxCFJoAGfMDi7PIBXq1RtGo7BhbLaxwrXPOmw8gq48Y9ozT01hUKy9byMjlR20EJhu5zlkErEkg==
 
-agora-rn-uikit@^0.1.0:
+agora-rn-uikit@^0.2.2:
   version "0.2.2"
   resolved "https://registry.yarnpkg.com/agora-rn-uikit/-/agora-rn-uikit-0.2.2.tgz#dcc410937aa36d0a933ad494426288fe1e4106ec"
   integrity sha512-WzXLKRMKbJbZdVrPtzEZRI64LLknh2PIWXscdvn/UHW5s/tB6vwTBTwiu8Vcyo5Ze1nbpvq/EI7OeT6RLULFvw==
@@ -2416,6 +2416,11 @@ domutils@^1.7.0:
   dependencies:
     dom-serializer "0"
     domelementtype "1"
+
+dooboolab-welcome@^1.1.1:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/dooboolab-welcome/-/dooboolab-welcome-1.2.0.tgz#295818ce85a8e97dc90c0ec0510b4008e2d722dc"
+  integrity sha512-XgEbjJHAsKLge/e8jtuHsv84Ovg1Gx0GvnOTOmOlVGV1643nduTAkT3fyo/mxKbzvyXBr47RHaJAY4R2toI0UA==
 
 ecc-jsbn@~0.1.1:
   version "0.1.2"
@@ -5432,6 +5437,13 @@ react-native-agora@^2.9.1-alpha.3:
   integrity sha512-RFJUQEJYSgTJ9RNMf0bs02G6gHU8ib1RqyqVBZfcvHbi4ZJ0Tg21nXDOfm7+P6Tkj2hywXVAOQIIiEm6oq0cjQ==
   dependencies:
     tslib "^1.9.3"
+
+react-native-audio-recorder-player@^2.5.1:
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/react-native-audio-recorder-player/-/react-native-audio-recorder-player-2.5.1.tgz#c57f33ec8920b2be182ab6d305da5fa4b9324c8a"
+  integrity sha512-qXE7/LLPdgoDNd88yv+uqmkBj8EOQa/yU2CUYCtC5bfeNQPiH1cVEbxfxGY+0hUawtd5uR2XxKM+Y5tUJOGzMQ==
+  dependencies:
+    dooboolab-welcome "^1.1.1"
 
 react-native-elements@^1.2.7:
   version "1.2.7"
