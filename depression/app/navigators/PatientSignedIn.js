@@ -6,6 +6,7 @@ import Video from '../screens/video';
 import AvtarSelection from '../screens/avatar';
 import Test from '../screens/test';
 import TalkToDoctor from '../screens/PatientScreens/TalkToDoctor';
+import VoiceQuestions from '../screens/PatientScreens/voiceQuestions/VoiceQuestions';
 import SurveyScreen from '../screens/Survey/SurveyScreen';
 import SurveyComplete from '../screens/Survey/SurveyComplete';
 
@@ -35,8 +36,11 @@ export class PatientSignedIn extends Component {
         <Drawer.Screen name="Avatar" component={AvtarSelection} />
         <Drawer.Screen name="VideoCall" component={Test} />
         <Drawer.Screen name="TalkToDoctor" component={TalkToDoctor} />
+        <Drawer.Screen name="VoiceQuestions" component={VoiceQuestions} />
         <Drawer.Screen name="Survey" children={this.createSurveyStack} />
       </Drawer.Navigator>
     );
   }
 }
+      
+

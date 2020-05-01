@@ -5,6 +5,7 @@ import { Card, Avatar, ListItem  } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Tts from 'react-native-tts';
+<<<<<<< HEAD
 
 const { width, height } = Dimensions.get('window');
 
@@ -21,6 +22,69 @@ const VoiceQuestions = () => {
     }, []);   
     console.log("printing voices", items)
     console.log("rendring voice question page")
+=======
+import { RNVoiceRecorder } from 'react-native-voice-recorder';
+
+const { width, height } = Dimensions.get('window');
+
+var questionControl=0
+var voiceControl=0
+
+const VoiceQuestions = () => {
+    useEffect(() => {
+        Tts.getInitStatus().then(() => {
+            Tts.speak('');
+            Tts.setDucking(true);
+            voiceControl=1
+          });
+        Tts.voices().then(voices => setVoices(voices));
+    }, []); 
+    const user = useSelector(state => state.auth.user)
+    const QuestionList = useSelector(state => state.auth.QuestionList)
+    const [questions, setQuestions] = useState(QuestionList[0]) 
+    const navigation = useNavigation();
+    const [items, setVoices] = useState()
+    const [changeVoices, setChangeVoices] = useState(false)
+    const [questionFinish, setQuestionFinish] = useState(true)
+
+    if (voiceControl){
+        if(questionFinish){
+            setTimeout(() => {
+                console.log("narrating question")
+                Tts.speak(questions.Question)
+            }, 800);
+        }
+    }
+
+    const Record = async() => {
+        console.log("started recording")
+        RNVoiceRecorder.Record({
+            onDone: (path) => {
+                console.log("recording done", path)
+                if(questionControl===(QuestionList.length)-1){
+                   console.log("finished")
+                   setQuestionFinish(false)
+                }
+                else{
+                    questionControl=questionControl+1
+                    setQuestions(QuestionList[questionControl])
+                }
+            },
+            onCancel: () => {
+                console.log("recording cancel")
+            }
+        })
+    }
+
+    const questionFinished = () => {
+        console.log("finished")
+        navigation.navigate('Profile')
+    }
+
+    console.log("printing doctorlist", questions)
+    console.log("rendring voice question page")
+
+>>>>>>> recordTest
     return (
         <SafeAreaView style = {styles.container} >
             <StatusBar backgroundColor='#2E71DC'/>
@@ -59,6 +123,39 @@ const VoiceQuestions = () => {
                     <Text style={styles.changeVoiceButton}>Change voice</Text>
                 </TouchableOpacity>
                 <View>
+<<<<<<< HEAD
+=======
+                { questionFinish && (
+                    <Card
+                        containerStyle={{borderRadius: 5, width: width/1.1,}}>
+                        <Text style={{marginBottom: '2%', marginVertical: '2%', alignSelf: 'center'}}>
+                            {questions.Question}
+                        </Text>
+                        {/*{Questions()}*/}
+                        <Button
+                            onPress={()=> Record()}
+                            buttonStyle={{borderRadius: 5}}
+                            title='Record Answer' 
+                        />
+                    </Card>
+                )}
+                { !questionFinish && (
+                    <Card
+                        containerStyle={{borderRadius: 5, width: width/1.1,}}>
+                        <Text style={{marginBottom: '2%', marginVertical: '2%', alignSelf: 'center'}}>
+                            Thank you. Your ansers are recorded. You will get reports after sometime in Reports section of profile. 
+                        </Text>
+                        {/*{Questions()}*/}
+                        <Button
+                            onPress={()=> questionFinished()}
+                            buttonStyle={{borderRadius: 5}}
+                            title='Finished' 
+                        />
+                    </Card>
+                )}
+                </View>
+                <View>
+>>>>>>> recordTest
                     {changeVoices && (
                         <View>
                             {items.map(item => (

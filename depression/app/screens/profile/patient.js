@@ -247,7 +247,7 @@ const ProfileScreen = () => {
                     </View>
                     <View style={{flexDirection: 'row'}}>
                       <TouchableOpacity
-                        onPress={() => alert('under development')}>
+                        onPress={() => navigation.navigate('VoiceQuestions')}>
                         <ImageLoader
                           style={{
                             marginVertical: '4%',
