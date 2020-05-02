@@ -133,6 +133,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   FirstHalf: {
+    height: height/1.5,
     backgroundColor: '#2E71DC',
   },
   SecondHalf: {

@@ -17,11 +17,12 @@ import {
   pickImage,
   pickVideo,
   fetchDoctorList,
-} from '../../actions/authAction';
+} from '../../../actions/authAction';
 import {Button, Avatar, Card} from 'react-native-elements';
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-
+import { firebase } from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 const {width, height} = Dimensions.get('window');
 
 class ImageLoader extends Component {
@@ -138,7 +139,7 @@ const ProfileScreen = () => {
               <Card containerStyle={styles.Cards}>
                 <ImageLoader
                   style={{width: width / 1.1, height: height / 2.6}}
-                  source={require('../../assets/healty0.png')}
+                  source={require('../../../assets/healty0.png')}
                 />
                 <TouchableOpacity onPress={() => setTrigerHltme(false)}>
                   <Text
@@ -156,7 +157,7 @@ const ProfileScreen = () => {
               <Card containerStyle={styles.Cards}>
                 <ImageLoader
                   style={{width: width / 1.1, height: height / 2.6}}
-                  source={require('../../assets/healty3.png')}
+                  source={require('../../../assets/healty3.png')}
                 />
                 <TouchableOpacity onPress={() => setTrigerDact(false)}>
                   <Text
@@ -214,7 +215,7 @@ const ProfileScreen = () => {
                         onPress={() => navigation.navigate('Survey')}>
                         <ImageLoader
                           style={{width: width / 2.5, height: height / 5.3}}
-                          source={require('../../assets/chat.png')}
+                          source={require('../../../assets/chat.png')}
                         />
                         <Text
                           style={{
@@ -233,7 +234,7 @@ const ProfileScreen = () => {
                             width: width / 2.5,
                             height: height / 5.3,
                           }}
-                          source={require('../../assets/videocall3.png')}
+                          source={require('../../../assets/videocall3.png')}
                         />
                         <Text
                           style={{
@@ -254,7 +255,7 @@ const ProfileScreen = () => {
                             width: width / 2.5,
                             height: height / 5.3,
                           }}
-                          source={require('../../assets/voiceChat.png')}
+                          source={require('../../../assets/voiceChat.png')}
                         />
                         <Text
                           style={{
@@ -273,7 +274,7 @@ const ProfileScreen = () => {
                             width: width / 2.5,
                             height: height / 5.3,
                           }}
-                          source={require('../../assets/imageChat.png')}
+                          source={require('../../../assets/imageChat.png')}
                         />
                         <Text
                           style={{
@@ -291,7 +292,7 @@ const ProfileScreen = () => {
               <Card containerStyle={styles.Cards}>
                 <ImageLoader
                   style={{width: width / 1.1, height: height / 2.5}}
-                  source={require('../../assets/healty9.png')}
+                  source={require('../../../assets/healty9.png')}
                 />
                 <TouchableOpacity onPress={() => setTrigerSlyf(false)}>
                   <Text
@@ -309,7 +310,7 @@ const ProfileScreen = () => {
               <Card containerStyle={styles.Cards}>
                 <ImageLoader
                   style={{width: width / 1.1, height: height / 2.6}}
-                  source={require('../../assets/healty8.png')}
+                  source={require('../../../assets/healty8.png')}
                 />
                 <TouchableOpacity
                   onPress={() => navigation.navigate('TalkToDoctor')}>
@@ -336,7 +337,7 @@ const ProfileScreen = () => {
                 }}>
                 <ImageLoader
                   style={{width: width, height: height / 3}}
-                  source={require('../../assets/healty12.png')}
+                  source={require('../../../assets/healty12.png')}
                 />
                 <TouchableOpacity onPress={() => setTrigerProfile(false)}>
                   <Text

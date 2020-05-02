@@ -37,6 +37,9 @@ import {START_GOOGLE_SIGN_IN,
     AVATAR_FORM_UPLOAD_STARTED,
     AVATAR_FORM_UPLOAD_SUCCESS,
     AVATAR_FORM_UPLOAD_FAILED,
+    AVATAR_VOICE_ANSWER_UPLOAD_STARTED,
+    AVATAR_VOICE_ANSWER_UPLOAD_SUCCESS,
+    AVATAR_VOICE_ANSWER_UPLOAD_FAILED,
 } from '../actions/types';
 import { act } from 'react-test-renderer';
 
@@ -297,6 +300,25 @@ export default (state=DEFAULT_STATE, action)=>{
             return{
                 ...state,
                 progressBarStatus: false,
+                errorMessage: action.payload
+            }
+        case AVATAR_VOICE_ANSWER_UPLOAD_STARTED:
+            return{
+                ...state,
+                progressBarStatus: true,
+                backtoProfile: false,
+            }
+        case AVATAR_VOICE_ANSWER_UPLOAD_SUCCESS:
+            return{
+                ...state,
+                progressBarStatus: false,
+                backtoProfile: true,
+            }
+        case AVATAR_VOICE_ANSWER_UPLOAD_FAILED:
+            return{
+                ...state,
+                progressBarStatus: false,
+                errorMessage: action.payload
             }
         default:
             return state

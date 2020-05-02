@@ -1,11 +1,11 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import PatientLoginSignup from '../screens/patientLoginSignup';
-import DoctorLoginSignup from '../screens/doctorLoginSingnup';
+import PatientLoginSignup from '../screens/PatientScreens/patientLoginSignup';
+import DoctorLoginSignup from '../screens/DoctorScreens/doctorLoginSingnup';
 import AppDiscription from '../screens/appdescription';
-import PatientDoctor from '../screens/patientORdoctor';
-import AvtarSelection from "../screens/avatar";
-import DoctorCreateProfile from "../screens/doctorCreateProfile";
+import PatientDoctor from '../screens/DoctorScreens/patientORdoctor';
+import AvtarSelection from "../screens/PatientScreens/avatar";
+import DoctorCreateProfile from "../screens/DoctorScreens/doctorCreateProfile";
 
 const Stack = createStackNavigator();
 export const  SignedOut = () =>(

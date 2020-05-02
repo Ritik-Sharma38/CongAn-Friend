@@ -1,14 +1,14 @@
 import React, {Component} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createDrawerNavigator} from '@react-navigation/drawer';
-import ProfileScreen from '../screens/profile/patient';
+import ProfileScreen from '../screens/PatientScreens/profile/patient';
 import Video from '../screens/video';
-import AvtarSelection from '../screens/avatar';
+import AvtarSelection from '../screens/PatientScreens/avatar/index';
 import Test from '../screens/test';
-import TalkToDoctor from '../screens/PatientScreens/TalkToDoctor';
+import TalkToDoctor from '../screens/PatientScreens/talkToDoctor/TalkToDoctor';
 import VoiceQuestions from '../screens/PatientScreens/voiceQuestions/VoiceQuestions';
-import SurveyScreen from '../screens/Survey/SurveyScreen';
-import SurveyComplete from '../screens/Survey/SurveyComplete';
+import SurveyScreen from '../screens/PatientScreens/Survey/SurveyScreen';
+import SurveyComplete from '../screens/PatientScreens/Survey/SurveyComplete';
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();

@@ -45,6 +45,9 @@ import {START_FB_SIGNIN,
     AVATAR_FORM_UPLOAD_STARTED,
     AVATAR_FORM_UPLOAD_SUCCESS,
     AVATAR_FORM_UPLOAD_FAILED,
+    AVATAR_VOICE_ANSWER_UPLOAD_STARTED,
+    AVATAR_VOICE_ANSWER_UPLOAD_SUCCESS,
+    AVATAR_VOICE_ANSWER_UPLOAD_FAILED,
 } from './types';
 import { act } from 'react-test-renderer';
 import { exp } from 'react-native-reanimated';
@@ -757,12 +760,40 @@ export const avatarFormUpload = (uid, answers) => {
             console.log("firestoreUpload function running: parameters", uid, answers)
             await firestore().collection("users").doc(uid).update({ AvatarFormQA: answers})
             console.log("answers written to firestore")
-            dispatch({ type: AVATAR_FORM_UPLOAD_SUCCESS })
+            dispatch({ type: AVATAR_FORM_UPLOAD_SUCCESS });
         } 
         catch (error) {
-            dispatch({ type: AVATAR_FORM_UPLOAD_FAILED });
+            dispatch({ 
+                type: AVATAR_FORM_UPLOAD_FAILED,
+                payload: error.code
+            });
             console.log(" firebase upload error", error)
             alert("upload failed please check internet connection", error.code)
         }
     }
 };
+
+export const voiceQuestionAnswerUpload = (uid, file, id) => {
+    return async dispatch => {
+        dispatch({ type: AVATAR_VOICE_ANSWER_UPLOAD_STARTED });
+        try{
+            console.log("started Voice Answers upload")
+            QuestionAnswer = {
+                VoiceAnsers: {
+                    Anserwer: id,//push in array form// error // solve this. 
+                }
+            }
+            updateUser(QuestionAnswer)
+            await storage().ref('/userData/Paitent/VoiceQuestions/'+uid).child(id).putFile(file)
+            dispatch({ type: AVATAR_VOICE_ANSWER_UPLOAD_SUCCESS });
+            console.log("Finished Voice Answers upload",id)
+        }
+        catch (error) {
+            dispatch({
+                type: AVATAR_VOICE_ANSWER_UPLOAD_FAILED,
+                payload: error.code
+            })
+            console.log(error)
+        }
+    }
+}

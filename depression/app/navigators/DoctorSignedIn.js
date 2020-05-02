@@ -1,10 +1,10 @@
 import React from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import ProfileScreen from '../screens/profile/doctor';
+import ProfileScreen from '../screens/DoctorScreens/profile/doctor';
 import Video from '../screens/video';
 import Test from '../screens/test';
-import DoctorCreateProfile from '../screens/doctorCreateProfile';
-import BookedAppointment from '../screens/DoctorScreens/BookedAppointment'
+import DoctorCreateProfile from '../screens/DoctorScreens/doctorCreateProfile/index';
+import BookedAppointment from '../screens/DoctorScreens/bookedAppointment/BookedAppointment'
 const Drawer = createDrawerNavigator();
 
 export const DoctorSignedIn =()=> (

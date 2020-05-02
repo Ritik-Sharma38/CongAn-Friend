@@ -5,30 +5,14 @@ import { Card, Avatar, ListItem  } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Tts from 'react-native-tts';
-<<<<<<< HEAD
-
-const { width, height } = Dimensions.get('window');
-
-const VoiceQuestions = () => {
-    const user = useSelector(state => state.auth.user)
-    const navigation = useNavigation();
-    const [items, setVoices] = useState()
-    const [changeVoices, setChangeVoices] = useState(false)
-    useEffect(() => {
-        Tts.getInitStatus().then(() => {
-            Tts.speak('initializing');
-          });
-        Tts.voices().then(voices => setVoices(voices));
-    }, []);   
-    console.log("printing voices", items)
-    console.log("rendring voice question page")
-=======
-import { RNVoiceRecorder } from 'react-native-voice-recorder';
+import AudioRecord from 'react-native-audio-record';
+import { voiceQuestionAnswerUpload } from '../../../actions/authAction';
 
 const { width, height } = Dimensions.get('window');
 
 var questionControl=0
 var voiceControl=0
+var startRecordingVoice=0
 
 const VoiceQuestions = () => {
     useEffect(() => {
@@ -36,55 +20,76 @@ const VoiceQuestions = () => {
             Tts.speak('');
             Tts.setDucking(true);
             voiceControl=1
+            startRecordingVoice=1
           });
         Tts.voices().then(voices => setVoices(voices));
-    }, []); 
+    }, []);
+    var date = new Date().getDate(); 
+    var month = new Date().getMonth() + 1;
+    var year = new Date().getFullYear(); 
+    var hours = new Date().getHours(); 
+    var min = new Date().getMinutes(); 
+    var sec = new Date().getSeconds();
+    var date = '_' + date + '_' + month + '_' + year + '_'
+    var time = hours + '_' + min + '_' + sec + '_'
     const user = useSelector(state => state.auth.user)
     const QuestionList = useSelector(state => state.auth.QuestionList)
-    const [questions, setQuestions] = useState(QuestionList[0]) 
+    const [questions, setQuestions] = useState(QuestionList[voiceControl]) 
     const navigation = useNavigation();
     const [items, setVoices] = useState()
     const [changeVoices, setChangeVoices] = useState(false)
     const [questionFinish, setQuestionFinish] = useState(true)
+    const [audioFile, setAudioFile] = useState([])
+    const dispatch = useDispatch();
+    const options = {
+        sampleRate: 16000,  // default 44100
+        channels: 1,        // 1 or 2, default 1
+        bitsPerSample: 16,  // 8 or 16, default 16
+        audioSource: 6,     // android only (see below)
+        wavFile: questions.id+date+time+'Answer.wav' // default 'audio.wav'
+    };
+    AudioRecord.init(options);
 
     if (voiceControl){
         if(questionFinish){
-            setTimeout(() => {
+            setTimeout(async() => {
                 console.log("narrating question")
-                Tts.speak(questions.Question)
+                await Tts.speak(questions.Question)
             }, 800);
         }
     }
 
-    const Record = async() => {
-        console.log("started recording")
-        RNVoiceRecorder.Record({
-            onDone: (path) => {
-                console.log("recording done", path)
-                if(questionControl===(QuestionList.length)-1){
-                   console.log("finished")
-                   setQuestionFinish(false)
-                }
-                else{
-                    questionControl=questionControl+1
-                    setQuestions(QuestionList[questionControl])
-                }
-            },
-            onCancel: () => {
-                console.log("recording cancel")
-            }
-        })
+    if (startRecordingVoice){
+        console.log("recording........")
+        AudioRecord.start();
     }
 
     const questionFinished = () => {
         console.log("finished")
+        questionControl=0
         navigation.navigate('Profile')
+    }
+
+    const StopRecording = async() => {
+        Tts.stop();
+        console.log("stopping...............")
+        const audioFile = await AudioRecord.stop();
+        console.log("printing audioFile",audioFile)
+        dispatch(voiceQuestionAnswerUpload(user.id, audioFile, options.wavFile))
+        if(questionControl===(QuestionList.length)-1){
+            setQuestionFinish(false)
+            startRecordingVoice=0
+         }
+         else{
+             questionControl=questionControl+1
+             setQuestions(QuestionList[questionControl])
+         }
+        console.log("printing audio file", audioFile)
     }
 
     console.log("printing doctorlist", questions)
     console.log("rendring voice question page")
 
->>>>>>> recordTest
     return (
         <SafeAreaView style = {styles.container} >
             <StatusBar backgroundColor='#2E71DC'/>
@@ -123,39 +128,54 @@ const VoiceQuestions = () => {
                     <Text style={styles.changeVoiceButton}>Change voice</Text>
                 </TouchableOpacity>
                 <View>
-<<<<<<< HEAD
-=======
-                { questionFinish && (
-                    <Card
-                        containerStyle={{borderRadius: 5, width: width/1.1,}}>
-                        <Text style={{marginBottom: '2%', marginVertical: '2%', alignSelf: 'center'}}>
-                            {questions.Question}
-                        </Text>
-                        {/*{Questions()}*/}
-                        <Button
-                            onPress={()=> Record()}
-                            buttonStyle={{borderRadius: 5}}
-                            title='Record Answer' 
-                        />
-                    </Card>
-                )}
-                { !questionFinish && (
-                    <Card
-                        containerStyle={{borderRadius: 5, width: width/1.1,}}>
-                        <Text style={{marginBottom: '2%', marginVertical: '2%', alignSelf: 'center'}}>
-                            Thank you. Your ansers are recorded. You will get reports after sometime in Reports section of profile. 
-                        </Text>
-                        {/*{Questions()}*/}
-                        <Button
-                            onPress={()=> questionFinished()}
-                            buttonStyle={{borderRadius: 5}}
-                            title='Finished' 
-                        />
-                    </Card>
-                )}
+                    { questionFinish && (
+                        <Card
+                            containerStyle={{borderRadius: 8, width: width/1.1,}}>
+                            <Avatar
+                                size="small"
+                                rounded
+                                source={{
+                                    uri: user.AvatarImg
+                                }}
+                            />
+                            <Text style={styles.subCardQuestionText}>
+                                {questions.Question}
+                            </Text>
+                            <View>
+                                <View>
+                                    <Text style={styles.subCardRecordingText}>Recording....</Text>
+                                </View>
+                                <View>
+                                    <Button
+                                        onPress={()=> StopRecording()}
+                                        title='Finish Recording' 
+                                    />
+                                </View>
+                            </View>
+                        </Card>
+                    )}
+                    { !questionFinish && (
+                        <Card
+                            containerStyle={{borderRadius: 5, width: width/1.1,}}>
+                            <Avatar
+                                size="small"
+                                rounded
+                                source={{
+                                    uri: user.AvatarImg
+                                }}
+                            />    
+                            <Text style={styles.subCardFinishQuestionText}>
+                                Thank you. Your ansers are recorded. You will get reports after sometime in Reports section of profile. 
+                            </Text>
+                            <Button
+                                onPress={()=> questionFinished()}
+                                buttonStyle={{borderRadius: 5}}
+                                title='Finished' 
+                            />
+                        </Card>
+                    )}
                 </View>
                 <View>
->>>>>>> recordTest
                     {changeVoices && (
                         <View>
                             {items.map(item => (
@@ -265,6 +285,30 @@ const styles = StyleSheet.create({
       },
       changeVoiceButton: {
           fontSize: 20,
+      },
+      subCardRecording: {
+        flexDirection: 'row'
+      },
+      subCardQuestionText: {
+        marginBottom: '30%', 
+        marginVertical: '2%', 
+        alignSelf: 'center', 
+        fontSize: 35, 
+        fontWeight: 'bold'
+      },
+      subCardRecordingText: {
+          fontSize: 18,
+          color: 'green',
+          fontWeight: 'bold'
+      },
+      subCardFinishQuestionText: {
+        marginBottom: '2%',
+        marginVertical: '2%',
+        alignSelf: 'center',
+        fontSize: 20,
+      },
+      subCardAvatar: {
+          flexDirection: 'row',
       }
 });
 
