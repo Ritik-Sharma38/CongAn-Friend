@@ -1,17 +1,17 @@
-import React, {Component} from 'react';
-import {createStackNavigator} from '@react-navigation/stack';
-import {createDrawerNavigator} from '@react-navigation/drawer';
-import ProfileScreen from '../screens/PatientScreens/profile/patient';
-import Video from '../screens/video';
-import AvtarSelection from '../screens/PatientScreens/avatar/index';
-import Test from '../screens/test';
-import TalkToDoctor from '../screens/PatientScreens/talkToDoctor/TalkToDoctor';
-import VoiceQuestions from '../screens/PatientScreens/voiceQuestions/VoiceQuestions';
-import SurveyScreen from '../screens/PatientScreens/Survey/SurveyScreen';
-import SurveyComplete from '../screens/PatientScreens/Survey/SurveyComplete';
+import React, { Component } from 'react'
+import { createStackNavigator } from '@react-navigation/stack'
+import { createDrawerNavigator } from '@react-navigation/drawer'
+import ProfileScreen from '../screens/PatientScreens/profile/patient'
+import Video from '../screens/video'
+import AvtarSelection from '../screens/PatientScreens/avatar/index'
+import Test from '../screens/test'
+import TalkToDoctor from '../screens/PatientScreens/talkToDoctor/TalkToDoctor'
+import VoiceQuestions from '../screens/PatientScreens/voiceQuestions/VoiceQuestions'
+import SurveyScreen from '../screens/PatientScreens/Survey/SurveyScreen'
+import SurveyComplete from '../screens/PatientScreens/Survey/SurveyComplete'
 
-const Drawer = createDrawerNavigator();
-const Stack = createStackNavigator();
+const Drawer = createDrawerNavigator()
+const Stack = createStackNavigator()
 
 export class PatientSignedIn extends Component {
   createSurveyStack = () => (
@@ -22,7 +22,7 @@ export class PatientSignedIn extends Component {
       <Stack.Screen name="SurveyScreen" component={SurveyScreen} />
       <Stack.Screen name="SurveyComplete" component={SurveyComplete} />
     </Stack.Navigator>
-  );
+  )
 
   render() {
     return (
@@ -39,8 +39,6 @@ export class PatientSignedIn extends Component {
         <Drawer.Screen name="VoiceQuestions" component={VoiceQuestions} />
         <Drawer.Screen name="Survey" children={this.createSurveyStack} />
       </Drawer.Navigator>
-    );
+    )
   }
 }
-      
-
