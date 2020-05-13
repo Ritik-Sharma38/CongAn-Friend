@@ -21,8 +21,6 @@ import {
 import {Button, Avatar, Card} from 'react-native-elements';
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { firebase } from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
 const {width, height} = Dimensions.get('window');
 
 class ImageLoader extends Component {
@@ -141,7 +139,7 @@ const ProfileScreen = () => {
                   style={{width: width / 1.1, height: height / 2.6}}
                   source={require('../../../assets/healty0.png')}
                 />
-                <TouchableOpacity onPress={() => setTrigerHltme(false)}>
+                <TouchableOpacity onPress={() => navigation.navigate('Survey') }>
                   <Text
                     style={{
                       marginBottom: '2%',
@@ -150,28 +148,11 @@ const ProfileScreen = () => {
                       alignSelf: 'center',
                       fontSize: 22,
                     }}>
-                    Check your health timeline
+                    Questions
                   </Text>
                 </TouchableOpacity>
               </Card>
-              <Card containerStyle={styles.Cards}>
-                <ImageLoader
-                  style={{width: width / 1.1, height: height / 2.6}}
-                  source={require('../../../assets/healty3.png')}
-                />
-                <TouchableOpacity onPress={() => setTrigerDact(false)}>
-                  <Text
-                    style={{
-                      marginBottom: '2%',
-                      marginVertical: '2%',
-                      color: '#fff',
-                      alignSelf: 'center',
-                      fontSize: 22,
-                    }}>
-                    Daily Activity
-                  </Text>
-                </TouchableOpacity>
-              </Card>
+              {/*
               <Card
                 containerStyle={{
                   backgroundColor: '#2E71DC',
@@ -289,31 +270,14 @@ const ProfileScreen = () => {
                   </View>
                 )}
               </Card>
-              <Card containerStyle={styles.Cards}>
-                <ImageLoader
-                  style={{width: width / 1.1, height: height / 2.5}}
-                  source={require('../../../assets/healty9.png')}
-                />
-                <TouchableOpacity onPress={() => setTrigerSlyf(false)}>
-                  <Text
-                    style={{
-                      marginBottom: '2%',
-                      marginVertical: '2%',
-                      color: '#fff',
-                      alignSelf: 'center',
-                      fontSize: 22,
-                    }}>
-                    Social life{' '}
-                  </Text>
-                </TouchableOpacity>
-              </Card>
+              */}
               <Card containerStyle={styles.Cards}>
                 <ImageLoader
                   style={{width: width / 1.1, height: height / 2.6}}
                   source={require('../../../assets/healty8.png')}
                 />
                 <TouchableOpacity
-                  onPress={() => navigation.navigate('TalkToDoctor')}>
+                  onPress={() => alert('under development')}>
                   <Text
                     style={{
                       marginBottom: '2%',
@@ -322,36 +286,11 @@ const ProfileScreen = () => {
                       alignSelf: 'center',
                       fontSize: 22,
                     }}>
-                    Talk to Doctor
+                    Health Timeline
                   </Text>
                 </TouchableOpacity>
               </Card>
-              <Card
-                containerStyle={{
-                  backgroundColor: '#2E71DC',
-                  height: height / 2.5,
-                  width: width / 1.08,
-                  borderRadius: 15,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                <ImageLoader
-                  style={{width: width, height: height / 3}}
-                  source={require('../../../assets/healty12.png')}
-                />
-                <TouchableOpacity onPress={() => setTrigerProfile(false)}>
-                  <Text
-                    style={{
-                      marginBottom: '2%',
-                      marginVertical: '2%',
-                      color: '#fff',
-                      alignSelf: 'center',
-                      fontSize: 22,
-                    }}>
-                    Profile and account setting
-                  </Text>
-                </TouchableOpacity>
-              </Card>
+              
               <Button
                 onPress={() => {
                   dispatch(userSignout());

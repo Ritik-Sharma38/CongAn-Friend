@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
+import {Button} from 'react-native-elements';
 
 const GREEN = 'rgba(141,196,63,1)';
 const PURPLE = 'rgba(108,48,237,1)';
@@ -50,6 +51,10 @@ export default class SurveyCompletedScreen extends Component {
               {answers.multipleDefaults[0].value} and the{' '}
               {answers.multipleDefaults[1].value}
             </Text>
+            <Button
+              onPress={()=> this.props.navigation.navigate('VoiceQuestions')}
+              title="Next"
+            />
           </ScrollView>
         </View>
       </View>
