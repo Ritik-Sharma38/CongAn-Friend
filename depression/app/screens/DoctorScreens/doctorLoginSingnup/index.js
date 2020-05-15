@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
-import { View, Text, StyleSheet, Dimensions, StatusBar, TouchableOpacity, ProgressBarAndroid, PermissionsAndroid} from 'react-native';
-import Svg, { Image, Circle, ClipPath } from 'react-native-svg';
-import Animated, { Easing } from 'react-native-reanimated';
-import { TapGestureHandler, State, TextInput } from 'react-native-gesture-handler';
-import { connect } from 'react-redux';
+import React from 'react';
+import {View, Text, StyleSheet, Dimensions, StatusBar, TouchableOpacity, ProgressBarAndroid, PermissionsAndroid} from 'react-native';
+import Svg, {Image, Circle, ClipPath} from 'react-native-svg';
+import Animated, {Easing} from 'react-native-reanimated';
+import {TapGestureHandler, State, TextInput} from 'react-native-gesture-handler';
+import {connect} from 'react-redux';
 import {fbSignin, emailSignup, emailLogin, googleSignin} from '../../../actions/authAction';
 
-const { width, height } = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 
 const {
   Value,
@@ -134,7 +134,7 @@ class DoctorLoginSignup extends React.Component {
     } catch (err) {
       console.warn(err);
     }
- }
+  }
 
   constructor() {
     super();
@@ -143,7 +143,7 @@ class DoctorLoginSignup extends React.Component {
 
     this.onStateChange = event([
       {
-        nativeEvent: ({ state }) =>
+        nativeEvent: ({state}) =>
           block([
             cond(
               eq(state, State.END),
@@ -155,7 +155,7 @@ class DoctorLoginSignup extends React.Component {
 
     this.onCloseState = event([
       {
-        nativeEvent: ({ state }) =>
+        nativeEvent: ({state}) =>
           block([
             cond(
               eq(state, State.END),
@@ -200,11 +200,34 @@ class DoctorLoginSignup extends React.Component {
       outputRange: [180, 360],
       extrapolate: Extrapolate.CLAMP
     });
+
+    this.submitHandler = this.submitHandler.bind(this);
   }
 
   state = {
     email: '',
     password: '',
+    errors: {},
+  }
+
+  submitHandler = func => {
+    let foundError = false,
+      errors = {};
+
+    if (this.state.email.trim().length == 0) {
+      errors["email"] = "Email can't be empty";
+      foundError = true;
+    }
+
+    if (this.state.password.trim().length == 0) {
+      errors["password"] = "Password can't be empty";
+      foundError = true;
+    }
+
+    if (!foundError)
+      func(this.state.email, this.state.password, "doctor");
+    else
+      this.setState({errors});
   }
 
   render() {
@@ -217,118 +240,122 @@ class DoctorLoginSignup extends React.Component {
           justifyContent: 'flex-end'
         }}
       >
-        <StatusBar backgroundColor='#fff'/>
+        <StatusBar backgroundColor='#fff' />
         <Animated.View
           style={{
             ...StyleSheet.absoluteFill,
-            transform: [{ translateY: this.bgY }]
+            transform: [{translateY: this.bgY}]
           }}
         >
-        <Svg height={height + 50} width={width}>
-          <ClipPath id="clip">
-            <Circle r={height + 50} cx={width / 2} />
-          </ClipPath>
-          <Image
-            href={require('../../../assets/bgg.png')}
-            width={width}
-            height={height + 50}
-            preserveAspectRatio="xMidYMid slice"
-            clipPath="url(#clip)"
-          />
-        </Svg>
+          <Svg height={height + 50} width={width}>
+            <ClipPath id="clip">
+              <Circle r={height + 50} cx={width / 2} />
+            </ClipPath>
+            <Image
+              href={require('../../../assets/bgg.png')}
+              width={width}
+              height={height + 50}
+              preserveAspectRatio="xMidYMid slice"
+              clipPath="url(#clip)"
+            />
+          </Svg>
         </Animated.View>
-          <View style={{ height: height / 3, justifyContent: 'center' }}>
+        <View style={{height: height / 3, justifyContent: 'center'}}>
           <TapGestureHandler onHandlerStateChange={this.onStateChange}>
             <Animated.View
               style={{
                 ...styles.button,
                 opacity: this.buttonOpacity,
-                transform: [{ translateY: this.buttonY }]
+                transform: [{translateY: this.buttonY}]
               }}
             >
-              <Text style={{ fontSize: 20, }}>SIGN IN / LOG IN</Text>
+              <Text style={{fontSize: 20, }}>SIGN IN / LOG IN</Text>
             </Animated.View>
           </TapGestureHandler>
-    
-        {/**<TapGestureHandler onHandlerStateChange={this.onStateChange}>**/}
+
+          {/**<TapGestureHandler onHandlerStateChange={this.onStateChange}>**/}
           <TouchableOpacity onPress={() => this.props.fbSignin("doctor")}>
             <Animated.View
-            style={{
-              ...styles.button,
-              backgroundColor: '#2E71DC',
-              opacity: this.buttonOpacity,
-              transform: [{ translateY: this.buttonY }]
-            }}
-          >
-            <Text style={{ fontSize: 20, color: 'white' }}>
-              SIGN IN WITH FACEBOOK
+              style={{
+                ...styles.button,
+                backgroundColor: '#2E71DC',
+                opacity: this.buttonOpacity,
+                transform: [{translateY: this.buttonY}]
+              }}
+            >
+              <Text style={{fontSize: 20, color: 'white'}}>
+                SIGN IN WITH FACEBOOK
             </Text>
-          </Animated.View>
-        </TouchableOpacity>
-        {/**</TapGestureHandler>**/}
-        {/** <TapGestureHandler onHandlerStateChange={this.onStateChange}>**/}
-        <TouchableOpacity onPress={() => this.props.googleSignin("doctor")}>
+            </Animated.View>
+          </TouchableOpacity>
+          {/**</TapGestureHandler>**/}
+          {/** <TapGestureHandler onHandlerStateChange={this.onStateChange}>**/}
+          <TouchableOpacity onPress={() => this.props.googleSignin("doctor")}>
             <Animated.View
               style={{
                 ...styles.button,
                 opacity: this.buttonOpacity,
-                transform: [{ translateY: this.buttonY }]
+                transform: [{translateY: this.buttonY}]
               }}>
-              <Text style={{ fontSize: 20, }}>SIGN IN WITH GOOGLE</Text>
+              <Text style={{fontSize: 20, }}>SIGN IN WITH GOOGLE</Text>
             </Animated.View>
-            { this.props.progressBarStatus && (
+            {this.props.progressBarStatus && (
               <ProgressBarAndroid styleAttr="Horizontal" color="#2E71DC" />
             )}
-        </TouchableOpacity>
-        
-        {/**</TapGestureHandler>**/}
+          </TouchableOpacity>
+
+          {/**</TapGestureHandler>**/}
           <Animated.View
-            style={{zIndex: this.textInputZindex,
-            opacity: this.textInputOpacity,
-            transform:[{translateY: this.textInputY}],
-            height: height/3,
-            ...StyleSheet.absoluteFill, top: null, justifyContent: 'center'}}
+            style={{
+              zIndex: this.textInputZindex,
+              opacity: this.textInputOpacity,
+              transform: [{translateY: this.textInputY}],
+              height: height / 3,
+              ...StyleSheet.absoluteFill, top: null, justifyContent: 'center'
+            }}
           >
             <TapGestureHandler onHandlerStateChange=
-            {this.onCloseState}>
+              {this.onCloseState}>
               <Animated.View style={styles.closeButton}>
                 <Animated.Text
-                  style={{fontSize: 15,
-                  transform: [{rotate: concat(this.rotateCross, 'deg') }] }}>
-                    X
+                  style={{
+                    fontSize: 15,
+                    transform: [{rotate: concat(this.rotateCross, 'deg')}]
+                  }}>
+                  X
                 </Animated.Text>
               </Animated.View>
             </TapGestureHandler>
             <TextInput
               placeholder="Email"
-              style={styles.textInput}
+              style={"email" in this.state.errors ? styles.textError : styles.textInput}
               placeholderTextColor='white'
               autoCompleteType='email'
               autoCorrect={true}
               keyboardType='email-address'
-              onChangeText={email => this.setState({ email })}
-          		value={this.state.email}
+              onChangeText={email => {this.setState({email}); this.setState({errors: {}})}}
+              value={this.state.email}
             />
             <TextInput
               placeholder="Password"
-              style={styles.textInput}
+              style={"password" in this.state.errors ? styles.textError : styles.textInput}
               placeholderTextColor='white'
               autoCompleteType='password'
               secureTextEntry={true}
-              onChangeText={password => this.setState({ password })}
+              onChangeText={password => {this.setState({password}); this.setState({errors: {}})}}
               value={this.state.password}
             />
-            <View style={{ flexDirection: 'row', }}>
-            <TouchableOpacity onPress={() => this.props.emailSignup(this.state.email, this.state.password, "doctor")}>
-              <Animated.View style={styles.Lbutton}>
-                <Text Style= {{ fontsize: 20, fontWeight: 'bold' }}>SIGN IN</Text>
-              </Animated.View>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.props.emailLogin(this.state.email, this.state.password, "doctor")}>
-              <Animated.View style={styles.Rbutton}> 
-                <Text Style= {{ fontsize: 20, fontWeight: 'bold' }}>LOG IN</Text>
-              </Animated.View>
-            </TouchableOpacity>
+            <View style={{flexDirection: 'row', }}>
+              <TouchableOpacity onPress={() => this.submitHandler(this.props.emailSignup)}>
+                <Animated.View style={styles.Lbutton}>
+                  <Text Style={{fontsize: 20, fontWeight: 'bold'}}>SIGN IN</Text>
+                </Animated.View>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => this.submitHandler(this.props.emailLogin)}>
+                <Animated.View style={styles.Rbutton}>
+                  <Text Style={{fontsize: 20, fontWeight: 'bold'}}>LOG IN</Text>
+                </Animated.View>
+              </TouchableOpacity>
             </View>
             {this.props.progressBarStatus && (
               <ProgressBarAndroid styleAttr="Horizontal" color="#fff" />
@@ -357,7 +384,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginVertical: 5,
-    shadowOffset: { width: 0, height: 3 },
+    shadowOffset: {width: 0, height: 3},
     shadowColor: '#000',
     shadowOpacity: 0.4,
     elevation: 4,
@@ -372,8 +399,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginVertical: 5,
-    width: width/2.47,
-    shadowOffset: { width: 0, height: 3 },
+    width: width / 2.47,
+    shadowOffset: {width: 0, height: 3},
     shadowColor: '#000',
     shadowOpacity: 0.4,
     elevation: 4,
@@ -387,8 +414,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginVertical: 5,
-    width: width/2.47,
-    shadowOffset: { width: 0, height: 3 },
+    width: width / 2.47,
+    shadowOffset: {width: 0, height: 3},
     shadowColor: '#000',
     shadowOpacity: 0.4,
     elevation: 4,
@@ -403,20 +430,27 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: -20,
     left: width / 2 - 20,
-    shadowOffset: { width: 0, height: 3 },
+    shadowOffset: {width: 0, height: 3},
     shadowColor: '#000',
     shadowOpacity: 0.4,
     elevation: 4,
   },
   textInput: {
     backgroundColor: 'rgba(0,0,0,0.05)',
-    height:50,
+    height: 50,
     borderRadius: 25,
-    borderWidth:0.5,
-    marginHorizontal:20,
-    paddingLeft:10,
-    marginVertical:5,
-    borderColor:'rgba(0,0,0,0.2)',
+    borderWidth: 0.5,
+    marginHorizontal: 20,
+    paddingLeft: 10,
+    marginVertical: 5,
+    borderColor: 'rgba(0,0,0,0.2)',
+  },
+  textError: {
+    marginHorizontal: 20,
+    paddingLeft: 10,
+    marginVertical: 5,
+    borderColor: "red",
+    borderWidth: 1,
   }
 });
 
@@ -434,5 +468,5 @@ const mapState = (state) => ({
   SignIn: state.auth.SignIn
 })
 
-const mapDispatch = { fbSignin, emailSignup, emailLogin, googleSignin};
-export default connect(mapState,mapDispatch)(DoctorLoginSignup)
+const mapDispatch = {fbSignin, emailSignup, emailLogin, googleSignin};
+export default connect(mapState, mapDispatch)(DoctorLoginSignup)
