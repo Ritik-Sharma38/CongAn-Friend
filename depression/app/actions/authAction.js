@@ -292,7 +292,8 @@ export const fbSignin=( profileType )=>{
         dispatch({
             type: START_FB_SIGNIN
         })
-        const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
+        try {
+            const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
         if (result.isCancelled) {
             throw new Error('User cancelled the login process');
             dispatch({
@@ -379,6 +380,14 @@ export const fbSignin=( profileType )=>{
                 });
             }
         }
+        }catch(error){
+            dispatch({
+                type: FB_SIGNIN_FAILED,
+                payload: error
+            })
+            alert("Facebook Login failed" + error)
+        }
+        
     }
 }
 
