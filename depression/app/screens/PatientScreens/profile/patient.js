@@ -82,6 +82,7 @@ const ProfileScreen = () => {
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor="#2E71DC" />
       <View style={styles.FirstHalf}>
+        {/*
         <View
           style={{
             flexDirection: 'row',
@@ -89,12 +90,14 @@ const ProfileScreen = () => {
             alignContent: 'center',
             alignItems: 'center',
           }}>
+            
           <Icon.Button
             backgroundColor="#2E71DC"
             name="menu"
             onPress={() => navigation.openDrawer()}
           />
-          <View style={{flexDirection: 'row', marginHorizontal: '20%'}}>
+            */}
+          <View style={{flexDirection: 'row', alignSelf: 'center' }}>
             <Avatar
               size="large"
               rounded
@@ -114,7 +117,6 @@ const ProfileScreen = () => {
               onEditPress={() => navigation.navigate('Avatar')}
             />
           </View>
-        </View>
         <View
           style={{
             alignItems: 'center',
@@ -139,7 +141,7 @@ const ProfileScreen = () => {
                   style={{width: width / 1.1, height: height / 2.6}}
                   source={require('../../../assets/healty0.png')}
                 />
-                <TouchableOpacity onPress={() => navigation.navigate('Survey') }>
+                <TouchableOpacity onPress={() => navigation.navigate('VoiceQuestions') }>
                   <Text
                     style={{
                       marginBottom: '2%',
@@ -299,6 +301,7 @@ const ProfileScreen = () => {
               />
             </View>
           )}
+        {/*
         {!trigerImg && (
           <View style={{alignItems: 'center', alignContent: 'center'}}>
             <View
@@ -378,6 +381,7 @@ const ProfileScreen = () => {
             <Text>triger form social life</Text>
           </View>
         )}
+        */}
       </ScrollView>
     </SafeAreaView>
   );

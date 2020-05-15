@@ -106,6 +106,7 @@ const VoiceQuestions = () => {
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor="#2E71DC" />
       <View style={styles.FirstHalf}>
+        {/* 
         <View
           style={{
             flexDirection: 'row',
@@ -118,7 +119,8 @@ const VoiceQuestions = () => {
             name="menu"
             onPress={() => navigation.openDrawer()}
           />
-          <View style={{ flexDirection: 'row', marginHorizontal: '20%' }}>
+          */}
+          <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
             <Avatar
               size="large"
               rounded
@@ -136,7 +138,7 @@ const VoiceQuestions = () => {
               }}
             />
           </View>
-        </View>
+        
         <View
           style={{
             alignItems: 'center',
