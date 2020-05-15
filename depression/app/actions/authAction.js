@@ -56,7 +56,7 @@ import { exp } from 'react-native-reanimated';
 function bootstrap() {
    GoogleSignin.configure({
     scopes: ['profile', 'email'],
-    webClientId: '183699983634-m4vtpe1dhvcftno84ksgsm5ttemdqo17.apps.googleusercontent.com'
+    webClientId: '849034506077-8n89fq2qn7plsj3vgerriueovdcl59et.apps.googleusercontent.com'
   });
 }
 
@@ -196,7 +196,7 @@ export const googleSignin=( profileType )=>{
             type: START_GOOGLE_SIGN_IN
         })
         try{
-            //await GoogleSignin.hasPlayServices();
+            await GoogleSignin.hasPlayServices();
             const user = await GoogleSignin.signIn();
             console.log("user fetch google login",user)
             console.log("fetch tokens",GoogleSignin.getTokens())
@@ -282,7 +282,7 @@ export const googleSignin=( profileType )=>{
                 type:GOOGLE_SIGN_IN_FAILED,
                 payload: error.message
             })
-            alert("Please try again! " + error.code);
+            alert("Please try again!" + error);
 
         }
     }
@@ -780,7 +780,9 @@ export const voiceQuestionAnswerUpload = (uid, file, id) => {
             console.log("started Voice Answers upload")
             QuestionAnswer = {
                 VoiceAnsers: {
-                    Anserwer: id,//push in array form// error // solve this. 
+                    id: id,//push in array form// error // solve this. 
+                    file: file,
+                    answer: true,
                 }
             }
             updateUser(QuestionAnswer)
