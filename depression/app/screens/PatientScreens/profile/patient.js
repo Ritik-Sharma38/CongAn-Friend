@@ -136,12 +136,12 @@ const ProfileScreen = () => {
           trigerProfile &&
           trigerAvtarVideo && (
             <View>
-              <Card containerStyle={styles.Cards}>
-                <ImageLoader
-                  style={{width: width / 1.1, height: height / 2.6}}
-                  source={require('../../../assets/healty0.png')}
-                />
-                <TouchableOpacity onPress={() => navigation.navigate('VoiceQuestions') }>
+              <TouchableOpacity onPress={() => navigation.navigate('VoiceQuestions') }>
+                <Card containerStyle={styles.Cards}>
+                  <ImageLoader
+                    style={{width: width / 1.1, height: height / 2.6}}
+                    source={require('../../../assets/healty0.png')}
+                  />
                   <Text
                     style={{
                       marginBottom: '2%',
@@ -152,8 +152,8 @@ const ProfileScreen = () => {
                     }}>
                     Questions
                   </Text>
-                </TouchableOpacity>
-              </Card>
+                </Card>
+              </TouchableOpacity>
               {/*
               <Card
                 containerStyle={{
@@ -273,25 +273,25 @@ const ProfileScreen = () => {
                 )}
               </Card>
               */}
-              <Card containerStyle={styles.Cards}>
-                <ImageLoader
-                  style={{width: width / 1.1, height: height / 2.6}}
-                  source={require('../../../assets/healty8.png')}
-                />
-                <TouchableOpacity
-                  onPress={() => alert('under development')}>
-                  <Text
-                    style={{
-                      marginBottom: '2%',
-                      marginVertical: '2%',
-                      color: '#fff',
-                      alignSelf: 'center',
-                      fontSize: 22,
-                    }}>
-                    Health Timeline
-                  </Text>
-                </TouchableOpacity>
-              </Card>
+              <TouchableOpacity
+                onPress={() => alert('under development')}>
+                <Card containerStyle={styles.Cards}>
+                  <ImageLoader
+                    style={{width: width / 1.1, height: height / 2.6}}
+                    source={require('../../../assets/healty8.png')}
+                  />
+                    <Text
+                      style={{
+                        marginBottom: '2%',
+                        marginVertical: '2%',
+                        color: '#fff',
+                        alignSelf: 'center',
+                        fontSize: 22,
+                      }}>
+                      Health Timeline
+                    </Text>
+                </Card>
+              </TouchableOpacity>
               
               <Button
                 onPress={() => {
