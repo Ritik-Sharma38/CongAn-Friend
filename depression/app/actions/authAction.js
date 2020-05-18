@@ -48,10 +48,12 @@ import {START_FB_SIGNIN,
     AVATAR_VOICE_ANSWER_UPLOAD_STARTED,
     AVATAR_VOICE_ANSWER_UPLOAD_SUCCESS,
     AVATAR_VOICE_ANSWER_UPLOAD_FAILED,
+    INITIALIZING_USER_SUCCESS,
+    INITIALIZING_USER_STARTED,
+    INITIALIZING_USER_FAILED,
 } from './types';
 import { act } from 'react-test-renderer';
 import { exp } from 'react-native-reanimated';
-
 
 function bootstrap() {
    GoogleSignin.configure({
@@ -253,6 +255,18 @@ export const googleSignin=( profileType )=>{
                                 imageName: '',
                                 imageDownloadUrl: '',
                             }
+                        },
+                        healthTimeline:{
+                            PHQ8Value:[
+                                {ScaleValue: 0, Date: '20/04', Time: " "},
+                                {ScaleValue: 3, Date: '20/04', Time: " "},
+                                {ScaleValue: 22, Date: '03/05', Time: " "},
+                                {ScaleValue: 15, Date: '10/05', Time: " "},
+                                {ScaleValue: 18, Date: '16/05', Time: " "},
+                                {ScaleValue: 20, Date: '23/05', Time: " "},
+                                {ScaleValue: 22, Date: '30/05', Time: " "},
+                                {ScaleValue: 24, Date: '06/06', Time: " "},
+                            ]
                         }
                     };
                     console.log("google signIn success from patient")
@@ -360,6 +374,18 @@ export const fbSignin=( profileType )=>{
                                     imageName: '',
                                     imageDownloadUrl: '',
                                 }
+                            },
+                            healthTimeline:{
+                                PHQ8Value:[
+                                    {ScaleValue: 0, Date: '20/04', Time: " "},
+                                    {ScaleValue: 3, Date: '20/04', Time: " "},
+                                    {ScaleValue: 22, Date: '03/05', Time: " "},
+                                    {ScaleValue: 15, Date: '10/05', Time: " "},
+                                    {ScaleValue: 18, Date: '16/05', Time: " "},
+                                    {ScaleValue: 20, Date: '23/05', Time: " "},
+                                    {ScaleValue: 22, Date: '30/05', Time: " "},
+                                    {ScaleValue: 24, Date: '06/06', Time: " "},
+                                ]
                             }
                         };
                         firestore().collection("users").doc(user.uid).set(temp);
@@ -422,6 +448,18 @@ export const emailSignup = (email, password, profileType) => {
                             imageName: '',
                             imageDownloadUrl: '',
                         }
+                    },
+                    healthTimeline:{
+                        PHQ8Value:[
+                            {ScaleValue: 0, Date: '20/04', Time: " "},
+                            {ScaleValue: 3, Date: '20/04', Time: " "},
+                            {ScaleValue: 22, Date: '03/05', Time: " "},
+                            {ScaleValue: 15, Date: '10/05', Time: " "},
+                            {ScaleValue: 18, Date: '16/05', Time: " "},
+                            {ScaleValue: 20, Date: '23/05', Time: " "},
+                            {ScaleValue: 22, Date: '30/05', Time: " "},
+                            {ScaleValue: 24, Date: '06/06', Time: " "},
+                        ]
                     }
                 }
                 await firestore().collection("users").doc(doLogin.user.uid).set(userDict);
@@ -444,6 +482,33 @@ export const emailSignup = (email, password, profileType) => {
     }
 };
 
+export const initalize = (uid) => {
+    return async dispatch => {
+        dispatch({ type: INITIALIZING_USER_STARTED });
+        try{
+            console.log("starting fetching of User data from firestore with uid=", uid)
+            const docRef = await firestore().collection("users").doc(uid);
+            console.log("docref", docRef)
+            docRef.get().then(function(doc){
+                if(true){
+                    dispatch({
+                        type: INITIALIZING_USER_SUCCESS,
+                        payload: doc.data(),
+                    })
+                    console.log("Finished Firestore user fetching. Fetching Doctor and VoiceQuestions list")
+                }
+            })
+            dispatch(fetchDoctorList())
+            console.log("Finished initalizing.")
+        }catch(error){
+            console.log("Error in initalizing....", error)
+            dispatch({
+                type: INITIALIZING_USER_FAILED,
+                payload: error
+            })
+       }
+    }
+}
 export const emailLogin = (email, password, profileType) => {
     return async dispatch => {
         dispatch({ type: START_EMAIL_PASSWORD_LOGIN });

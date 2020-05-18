@@ -9,6 +9,7 @@ import TalkToDoctor from '../screens/PatientScreens/talkToDoctor/TalkToDoctor'
 import VoiceQuestions from '../screens/PatientScreens/voiceQuestions/VoiceQuestions'
 import SurveyScreen from '../screens/PatientScreens/Survey/SurveyScreen'
 import SurveyComplete from '../screens/PatientScreens/Survey/SurveyComplete'
+import HealthTimeline from '../screens/PatientScreens/HealthTimeline/HealthTimeline'
 
 const Drawer = createDrawerNavigator()
 const Stack = createStackNavigator()
@@ -34,6 +35,7 @@ export class PatientSignedIn extends Component {
         <Drawer.Screen name="Profile" component={ProfileScreen} />
         <Drawer.Screen name="Avatar" component={AvtarSelection} />
         <Drawer.Screen name="VoiceQuestions" component={VoiceQuestions} />
+        <Drawer.Screen name="Health Timeline" component={HealthTimeline} />
         {/*
         <Drawer.Screen name="Video" component={Video} />
         <Drawer.Screen name="VideoCall" component={Test} />

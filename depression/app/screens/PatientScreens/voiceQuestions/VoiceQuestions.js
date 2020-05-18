@@ -127,8 +127,6 @@ const VoiceQuestions = () => {
               source={{
                 uri: user.profileURL,
               }}
-              showEditButton
-              onEditPress={() => alert('not allowed now')}
             />
             <Avatar
               size="large"

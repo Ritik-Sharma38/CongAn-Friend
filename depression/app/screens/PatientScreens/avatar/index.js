@@ -82,17 +82,17 @@ class AvtarSelection extends Component {
     var buttonHeight = height/2
     return (
       <Card
-        containerStyle={{borderRadius: 25, height: height/2, width: width/1.1,}}>
+        containerStyle={{borderRadius: 20, width: width/1.08,}}>
         <Image
-          style={{width: width/1.2, height: height/3,}}
+          style={{width: width/1.2, height:height/2.7}}
           source={item.uri}
         />
-        <Text style={{marginBottom: '2%', marginVertical: '2%', alignSelf: 'center'}}>
+        <Text style={{marginTop: '2%', alignSelf: 'center'}}>
           {item.title}
         </Text>
         <Button
           onPress={()=>this.profilePage(item.name)}
-          buttonStyle={{borderRadius: 25, marginVertical: buttonHeight/14}}
+          buttonStyle={{borderRadius: 25}}
           title='This is me' />
       </Card>  
     );

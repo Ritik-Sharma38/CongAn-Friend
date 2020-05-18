@@ -16,7 +16,7 @@ import {
   userSignout,
   pickImage,
   pickVideo,
-  fetchDoctorList,
+  initalize,
 } from '../../../actions/authAction';
 import {Button, Avatar, Card} from 'react-native-elements';
 import {useNavigation} from '@react-navigation/native';
@@ -75,7 +75,7 @@ const ProfileScreen = () => {
   const progressBar = useSelector((state) => state.auth.progressBarStatus);
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(fetchDoctorList());
+    dispatch(initalize(user.id));
   }, []);
   console.log('profile detils', user);
   return (
@@ -107,15 +107,17 @@ const ProfileScreen = () => {
               showEditButton
               onEditPress={() => alert('not allowed now')}
             />
-            <Avatar
-              size="large"
-              rounded
-              source={{
-                uri: user.AvatarImg,
-              }}
-              showEditButton
-              onEditPress={() => navigation.navigate('Avatar')}
-            />
+            <View style={{marginLeft: 8}}>
+              <Avatar
+                size="large"
+                rounded
+                source={{
+                  uri: user.AvatarImg,
+                }}
+                showEditButton
+                onEditPress={() => navigation.navigate('Avatar')}
+              />
+            </View>
           </View>
         <View
           style={{
@@ -128,6 +130,9 @@ const ProfileScreen = () => {
         </View>
       </View>
       <ScrollView contentContainerStyle={styles.SecondHalf}>
+        {progressBar && (
+              <ProgressBarAndroid styleAttr="Horizontal" color="#2E71DC" />
+        )}
         {trigerImg &&
           trigerHltme &&
           trigerDact &&
@@ -274,7 +279,7 @@ const ProfileScreen = () => {
               </Card>
               */}
               <TouchableOpacity
-                onPress={() => alert('under development')}>
+                onPress={() => navigation.navigate('Health Timeline')}>
                 <Card containerStyle={styles.Cards}>
                   <ImageLoader
                     style={{width: width / 1.1, height: height / 2.6}}

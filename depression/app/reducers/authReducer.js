@@ -40,6 +40,9 @@ import {START_GOOGLE_SIGN_IN,
     AVATAR_VOICE_ANSWER_UPLOAD_STARTED,
     AVATAR_VOICE_ANSWER_UPLOAD_SUCCESS,
     AVATAR_VOICE_ANSWER_UPLOAD_FAILED,
+    INITIALIZING_USER_STARTED,
+    INITIALIZING_USER_SUCCESS,
+    INITIALIZING_USER_FAILED,
 } from '../actions/types';
 import { act } from 'react-test-renderer';
 
@@ -57,6 +60,7 @@ const DEFAULT_STATE={
     DoctorList: [],
     QuestionList: [],
     backtoProfile: false,
+    firebaseUser:{},
 }
 export default (state=DEFAULT_STATE, action)=>{
     switch(action.type){
@@ -315,6 +319,23 @@ export default (state=DEFAULT_STATE, action)=>{
                 backtoProfile: true,
             }
         case AVATAR_VOICE_ANSWER_UPLOAD_FAILED:
+            return{
+                ...state,
+                progressBarStatus: false,
+                errorMessage: action.payload
+            }
+        case INITIALIZING_USER_STARTED:
+            return{
+                ...state,
+                progressBarStatus: true,
+            }
+        case INITIALIZING_USER_SUCCESS:
+            return{
+                ...state,
+                progressBarStatus: false,
+                firebaseUser: action.payload
+            }
+        case INITIALIZING_USER_FAILED:
             return{
                 ...state,
                 progressBarStatus: false,
