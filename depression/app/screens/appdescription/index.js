@@ -11,10 +11,10 @@ export default class AppDiscription extends React.Component {
       <Onboarding
       bottomBarColor = '#fff'
         onSkip={() => {
-          this.props.navigation.navigate('ploginSignup')
+          this.props.navigation.navigate('patientDoctor')
         }}
         onDone={() => {
-          this.props.navigation.navigate('ploginSignup')
+          this.props.navigation.navigate('patientDoctor')
         }}
         pages={[
           {

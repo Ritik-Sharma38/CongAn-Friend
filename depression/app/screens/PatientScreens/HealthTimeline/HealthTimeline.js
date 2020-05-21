@@ -14,14 +14,18 @@ import {
   Alert,
 } from 'react-native'
 import { useSelector, useDispatch } from 'react-redux'
-import { Card, Avatar, ListItem } from 'react-native-elements'
+import { Card, Avatar } from 'react-native-elements'
 import { useNavigation } from '@react-navigation/native'
 import { LineChart } from "react-native-chart-kit";
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const { width, height } = Dimensions.get('window')
+
+var depressionLevel = 0
 var depressionStatus = ''
 var depressionOverTimeGraphValue=[]
 var depressionOverTimeGraphLable=[]
+var loadingState=true
 
 const HealthTimeline = () => {
   useEffect(() => {
@@ -30,7 +34,30 @@ const HealthTimeline = () => {
   const dispatch = useDispatch()
   const user = useSelector((state) => state.auth.user);
   const firebaseUser = useSelector((state) => state.auth.firebaseUser);
-  const depressionLevel = firebaseUser.healthTimeline.PHQ8Value[(firebaseUser.healthTimeline.PHQ8Value.length)-1]
+  if(firebaseUser.healthTimeline){
+    depressionLevel = firebaseUser.healthTimeline.PHQ8Value[(firebaseUser.healthTimeline.PHQ8Value.length)-1]
+    for(let i=0; i<firebaseUser.healthTimeline.PHQ8Value.length; i++){
+      depressionOverTimeGraphValue.push(firebaseUser.healthTimeline.PHQ8Value[i].ScaleValue)
+      depressionOverTimeGraphLable.push(firebaseUser.healthTimeline.PHQ8Value[i].Date)
+    }
+    if(depressionLevel.ScaleValue<5){
+        depressionStatus = 'Not Depressed'
+    }
+    else if(depressionLevel.ScaleValue>4 && depressionLevel.ScaleValue<10){
+        depressionStatus = 'Mild Depression'
+    }
+    else if(depressionLevel.ScaleValue>9 && depressionLevel.ScaleValue<15){
+      depressionStatus = 'Moderate Depression'
+    }
+    else if(depressionLevel.ScaleValue>14 && depressionLevel.ScaleValue<20){
+      depressionStatus = 'Moderately severe depression'
+    }
+    else if(depressionLevel.ScaleValue>19 && depressionLevel.ScaleValue<25){
+      depressionStatus = 'Severe depression'
+    }
+    console.log("printing firebase user data", firebaseUser)
+    loadingState=false
+  }
   const chartConfig = {
     backgroundGradientFrom: "#1E2923",
     backgroundGradientFromOpacity: 0,
@@ -41,10 +68,6 @@ const HealthTimeline = () => {
     barPercentage: 0.5,
     useShadowColorFromDataset: true // optional
   };
-  for(let i=0; i<firebaseUser.healthTimeline.PHQ8Value.length; i++){
-    depressionOverTimeGraphValue.push(firebaseUser.healthTimeline.PHQ8Value[i].ScaleValue)
-    depressionOverTimeGraphLable.push(firebaseUser.healthTimeline.PHQ8Value[i].Date)
-  }
   const data = {
     labels: depressionOverTimeGraphLable,
     datasets: [
@@ -55,22 +78,6 @@ const HealthTimeline = () => {
       }
     ],
   };
-  if(depressionLevel.ScaleValue<5){
-      depressionStatus = 'Not Depressed'
-  }
-  else if(depressionLevel.ScaleValue>4 && depressionLevel.ScaleValue<10){
-      depressionStatus = 'Mild Depression'
-  }
-  else if(depressionLevel.ScaleValue>9 && depressionLevel.ScaleValue<15){
-    depressionStatus = 'Moderate Depression'
-  }
-  else if(depressionLevel.ScaleValue>14 && depressionLevel.ScaleValue<20){
-    depressionStatus = 'Moderately severe depression'
-  }
-  else if(depressionLevel.ScaleValue>19 && depressionLevel.ScaleValue<25){
-    depressionStatus = 'Severe depression'
-  }
-  console.log("printing firebase user data", firebaseUser.healthTimeline.PHQ8Value, depressionLevel)
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor="#2E71DC" />
@@ -118,21 +125,65 @@ const HealthTimeline = () => {
         </View>
       </View>
       <ScrollView contentContainerStyle={styles.SecondHalf}>
-        <View style={styles.DepressionStatusView}>
-            <Text style={styles.DepressionText}>Your level of depression is: {depressionLevel.ScaleValue}</Text>
-            <Text style={styles.DepressionText}>Your Depression status is: {depressionStatus}</Text>
-        </View>
-        <View style={styles.GraphView}>
-            <Text style={styles.DepressionOverTimeGraphHeading}>Depression over time:</Text>
-            <LineChart
-                data={data}
-                width={width}
-                height={height/3}
-                chartConfig={chartConfig}
-                withInnerLines={true}
-                withOuterLines={true}
-            />
-        </View>
+        {loadingState && (
+              <ProgressBarAndroid styleAttr="Horizontal" color="#2E71DC" />
+        )}
+        {!loadingState && (
+            <View>
+              <Text>Last update: {depressionLevel.Date} :{depressionLevel.Time}</Text>
+              <View style={styles.DepressionStatusView}>
+                <Text style={styles.DepressionText}>Your level of depression is: {depressionLevel.ScaleValue}</Text>
+                <Text style={styles.DepressionText}>Your Depression status is: {depressionStatus}</Text>
+              </View>
+              <View style={styles.GraphView}>
+                <Text style={styles.DepressionOverTimeGraphHeading}>Depression over time:</Text>
+                <LineChart
+                  data={data}
+                  width={width}
+                  height={height/3}
+                  chartConfig={chartConfig}
+                  withInnerLines={true}
+                  withOuterLines={true}
+                />
+              </View>
+              <View style={styles.OnlineCBT}>
+                <View style={styles.CBT_Hedline}>
+                  <Text style={styles.CBT_HeadlineText}>Online CBT</Text>
+                  <Icon
+                    size={30}
+                    name='info-outline'
+                    type='MaterialIcons'
+                    onPress={()=> Alert.alert(
+                      "Cognitive Behavioral Therapy",
+                      "Cognitive behavioral therapy is a psycho-social intervention that aims to improve mental health. CBT focuses on challenging and changing unhelpful cognitive distortions and behaviors, improving emotional regulation, and the development of personal coping strategies that target solving current problems."
+                    )}  
+                  />
+                </View>
+                <Button
+                  onPress={()=> alert("under development")}
+                  title="Launch CBT"
+                />
+              </View>
+              <View style={styles.TalkToDoctor}>
+                <View style={styles.DoctorHeadline}>
+                  <Text style={styles.DoctorHeadlineText}>Talk to Doctor</Text>
+                  <Icon
+                    size={30}
+                    name='info-outline'
+                    type='MaterialIcons'
+                    onPress={()=> Alert.alert(
+                      "Talk to Doctor",
+                      "How it works? \n 1. Click the button below \n 2. Select a doctor from list \n 3. Buy subscription or select pay as you go \n 4. Book appointment with doctor"
+                    )}  
+                  />
+                </View>
+                <Button
+                  onPress={()=> navigation.navigate("Talk To Doctor")}
+                  title="Talk to a doctor"
+                />
+              </View>
+            </View>
+        )}
       </ScrollView>
     </SafeAreaView>
   )
@@ -164,9 +215,31 @@ const styles = StyleSheet.create({
 
   },
   DepressionOverTimeGraphHeading: {
-      padding: 10,
-      fontSize: 18,
-      marginBottom: 5,
+    padding: 10,
+    fontSize: 18,
+    marginBottom: 5,
+  },
+  OnlineCBT: {
+    padding: 10,
+    backgroundColor: 'white'
+  },
+  CBT_HeadlineText: {
+    fontSize: 20
+  },
+  CBT_Hedline: {
+    flexDirection: 'row',
+    marginBottom: 7
+  },
+  TalkToDoctor: {
+    padding: 10,
+    backgroundColor: 'white'
+  },
+  DoctorHeadline: {
+    flexDirection: 'row',
+    marginBottom: 7
+  },
+  DoctorHeadlineText: {
+    fontSize: 20
   }
 })
 

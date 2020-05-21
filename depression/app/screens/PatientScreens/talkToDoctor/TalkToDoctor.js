@@ -63,7 +63,7 @@ const TalkToDoctor = () => {
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor="#2E71DC" />
       <View style={styles.FirstHalf}>
-        <View
+        {/*<View
           style={{
             flexDirection: 'row',
             justifyContent: 'flex-start',
@@ -74,8 +74,8 @@ const TalkToDoctor = () => {
             backgroundColor="#2E71DC"
             name="menu"
             onPress={() => navigation.openDrawer()}
-          />
-          <View style={{ flexDirection: 'row', marginHorizontal: '20%' }}>
+          />*/}
+          <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
             <Avatar
               size="large"
               rounded
@@ -92,10 +92,10 @@ const TalkToDoctor = () => {
                 uri: user.AvatarImg,
               }}
               showEditButton
-              onEditPress={() => navigation.navigate('Avatar')}
+              onEditPress={() => navigation.navigate('Change Avatar')}
             />
           </View>
-        </View>
+        
         <View
           style={{
             alignItems: 'center',
@@ -129,7 +129,7 @@ const TalkToDoctor = () => {
             </Text>
           </View>
         </View>
-        <Text style={styles.AvailableDoc}>Available Doctors for call</Text>
+        <Text style={styles.AvailableDoc}>Available Doctors</Text>
         {items.map((item) => (
           <ListItem
             leftAvatar={{
@@ -231,7 +231,6 @@ const styles = StyleSheet.create({
     fontSize: 25,
   },
   appointmentBox: {
-    height: height / 4,
     backgroundColor: '#fff',
   },
   card: {

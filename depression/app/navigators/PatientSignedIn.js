@@ -33,13 +33,13 @@ export class PatientSignedIn extends Component {
           header: () => null,
         }}>
         <Drawer.Screen name="Profile" component={ProfileScreen} />
-        <Drawer.Screen name="Avatar" component={AvtarSelection} />
-        <Drawer.Screen name="VoiceQuestions" component={VoiceQuestions} />
+        <Drawer.Screen name="Change Avatar" component={AvtarSelection} />
+        <Drawer.Screen name="Voice Questions" component={VoiceQuestions} />
         <Drawer.Screen name="Health Timeline" component={HealthTimeline} />
+        {/*<Drawer.Screen name="Video" component={Video} />*/}
+        <Drawer.Screen name="Video Call" component={Test} />
+        <Drawer.Screen name="Talk To Doctor" component={TalkToDoctor} />
         {/*
-        <Drawer.Screen name="Video" component={Video} />
-        <Drawer.Screen name="VideoCall" component={Test} />
-        <Drawer.Screen name="TalkToDoctor" component={TalkToDoctor} />
         <Drawer.Screen name="Survey" children={this.createSurveyStack} />
          */}
       </Drawer.Navigator>
