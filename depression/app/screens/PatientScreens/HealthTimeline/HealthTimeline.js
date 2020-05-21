@@ -34,7 +34,7 @@ const HealthTimeline = () => {
   const dispatch = useDispatch()
   const user = useSelector((state) => state.auth.user);
   const firebaseUser = useSelector((state) => state.auth.firebaseUser);
-  if(firebaseUser.healthTimeline){
+  if(firebaseUser){
     depressionLevel = firebaseUser.healthTimeline.PHQ8Value[(firebaseUser.healthTimeline.PHQ8Value.length)-1]
     for(let i=0; i<firebaseUser.healthTimeline.PHQ8Value.length; i++){
       depressionOverTimeGraphValue.push(firebaseUser.healthTimeline.PHQ8Value[i].ScaleValue)
