@@ -141,7 +141,7 @@ const ProfileScreen = () => {
           trigerProfile &&
           trigerAvtarVideo && (
             <View>
-              <TouchableOpacity onPress={() => navigation.navigate('VoiceQuestions') }>
+              <TouchableOpacity onPress={() => navigation.navigate('Voice Questions') }>
                 <Card containerStyle={styles.Cards}>
                   <ImageLoader
                     style={{width: width / 1.1, height: height / 2.6}}
