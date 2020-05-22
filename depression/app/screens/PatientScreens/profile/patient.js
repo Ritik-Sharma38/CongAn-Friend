@@ -115,7 +115,7 @@ const ProfileScreen = () => {
                   uri: user.AvatarImg,
                 }}
                 showEditButton
-                onEditPress={() => navigation.navigate('Avatar')}
+                onEditPress={() => navigation.navigate('Change Avatar')}
               />
             </View>
           </View>

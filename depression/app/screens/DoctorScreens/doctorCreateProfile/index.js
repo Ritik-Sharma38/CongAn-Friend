@@ -3,6 +3,7 @@ import { Text, View, Alert, StyleSheet, StatusBar, TouchableOpacity, Animated, D
 import {useSelector, useDispatch} from 'react-redux';
 import Swiper from 'react-native-swiper'
 import {doctorProfileUpload, } from '../../../actions/authAction';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const { width, height } = Dimensions.get('window');
 class ImageLoader extends Component {
@@ -45,61 +46,130 @@ const DoctorCreateProfile = () => {
     const dispatch = useDispatch();
     const user = useSelector(state => state.auth.user)
     const [uploadImg, setUploadImg] = useState('Upload profile pic')
-    const [firstName, setFirstName] = useState('')
-    const [lastNmae, setLastName] = useState('')
-    const [hospitalClinic, setHospiatalClinic] = useState('')
-    const [specialization, setSpecialization] = useState('')
-    const [messagePatient, setMessagePatient] = useState('')
+    const [DoctorProfileDetails, setDocProfile] = useState(
+      {
+        firstName: '',
+        lastName: '',
+        age: 0,
+        gender: '',
+        specialization: '',
+        country: '',
+        state: '',
+        cityTown: '',
+        hospitalClinicName: '',
+        hospitalClinicAddress: '',
+        postalCode: '',
+        licenceNumer: '',
+        messagePatient: '',
+      }
+    )
+    console.log(DoctorProfileDetails)
     const progressBar = useSelector(state => state.auth.progressBarStatus)
     function uploadData(){
-      dispatch(doctorProfileUpload(
-        user.id,
-        firstName,
-        lastNmae,
-        hospitalClinic,
-        specialization,
-        messagePatient
-      ))
+      dispatch(doctorProfileUpload(user.id, DoctorProfileDetails))
       setUploadImg('Creating profile.....')
     }
     return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
             <StatusBar backgroundColor="rgba(0, 130, 255, 1)" barStyle="light-content" />
             <View style = {styles.FirstHalf}>
                 <ImageLoader
-                    style={{marginTop:'15%', width: width/2, height: height/4}}
+                    style={{marginTop:'15%', width: width/2, height: width/2}}
                     source={require('../../../assets/Logo.png')}
                 />
-                <View style={{paddingLeft: '15%', marginTop: '20%'}}>
+                <View style={{padding: '7%'}}>
                     <Text style={{fontSize: 30, color: '#fff'}}>Create your profile to help patient reach you</Text>
                 </View>
             </View>
-            <View style={{width: width, height: '35%'}}>
+            <View style={{width: width}}>
                 <Swiper style={styles.wrapper}>
                     <View style={styles.swiperPage}>
-                        <TextInput
+                    <TextInput
                             placeholder="First Name"
                             style={styles.textInput}
                             placeholderTextColor='black'
-                            onChangeText = { firstName => setFirstName(firstName)}
+                            autoCompleteType='name'
+                            autoCapitalize='characters'
+                            importantForAutofill='yes'
+                            onChangeText = { FirstName => { DoctorProfileDetails.firstName=FirstName }}
                         />
                         <TextInput
                             placeholder="Last Name"
                             style={styles.textInput}
                             placeholderTextColor='black'
-                            onChangeText = { lastNmae => setLastName(lastNmae)}
+                            autoCompleteType='name'
+                            autoCapitalize='characters'
+                            onChangeText = { lastNmae => { DoctorProfileDetails.lastName=lastNmae}}
                         />
                         <TextInput
-                            placeholder="Hospital/Clinic name"
+                            placeholder="Age"
                             style={styles.textInput}
                             placeholderTextColor='black'
-                            onChangeText = { hospitalClinic => setHospiatalClinic(hospitalClinic)}
+                            keyboardType='numeric'
+                            onChangeText = { age => { DoctorProfileDetails.age=age}}
+                        />
+                        <TextInput
+                            placeholder="Gender"
+                            style={styles.textInput}
+                            placeholderTextColor='black'
+                            autoCapitalize='characters'
+                            onChangeText = { gender => { DoctorProfileDetails.gender=gender}}
+                        />
+                        <TextInput
+                            placeholder="Country"
+                            style={styles.textInput}
+                            placeholderTextColor='black'
+                            textContentType='countryName'
+                            autoCapitalize='characters'
+                            onChangeText = { country => { DoctorProfileDetails.country=country}}
+                        />
+                        <TextInput
+                            placeholder="State"
+                            style={styles.textInput}
+                            placeholderTextColor='black'
+                            textContentType='addressState'
+                            autoCapitalize='characters'
+                            onChangeText = { state => { DoctorProfileDetails.state=state}}
+                        />
+                        <TextInput
+                            placeholder="City/Town"
+                            style={styles.textInput}
+                            placeholderTextColor='black'
+                            textContentType='addressCityAndState'
+                            autoCapitalize='characters'
+                            onChangeText = { cityTown => { DoctorProfileDetails.cityTown=cityTown}}
+                        />
+                        <TextInput
+                            placeholder="Hospital/Clinic Name"
+                            style={styles.textInput}
+                            placeholderTextColor='black'
+                            onChangeText = { hospitalClinicName => { DoctorProfileDetails.hospitalClinicName=hospitalClinicName}}
+                        />
+                        <TextInput
+                            placeholder="Hospital/Clinic Address"
+                            style={styles.textInput}
+                            placeholderTextColor='black'
+                            onChangeText = { hospitalClinicAddress => { DoctorProfileDetails.hospitalClinicAddress=hospitalClinicAddress}}
+                        />
+                        <TextInput
+                            placeholder="Postal code"
+                            style={styles.textInput}
+                            placeholderTextColor='black'
+                            autoCompleteType='postal-code'
+                            onChangeText = { postalCode => { DoctorProfileDetails.postalCode=postalCode}}
                         />
                         <TextInput
                             placeholder="Specialization"
                             style={styles.textInput}
                             placeholderTextColor='black'
-                            onChangeText = { specialization => setSpecialization(specialization)}
+                            autoCapitalize='characters'
+                            onChangeText = { specialization => { DoctorProfileDetails.specialization=specialization}}
+                        />
+                        <TextInput
+                            placeholder="Licence Number"
+                            style={styles.textInput}
+                            placeholderTextColor='black'
+                            onChangeText = { licenceNumer => { DoctorProfileDetails.licenceNumer=licenceNumer}}
                         />
                     </View>
                     <View>
@@ -107,7 +177,8 @@ const DoctorCreateProfile = () => {
                             placeholder="Message for patient"
                             style={styles.messageInput}
                             placeholderTextColor='black'
-                            onChangeText = { messagePatient => setMessagePatient(messagePatient)}
+                            multiline={true}
+                            onChangeText = {messagePatient => { DoctorProfileDetails.messagePatient=messagePatient}}
                         />
                         <TouchableOpacity style={styles.button} onPress={() => uploadData()}>
                             <Text style={{color: '#fff'}}>{uploadImg}</Text>
@@ -118,7 +189,7 @@ const DoctorCreateProfile = () => {
                     </View>
                 </Swiper>
             </View>
-      </View>
+      </ScrollView>
     );
 }
 
@@ -128,7 +199,6 @@ const styles = StyleSheet.create({
       
     },
     FirstHalf: {
-      height: '65%',
       backgroundColor: 'rgba(0, 130, 255, 1)',
       alignContent: 'center',
       alignItems: 'center'

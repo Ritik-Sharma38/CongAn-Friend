@@ -54,18 +54,18 @@ const ProfileScreen = () => {
     const navigation = useNavigation();
     const progressBar = useSelector(state => state.auth.progressBarStatus) 
     const dispatch = useDispatch();
-    console.log("profile detils",user)
+    console.log("profile detils",user.channel)
     return (
         <SafeAreaView style = {styles.container}>
             <StatusBar backgroundColor='#2E71DC'/>
             <View style = {styles.FirstHalf}>
-                <View style={{flexDirection: 'row', justifyContent: 'flex-start', alignContent:'center', alignItems: 'center'}}>
-                    <Icon.Button 
+                <View style={{flexDirection: 'row', alignSelf: 'center'}}>
+                    {/*<Icon.Button 
                         backgroundColor="#2E71DC"
                         name="menu"
                         onPress={() => navigation.openDrawer()}
-                    />
-                    <View style={{marginLeft: '30%'}}>
+                    />*/}
+                    <View>
                         <Avatar
                             size="large"
                             rounded
@@ -90,7 +90,8 @@ const ProfileScreen = () => {
                             style={{width: width/1.1, height: height/2.6,}}
                             source={require('../../../assets/healty0.png')}
                             />
-                            <TouchableOpacity onPress={() => navigation.navigate('VideoCall', { channel: user.channel })}>
+                            {/*navigation.navigate('VideoCall', { channel: user.channel })*/} 
+                            <TouchableOpacity onPress={() => alert("under development")}>
                                 <Text style={{marginBottom: '2%', marginVertical: '3%', color: '#fff', alignSelf: 'center', fontSize: 22}}>Timeline and Patient history</Text>
                             </TouchableOpacity>
                         </Card>

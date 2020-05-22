@@ -239,16 +239,25 @@ export const googleSignin=( profileType )=>{
                         fullname: user.displayName,
                         email: user.email,
                         profileURL: user.photoURL,
+                        BasicDetails:{
+                            
+                        },
                         profile: profileType,
                     };
                 var temp = {
                         id: user.uid,
                         imageNumber: 0,
                         profile: profileType,
+                        email: user.email,
+                        profileURL: user.photoURL,
+                        fullname: user.displayName,
                         google:{
                             fullname: user.displayName,
                             email: user.email,
                             profileURL: user.photoURL,
+                        },
+                        BasicDetails:{
+                            
                         },
                         imageData:{
                             imageSubData:{
@@ -357,6 +366,9 @@ export const fbSignin=( profileType )=>{
                             fullname: user.displayName,
                             email: user.email,
                             profileURL: user.photoURL,
+                            BasicDetails:{
+                                
+                            },
                             profile: profileType,
                         };
                         console.log("uploading data on firestore")
@@ -364,10 +376,15 @@ export const fbSignin=( profileType )=>{
                             id: user.uid,
                             imageNumber: 0,
                             profile: profileType,
+                            email: user.email,
+                            profileURL: user.photoURL,
                             fb:{
                                 fullname: user.displayName,
                                 email: user.email,
                                 profileURL: user.photoURL
+                            },
+                            BasicDetails:{
+                                fullname: user.displayName,
                             },
                             imageData:{
                                 imageSubData:{
@@ -441,7 +458,9 @@ export const emailSignup = (email, password, profileType) => {
                     id: doLogin.user.uid,
                     email: doLogin.user.email,
                     imageNumber: 0,
-                    fullname: 'noName',
+                    BasicDetails:{
+
+                    },
                     profile: profileType,
                     imageData:{
                         imageSubData:{
@@ -607,19 +626,22 @@ export const pickVideo = (uid, userName) => {
     }
 };
 
-export const firestoreUpload = (name, uid) => {
+export const firestoreUpload = (name, uid, patientBasicDetails) => {
     return async dispatch => {
         dispatch({ type: FIRESTORE_UPLOAD_STARTED });
         try {
-            console.log("firestoreUpload function running: parameters", name, uid)
+            console.log("firestoreUpload function running: parameters", name, uid, patientBasicDetails)
             const imgReff = await storage().ref('userData/assets/'+name)
             const url = await imgReff.getDownloadURL();
             console.log(url)
-            await firestore().collection("users").doc(uid).update({ AvatarImg: url})
+            await firestore().collection("users").doc(uid).update({ fullname: patientBasicDetails.fullname, BasicDetails: patientBasicDetails, AvatarImg: url})
             console.log("url written to firestore")
             var userDict = {
+                BasicDetails: patientBasicDetails,
+                fullname: patientBasicDetails.fullname,
                 AvatarImg: url
             }
+            console.log("writin data to local user", userDict)
             updateUser(userDict)
             dispatch(fetchUser())
             dispatch({ type: FIRESTORE_UPLOAD_SUCCESS })
@@ -709,28 +731,15 @@ export const storeDownloadURL = (getDownloadUrl, sessionId, uid) => {
         .set(tempData)
 }
 
-export const doctorProfileUpload = (
-    uid,
-    firstName,
-    lastNmae,
-    hospitalClinic,
-    specialization,
-    messagePatient
-    ) => {
+export const doctorProfileUpload = (uid, DoctorProfileDetails ) => {
     return async dispatch => {
         dispatch({ type: DOCTOR_PROFILE_CREATE_START })
         try {
-            var basicInfo = {
-                First_Name: firstName,
-                Last_Name: lastNmae,
-                Full_Name: firstName+" "+lastNmae,
-                Hospital_Clinic_Name: hospitalClinic,
-                Specialization: specialization,
-                Message_for_patient: messagePatient,
-                channel: lastNmae+firstName,
-                profilePicture: ''
+            var DoctorProfileDetail = {
+                ...DoctorProfileDetails,
+                Full_Name: DoctorProfileDetails.firstName+" "+DoctorProfileDetails.lastName,
+                channel: DoctorProfileDetails.lastName+DoctorProfileDetails.firstName,
             }
-            updateUser(basicInfo)
             ImagePicker.showImagePicker(response => {
                 if (response.didCancel) {
                     console.log("user cancelled the image operation")
@@ -739,7 +748,7 @@ export const doctorProfileUpload = (
                 } else {
                     const source = { uri: response.uri };
                     console.log("printing image uri: ", source)
-                    dispatch(DoctorProfile(basicInfo, source.uri, uid))
+                    dispatch(DoctorProfile(DoctorProfileDetail, source.uri, uid))
                 }
             })   
         }
@@ -754,36 +763,23 @@ export const doctorProfileUpload = (
     }
 }
 
-export const DoctorProfile = (basicInfo, uri ,uid) =>{
+export const DoctorProfile = (DoctorProfileDetail, uri ,uid) =>{
     return async dispatch => {
         try {
+            console.log("printing received data.......",basicInfo)
             const imgRef =await storage().ref('userData/Doctors/'+uid).child('profilePic').putFile(uri)
             const imgReff = await storage().ref(imgRef.metadata.fullPath)
             const url = await imgReff.getDownloadURL();
-            await firestore().collection("doctors").doc(uid).update({ 
-                First_Name: basicInfo.First_Name,
-                Last_Name: basicInfo.Last_Name,
-                Full_Name: basicInfo.Full_Name,
-                Hospital_Clinic_Name: basicInfo.Hospital_Clinic_Name,
-                Specialization: basicInfo.Specialization,
-                Message_for_patient: basicInfo.Message_for_patient,
-                channel: basicInfo.channel,
-                profilePicture: url
-
-            }) 
-            var userDict = {
-                First_Name: basicInfo.First_Name,
-                Last_Name: basicInfo.Last_Name,
-                Full_Name: basicInfo.Full_Name,
-                Hospital_Clinic_Name: basicInfo.Hospital_Clinic_Name,
-                Specialization: basicInfo.Specialization,
-                Message_for_patient: basicInfo.Message_for_patient,
-                channel: basicInfo.channel,
+            var DoctorProfileDetails= {
+                ...DoctorProfileDetail,
                 profilePicture: url
             }
-            updateUser(userDict)
+            await firestore().collection("doctors").doc(uid).update({ 
+                DoctorProfileDetails
+            })
+            updateUser(DoctorProfileDetails)
             await firestore().collection("DoctorsData").doc("AvailabeleDoctor").update({ 
-                DoctorsList: firebase.firestore.FieldValue.arrayUnion(userDict)
+                DoctorsList: firebase.firestore.FieldValue.arrayUnion(DoctorProfileDetails)
             })
             dispatch({
                 type: DOCTOR_PROFILE_CREATE_SUCCESS,
