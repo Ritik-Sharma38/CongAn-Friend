@@ -766,7 +766,7 @@ export const doctorProfileUpload = (uid, DoctorProfileDetails ) => {
 export const DoctorProfile = (DoctorProfileDetail, uri ,uid) =>{
     return async dispatch => {
         try {
-            console.log("printing received data.......",basicInfo)
+            console.log("printing received data.......",DoctorProfileDetail)
             const imgRef =await storage().ref('userData/Doctors/'+uid).child('profilePic').putFile(uri)
             const imgReff = await storage().ref(imgRef.metadata.fullPath)
             const url = await imgReff.getDownloadURL();

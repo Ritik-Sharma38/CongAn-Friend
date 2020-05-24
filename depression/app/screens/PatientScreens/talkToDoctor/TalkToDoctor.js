@@ -26,39 +26,7 @@ const TalkToDoctor = () => {
   const navigation = useNavigation()
   const DoctorList = useSelector((state) => state.auth.DoctorList)
   const dispatch = useDispatch()
-  const [items, setItems] = useState(DoctorList)
-  var date = new Date().getDate()
-  var month = new Date().getMonth() + 1
-  var year = new Date().getFullYear()
-  var hours = new Date().getHours()
-  var min = new Date().getMinutes()
-  var sec = new Date().getSeconds()
-  useEffect(() => {
-    dispatch(fetchDoctorList())
-    setItems(DoctorList)
-  }, [])
-  const [DocInfoCard, setCard] = useState({
-    cardStae: false,
-    DoctorName: '',
-    DocProfilePic: '',
-    Specialization: '',
-    Message: '',
-    HospiatlClinicName: '',
-    Channel: '',
-  })
-  const [CurrentDate, setDate] = useState({
-    Date: date + '/' + month + '/' + year,
-  })
-  const [CurrentTime, setTime] = useState({
-    Time: hours + ':' + min + ':' + sec,
-  })
-  const [Appointment, setaptm] = useState({
-    Date: '',
-    DoctorName: '',
-    Hospital_Clinic_Name: "you don't have any appointment",
-    BookingTime: '',
-  })
-  console.log('profile detils', DocInfoCard.Channel)
+  console.log('profile detils', DoctorList)
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor="#2E71DC" />
@@ -82,8 +50,6 @@ const TalkToDoctor = () => {
               source={{
                 uri: user.profileURL,
               }}
-              showEditButton
-              onEditPress={() => alert('not allowed now')}
             />
             <Avatar
               size="large"
@@ -91,8 +57,6 @@ const TalkToDoctor = () => {
               source={{
                 uri: user.AvatarImg,
               }}
-              showEditButton
-              onEditPress={() => navigation.navigate('Change Avatar')}
             />
           </View>
         
@@ -112,103 +76,39 @@ const TalkToDoctor = () => {
           <View>
             <ListItem
               leftAvatar={{
-                title: Appointment.Hospital_Clinic_Name,
+                title: "null",
                 source: {
                   uri:
                     'https://cdn2.iconfinder.com/data/icons/calendar-36/64/5-512.png',
                 },
               }}
-              title={Appointment.Hospital_Clinic_Name}
-              subtitle={Appointment.DoctorName}
+              title="null"
+              subtitle="null"
             />
             <Text style={{ paddingLeft: 20, fontSize: 17 }}>
-              {Appointment.BookingTime}
+              Appointment Time
             </Text>
             <Text style={{ paddingLeft: 20, fontSize: 17 }}>
-              {Appointment.Date}
+              Appointment Date
             </Text>
           </View>
         </View>
         <Text style={styles.AvailableDoc}>Available Doctors</Text>
-        {items.map((item) => (
-          <ListItem
-            leftAvatar={{
-              title: item.First_Name,
-              source: { uri: item.profilePicture },
-            }}
-            title={item.Full_Name}
-            subtitle={item.Specialization}
-            onPress={() =>
-              setCard({
-                cardStae: true,
-                DoctorName: item.Full_Name,
-                DocProfilePic: item.profilePicture,
-                Specialization: item.Specialization,
-                Message: item.Message_for_patient,
-                HospiatlClinicName: item.Hospital_Clinic_Name,
-                Channel: item.channel,
-              })
-            }
-            onLongPress={() =>
-              Alert.alert('Message for patient', item.Message_for_patient)
-            }
-            chevron
-          />
-        ))}
-        {DocInfoCard.cardStae && (
-          <Card containerStyle={styles.card}>
-            <Image
-              style={styles.image}
-              source={{ uri: DocInfoCard.DocProfilePic }}
-            />
-            <Text style={styles.DocName}>{DocInfoCard.DoctorName}</Text>
+        {DoctorList.map((item) => (
+          <View style={styles.ListAvailableDoctor}>
             <ListItem
               leftAvatar={{
-                title: DocInfoCard.DoctorName,
-                source: {
-                  uri:
-                    'https://png.pngtree.com/png-vector/20190115/ourlarge/pngtree-vector-hospital-icon-png-image_319682.jpg',
-                },
+                title: item.doctorProfile.Full_Name,
+                source: { uri: item.profilePicture },
               }}
-              title={DocInfoCard.HospiatlClinicName}
-              subtitle={DocInfoCard.Specialization}
-              onPress={() =>
-                Alert.alert(
-                  'Hospital Adress',
-                  'This feature wil be soon available soon'
-                )
-              }
+              title={item.doctorProfile.Full_Name}
+              subtitle={item.doctorProfile.DoctorProfile.specialization}
+              onPress={() =>navigation.navigate("Selected Doctor", {DoctorsInfo: item})}
+              chevron
             />
-            <Text style={styles.message}>Message : {DocInfoCard.Message}</Text>
-            <TouchableOpacity
-              style={styles.appointmentButton}
-              onPress={() =>
-                setaptm({
-                  Date: 'Date: ' + CurrentDate.Date,
-                  DoctorName:
-                    DocInfoCard.DoctorName + ' - ' + DocInfoCard.Specialization,
-                  Hospital_Clinic_Name: DocInfoCard.HospiatlClinicName,
-                  BookingTime: 'Time: ' + CurrentTime.Time,
-                })
-              }>
-              <Text style={{ color: 'white' }}>BOOK APPOINTMENT</Text>
-            </TouchableOpacity>
-            <View style={{ flexDirection: 'row' }}>
-              <TouchableOpacity style={styles.Lbutton}>
-                <Text style={{ color: 'white' }}>Call</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.Rbutton}
-                onPress={() =>
-                  navigation.navigate('VideoCall', {
-                    channel: DocInfoCard.Channel,
-                  })
-                }>
-                <Text style={{ color: 'white' }}>Video Call</Text>
-              </TouchableOpacity>
-            </View>
-          </Card>
-        )}
+            <Text style={styles.AvailableDocCityState}>City: {item.doctorProfile.DoctorProfile.cityTown} State: {item.doctorProfile.DoctorProfile.state}</Text>
+          </View>
+        ))}
       </ScrollView>
     </SafeAreaView>
   )
@@ -225,6 +125,14 @@ const styles = StyleSheet.create({
   AvailableDoc: {
     fontSize: 25,
     padding: 8,
+  },
+  ListAvailableDoctor: {
+    backgroundColor: '#fff'
+  },
+  AvailableDocCityState: {
+    paddingLeft: 20,
+    fontSize: 15,
+    marginBottom: 4,
   },
   appointment: {
     padding: 10,

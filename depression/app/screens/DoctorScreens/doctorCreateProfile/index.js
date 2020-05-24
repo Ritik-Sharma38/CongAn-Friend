@@ -6,6 +6,8 @@ import {doctorProfileUpload, } from '../../../actions/authAction';
 import { ScrollView } from 'react-native-gesture-handler';
 
 const { width, height } = Dimensions.get('window');
+var workingDayControler = 0;
+var workingdayDot="."
 class ImageLoader extends Component {
     state = {
       opacity: new Animated.Value(0),
@@ -61,9 +63,23 @@ const DoctorCreateProfile = () => {
         postalCode: '',
         licenceNumer: '',
         messagePatient: '',
+        workingDays: [],
       }
     )
-    console.log(DoctorProfileDetails)
+    const selectDays = (day) => {
+      var noDublicate=true
+      for(let i=0; i<DoctorProfileDetails.workingDays.length; i++){
+        if(DoctorProfileDetails.workingDays[i]===day){
+          console.log("dublication avoided")
+          noDublicate=false
+        }
+      }
+      if(noDublicate){
+        workingDayControler=1
+        DoctorProfileDetails.workingDays.push(day)
+      }
+    }
+    console.log(DoctorProfileDetails, "workingd", workingDayControler)
     const progressBar = useSelector(state => state.auth.progressBarStatus)
     function uploadData(){
       dispatch(doctorProfileUpload(user.id, DoctorProfileDetails))
@@ -173,6 +189,32 @@ const DoctorCreateProfile = () => {
                         />
                     </View>
                     <View>
+                        <View style={styles.WorkingDays}>
+                        <Text style={styles.WorkingDaysText}>Select working days</Text>
+                        </View>
+                        <View style={styles.SelectDays}>
+                          <TouchableOpacity style={styles.DaysButtonFirst} onPress={()=> selectDays('Mon')}>
+                            <Text style={styles.DaysText}>{'  '}Mon{'  '}{workingDayControler ===1 ? '.' : null }</Text>
+                          </TouchableOpacity>
+                          <TouchableOpacity style={styles.DaysButton} onPress={()=> selectDays('Tue')}>
+                            <Text style={styles.DaysText}>{'  '}Tue{'  '}{workingDayControler ===1 ? '.' : null }</Text>
+                          </TouchableOpacity>
+                          <TouchableOpacity style={styles.DaysButton} onPress={()=> selectDays('Wed')}>
+                            <Text style={styles.DaysText}>{'  '}Wed{'  '}{workingDayControler ===1 ? '.' : null }</Text>
+                          </TouchableOpacity>
+                          <TouchableOpacity style={styles.DaysButton} onPress={()=> selectDays('Thr')}>
+                            <Text style={styles.DaysText}>{'  '}Thr{'  '}{workingDayControler ===0 ? '.' : null }</Text>
+                          </TouchableOpacity>
+                          <TouchableOpacity style={styles.DaysButton} onPress={()=> selectDays('Fri')}>
+                            <Text style={styles.DaysText}>{'  '}Fri{'  '}</Text>
+                          </TouchableOpacity>
+                          <TouchableOpacity style={styles.DaysButton} onPress={()=> selectDays('Sat')}>
+                            <Text style={styles.DaysText}>{'  '}Sat{'  '}</Text>
+                          </TouchableOpacity>
+                          <TouchableOpacity style={styles.DaysButton} onPress={()=> selectDays('Sun')}>
+                            <Text style={styles.DaysText}>{'  '}Sun{'  '}</Text>
+                          </TouchableOpacity>
+                        </View>
                         <TextInput
                             placeholder="Message for patient"
                             style={styles.messageInput}
@@ -217,6 +259,25 @@ const styles = StyleSheet.create({
         marginVertical:'1%',
         borderColor:'rgba(0,0,0,0.02)',
     },
+    WorkingDays: {
+      marginTop: '6%',
+      marginHorizontal: '6%'
+    },
+    SelectDays: {
+      flexDirection: 'row',
+      marginTop: '4%',
+      marginHorizontal: '6%'
+    },
+    DaysButtonFirst: {
+      backgroundColor: 'white'
+    },
+    DaysButton: {
+      marginLeft: '3%',
+      backgroundColor: 'white'
+    },
+    DaysText: {
+      fontSize: 18,
+    },
     messageInput: {
         height:'40%',
         marginHorizontal:'6%',
@@ -238,6 +299,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.4,
         elevation: 4,
       },
+
 });
 
 export default DoctorCreateProfile
