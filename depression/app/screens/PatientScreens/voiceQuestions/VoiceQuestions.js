@@ -23,9 +23,9 @@ import { voiceQuestionAnswerUpload } from '../../../actions/authAction'
 
 const { width, height } = Dimensions.get('window')
 
+var prevQuestionControl = -1
 var questionControl = 0
 var voiceControl = 0
-var startRecordingVoice = 0
 
 const VoiceQuestions = () => {
   useEffect(() => {
@@ -33,7 +33,6 @@ const VoiceQuestions = () => {
       Tts.speak('')
       Tts.setDucking(true)
       voiceControl = 1
-      startRecordingVoice = 1
     })
     Tts.voices().then((voices) => setVoices(voices))
   }, [])
@@ -50,6 +49,7 @@ const VoiceQuestions = () => {
   const [questions, setQuestions] = useState(QuestionList[voiceControl])
   const navigation = useNavigation()
   const [items, setVoices] = useState()
+  const [startRecordingVoice, setRecording] = useState(false)
   const [changeVoices, setChangeVoices] = useState(false)
   const [questionFinish, setQuestionFinish] = useState(true)
   const [audioFile, setAudioFile] = useState([])
@@ -65,10 +65,11 @@ const VoiceQuestions = () => {
 
   if (voiceControl) {
     if (questionFinish) {
-      setTimeout(async () => {
+      if (prevQuestionControl != questionControl) {
+        prevQuestionControl = questionControl
         console.log('narrating question')
-        await Tts.speak(questions.Question)
-      }, 800)
+        Tts.speak(questions.Question)
+      }
     }
   }
 
@@ -91,11 +92,12 @@ const VoiceQuestions = () => {
     dispatch(voiceQuestionAnswerUpload(user.id, audioFile, options.wavFile))
     if (questionControl === QuestionList.length - 1) {
       setQuestionFinish(false)
-      startRecordingVoice = 0
     } else {
+      setRecording(false)
       questionControl = questionControl + 1
       setQuestions(QuestionList[questionControl])
     }
+
     console.log('printing audio file', audioFile)
   }
 
@@ -106,37 +108,23 @@ const VoiceQuestions = () => {
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor="#2E71DC" />
       <View style={styles.FirstHalf}>
-        {/* 
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'flex-start',
-            alignContent: 'center',
-            alignItems: 'center',
-          }}>
-          <Icon.Button
-            backgroundColor="#2E71DC"
-            name="menu"
-            onPress={() => navigation.openDrawer()}
+        <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
+          <Avatar
+            size="large"
+            rounded
+            source={{
+              uri: user.profileURL,
+            }}
           />
-          */}
-          <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-            <Avatar
-              size="large"
-              rounded
-              source={{
-                uri: user.profileURL,
-              }}
-            />
-            <Avatar
-              size="large"
-              rounded
-              source={{
-                uri: user.AvatarImg,
-              }}
-            />
-          </View>
-        
+          <Avatar
+            size="large"
+            rounded
+            source={{
+              uri: user.AvatarImg,
+            }}
+          />
+        </View>
+
         <View
           style={{
             alignItems: 'center',
@@ -166,13 +154,37 @@ const VoiceQuestions = () => {
               </Text>
               <View>
                 <View>
-                  <Text style={styles.subCardRecordingText}>Recording....</Text>
+                  {startRecordingVoice && (
+                    <Text style={styles.subCardRecordingText}>
+                      Recording....
+                    </Text>
+                  )}
                 </View>
                 <View>
-                  <Button
-                    onPress={() => StopRecording()}
-                    title="Finish Recording"
-                  />
+                  {!startRecordingVoice && (
+                    <View>
+                      <Text
+                        style={{
+                          fontSize: 10,
+                          fontStyle: 'italic',
+                          fontWeight: '100',
+                          color: 'grey',
+                        }}>
+                        {' '}
+                        click on the record button to answer{' '}
+                      </Text>
+                      <Button
+                        title="Record"
+                        onPress={() => setRecording(true)}
+                      />
+                    </View>
+                  )}
+                  {startRecordingVoice && (
+                    <Button
+                      onPress={() => StopRecording()}
+                      title="Finish Recording"
+                    />
+                  )}
                 </View>
               </View>
             </Card>
