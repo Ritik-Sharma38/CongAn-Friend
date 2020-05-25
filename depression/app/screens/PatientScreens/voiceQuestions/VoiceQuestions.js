@@ -54,12 +54,13 @@ const VoiceQuestions = () => {
   const [questionFinish, setQuestionFinish] = useState(true)
   const [audioFile, setAudioFile] = useState([])
   const dispatch = useDispatch()
+  const q_id = questions.id < 10 ? '0' + questions.id : questions.id
   const options = {
     sampleRate: 16000, // default 44100
     channels: 1, // 1 or 2, default 1
     bitsPerSample: 16, // 8 or 16, default 16
     audioSource: 6, // android only (see below)
-    wavFile: questions.id + date + time + 'Answer.wav', // default 'audio.wav'
+    wavFile: q_id + date + time + 'Answer.wav', // default 'audio.wav'
   }
   AudioRecord.init(options)
 
