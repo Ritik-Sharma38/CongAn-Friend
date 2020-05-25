@@ -920,7 +920,7 @@ export const voiceQuestionAnswerUpload = (uid, file, id) => {
       console.log('Finished Voice Answers upload', id)
 
       // backend api call on last audio
-      if (id.substring(0, 2) == '01') {
+      if (id.substring(0, 2) == '33') {
         console.log('LAST AUDIO', id, backend_api.endpoint)
         const data = {
           dir: '/userData/Paitent/VoiceQuestions/' + uid,
