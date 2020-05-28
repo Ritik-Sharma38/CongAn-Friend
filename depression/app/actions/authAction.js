@@ -923,7 +923,8 @@ export const voiceQuestionAnswerUpload = (uid, file, id) => {
       if (id.substring(0, 2) == '33') {
         console.log('LAST AUDIO', id, backend_api.endpoint)
         const data = {
-          dir: '/userData/Paitent/VoiceQuestions/' + uid,
+          dir: 'userData/Paitent/VoiceQuestions',
+          uid: uid,
         }
         try {
           await postData(backend_api.endpoint, data)
