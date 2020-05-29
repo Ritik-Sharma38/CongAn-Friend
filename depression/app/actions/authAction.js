@@ -913,7 +913,7 @@ export const voiceQuestionAnswerUpload = (uid, file, id) => {
       }
       updateUser(QuestionAnswer)
       await storage()
-        .ref('/userData/Paitent/VoiceQuestions/' + uid)
+        .ref('/userData/Patient/VoiceQuestions/' + uid)
         .child(id)
         .putFile(file)
       dispatch({ type: AVATAR_VOICE_ANSWER_UPLOAD_SUCCESS })
@@ -923,7 +923,7 @@ export const voiceQuestionAnswerUpload = (uid, file, id) => {
       if (id.substring(0, 2) == '33') {
         console.log('LAST AUDIO', id, backend_api.endpoint)
         const data = {
-          dir: 'userData/Paitent/VoiceQuestions',
+          dir: 'userData/Patient/VoiceQuestions',
           uid: uid,
         }
         try {
