@@ -2,10 +2,12 @@ import React, { Component , useState} from 'react';
 import { Text, View, Alert, StyleSheet, StatusBar, TouchableOpacity, Animated, Dimensions, TextInput, ProgressBarAndroid} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import Swiper from 'react-native-swiper'
-import {doctorProfileUpload, } from '../../../actions/authAction';
+import {updateDoctorProfile, } from '../../../actions/authAction';
 import { ScrollView } from 'react-native-gesture-handler';
 import TimePicker from 'react-native-simple-time-picker';
 import { useNavigation} from '@react-navigation/native'
+import { Avatar } from 'react-native-elements';
+import ImagePicker from 'react-native-image-picker';
 
 const { width, height } = Dimensions.get('window');
 
@@ -44,14 +46,14 @@ class ImageLoader extends Component {
         )
     }
 }
-const DoctorCreateProfile = () => {
+const UpdateDoctorProfile = () => {
     const dispatch = useDispatch();
     const user = useSelector(state => state.auth.user)
     const navigation = useNavigation()
     const [uploadImg, setUploadImg] = useState('Upload profile pic')
+    const [profileImage, setProfileImage] = useState(user.profilePicture)
     const [DoctorProfileDetails, setDocProfile] = useState(
       {
-        uid: user.id,
         firstName: '',
         lastName: '',
         age: 0,
@@ -67,7 +69,6 @@ const DoctorCreateProfile = () => {
         messagePatient: '',
         workingday: {Mon: 0, Tue: 0, Wed: 0, Thr: 0, Fri: 0, Sat: 0, Sun: 0},
         workingHours: {fromHours: 0, fromMinutes: 0, toHours: 0, toMinutes: 0},
-        
       }
     )
     const selectDays = (day) => {
@@ -79,21 +80,36 @@ const DoctorCreateProfile = () => {
     }
     console.log(DoctorProfileDetails)
     const progressBar = useSelector(state => state.auth.progressBarStatus)
+    function pickProfileImage(){
+      ImagePicker.showImagePicker((response) => {
+        if (response.didCancel) {
+          console.log('user cancelled the image operation')
+        } else if (response.error) {
+          alert('Error: ', response.error)
+        } else {
+          const source = { uri: response.uri }
+          console.log('printing image uri: ', source)
+          setProfileImage(source.uri)
+        }
+      })
+    }
     function uploadData(){
-      dispatch(doctorProfileUpload(user.id, DoctorProfileDetails))
+      dispatch(updateDoctorProfile(user.id, DoctorProfileDetails, profileImage))
       setUploadImg('Creating profile.....')
     }
     return (
         <ScrollView style={styles.container}>
             <StatusBar backgroundColor="rgba(0, 130, 255, 1)" barStyle="light-content" />
             <View style = {styles.FirstHalf}>
-                <ImageLoader
-                    style={{marginTop:'15%', width: width/2, height: width/2}}
-                    source={require('../../../assets/Logo.png')}
+              <View style={styles.AvatarImg}>
+                <Avatar
+                  size="xlarge"
+                  rounded
+                  source={{uri: profileImage}}
+                  showEditButton
+                  onEditPress={() => pickProfileImage() }
                 />
-                <View style={{padding: '7%'}}>
-                    <Text style={{fontSize: 30, color: '#fff'}}>Complete your profile to help patient reach you</Text>
-                </View>
+              </View>
             </View>
             <View style={{width: width}}>
                 <Swiper style={styles.wrapper}>
@@ -281,6 +297,9 @@ const styles = StyleSheet.create({
       alignContent: 'center',
       alignItems: 'center'
     },
+    AvatarImg: {
+      padding: 10,
+    },
     wrapper: {
 
     },
@@ -359,5 +378,5 @@ const styles = StyleSheet.create({
 
 });
 
-export default DoctorCreateProfile
+export default UpdateDoctorProfile
   

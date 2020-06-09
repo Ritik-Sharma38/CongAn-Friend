@@ -35,28 +35,33 @@ const HealthTimeline = () => {
   const user = useSelector((state) => state.auth.user);
   const firebaseUser = useSelector((state) => state.auth.firebaseUser);
   if(firebaseUser){
-    depressionLevel = firebaseUser.healthTimeline.PHQ8Value[(firebaseUser.healthTimeline.PHQ8Value.length)-1]
-    for(let i=0; i<firebaseUser.healthTimeline.PHQ8Value.length; i++){
-      depressionOverTimeGraphValue.push(firebaseUser.healthTimeline.PHQ8Value[i].ScaleValue)
-      depressionOverTimeGraphLable.push(firebaseUser.healthTimeline.PHQ8Value[i].Date)
+    try
+    {
+      depressionLevel = firebaseUser.healthTimeline.PHQ8Value[(firebaseUser.healthTimeline.PHQ8Value.length)-1]
+      for(let i=0; i<firebaseUser.healthTimeline.PHQ8Value.length; i++){
+        depressionOverTimeGraphValue.push(firebaseUser.healthTimeline.PHQ8Value[i].ScaleValue)
+        depressionOverTimeGraphLable.push(firebaseUser.healthTimeline.PHQ8Value[i].Date)
+      }
+      if(depressionLevel.ScaleValue<5){
+          depressionStatus = 'Not Depressed'
+      }
+      else if(depressionLevel.ScaleValue>4 && depressionLevel.ScaleValue<10){
+          depressionStatus = 'Mild Depression'
+      }
+      else if(depressionLevel.ScaleValue>9 && depressionLevel.ScaleValue<15){
+        depressionStatus = 'Moderate Depression'
+      }
+      else if(depressionLevel.ScaleValue>14 && depressionLevel.ScaleValue<20){
+        depressionStatus = 'Moderately severe depression'
+      }
+      else if(depressionLevel.ScaleValue>19 && depressionLevel.ScaleValue<25){
+        depressionStatus = 'Severe depression'
+      }
+      console.log("printing firebase user data", firebaseUser)
+      loadingState=false
+    }catch(error){
+      console.log("error from healthTimeline", error)
     }
-    if(depressionLevel.ScaleValue<5){
-        depressionStatus = 'Not Depressed'
-    }
-    else if(depressionLevel.ScaleValue>4 && depressionLevel.ScaleValue<10){
-        depressionStatus = 'Mild Depression'
-    }
-    else if(depressionLevel.ScaleValue>9 && depressionLevel.ScaleValue<15){
-      depressionStatus = 'Moderate Depression'
-    }
-    else if(depressionLevel.ScaleValue>14 && depressionLevel.ScaleValue<20){
-      depressionStatus = 'Moderately severe depression'
-    }
-    else if(depressionLevel.ScaleValue>19 && depressionLevel.ScaleValue<25){
-      depressionStatus = 'Severe depression'
-    }
-    console.log("printing firebase user data", firebaseUser)
-    loadingState=false
   }
   const chartConfig = {
     backgroundGradientFrom: "#1E2923",
@@ -173,7 +178,7 @@ const HealthTimeline = () => {
                     type='MaterialIcons'
                     onPress={()=> Alert.alert(
                       "Talk to Doctor",
-                      "How it works? \n 1. Click the button below \n 2. Select a doctor from list \n 3. Buy subscription or select pay as you go \n 4. Book appointment with doctor"
+                      "We not just help the user analyse his emotional states but we also provide a telemedicine service that helps the user connect with available doctors by scheduling appointments at their convenience \n\nHow it works? \n 1. Click the button below \n 2. Select a doctor from list \n 3. Buy subscription or select pay as you go \n 4. Book appointment with doctor"
                     )}  
                   />
                 </View>

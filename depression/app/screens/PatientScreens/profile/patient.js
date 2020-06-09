@@ -1,5 +1,6 @@
 import React, {Component, useState, useEffect} from 'react';
 import {
+  RefreshControl,
   StyleSheet,
   Text,
   View,
@@ -69,6 +70,7 @@ const ProfileScreen = () => {
   const [trigerMps, setTrigerMps] = useState(true);
   const [trigerProfile, setTrigerProfile] = useState(true);
   const [trigerAvtarVideo, setTrigerAvatarVideo] = useState(true);
+  const [refreshing, setRefreshing] = React.useState(false);
   const user = useSelector((state) => state.auth.user);
   const navigation = useNavigation();
   const imageSource = useSelector((state) => state.auth.imageSource);
@@ -77,6 +79,11 @@ const ProfileScreen = () => {
   useEffect(() => {
     dispatch(initalize(user.id));
   }, []);
+  const onRefresh = React.useCallback(async () => {
+    setRefreshing(true);
+    await initalize(user.id);
+    setRefreshing(false);
+  }, [refreshing]);
   console.log('profile detils', user);
   return (
     <SafeAreaView style={styles.container}>
@@ -133,7 +140,7 @@ const ProfileScreen = () => {
         {progressBar && (
               <ProgressBarAndroid styleAttr="Horizontal" color="#2E71DC" />
         )}
-        {trigerImg &&
+        { trigerImg &&
           trigerHltme &&
           trigerDact &&
           trigerSlyf &&

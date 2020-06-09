@@ -40,6 +40,9 @@ import {
   DOCTOR_PROFILE_CREATE_START,
   DOCTOR_PROFILE_CREATE_SUCCESS,
   DOCTOR_PROFILE_CREATE_FAILED,
+  DOCTOR_PROFILE_UPDATE_START,
+  DOCTOR_PROFILE_UPDATE_SUCCESS,
+  DOCTOR_PROFILE_UPDATE_FAILED,
   DOCTOR_AVAILABLE_LIST_FETCH_START,
   DOCTOR_AVAILABLE_LIST_FETCH_SUCCESS,
   DOCTOR_AVAILABLE_LIST_FETCH_FAILED,
@@ -516,6 +519,7 @@ export const initalize = (uid) => {
         'starting fetching of User data from firestore with uid=',
         uid
       )
+      await dispatch(fetchDoctorList())
       const docRef = await firestore().collection('users').doc(uid)
       console.log('docref', docRef)
       docRef.get().then(function (doc) {
@@ -529,7 +533,6 @@ export const initalize = (uid) => {
           )
         }
       })
-      dispatch(fetchDoctorList())
       console.log('Finished initalizing.')
     } catch (error) {
       console.log('Error in initalizing....', error)
@@ -772,8 +775,7 @@ export const doctorProfileUpload = (uid, DoctorProfileDetails) => {
     try {
       var DoctorProfileDetail = {
         ...DoctorProfileDetails,
-        Full_Name:
-          DoctorProfileDetails.firstName + ' ' + DoctorProfileDetails.lastName,
+        Full_Name: DoctorProfileDetails.firstName + ' ' + DoctorProfileDetails.lastName,
         channel: DoctorProfileDetails.lastName + DoctorProfileDetails.firstName,
       }
       ImagePicker.showImagePicker((response) => {
@@ -801,21 +803,24 @@ export const doctorProfileUpload = (uid, DoctorProfileDetails) => {
 export const DoctorProfile = (DoctorProfileDetail, uri, uid) => {
   return async (dispatch) => {
     try {
-      console.log('printing received data.......', DoctorProfileDetail)
       const imgRef = await storage()
         .ref('userData/Doctors/' + uid)
         .child('profilePic')
         .putFile(uri)
       const imgReff = await storage().ref(imgRef.metadata.fullPath)
       const url = await imgReff.getDownloadURL()
+      const docRef = await firestore()
+        .collection('DoctorsData')
+        .doc('AvailabeleDoctor')
+      const DoctorList = await (await docRef.get()).data().DoctorsList
       var DoctorProfileDetails = {
         ...DoctorProfileDetail,
         profilePicture: url,
+        iid: DoctorList.length,
       }
       await firestore().collection('doctors').doc(uid).update({
         DoctorProfileDetails,
       })
-      updateUser(DoctorProfileDetails)
       await firestore()
         .collection('DoctorsData')
         .doc('AvailabeleDoctor')
@@ -828,9 +833,10 @@ export const DoctorProfile = (DoctorProfileDetail, uri, uid) => {
         type: DOCTOR_PROFILE_CREATE_SUCCESS,
       })
       console.log('created proflie and updated doctors list')
-    } catch (error) {
+      updateUser(DoctorProfileDetails)
+    }catch(error){
       console.log('Profile creation failed : ', error.code, error)
-      Alert.alert('Something went worng', error.code)
+      Alert.alert('Something went wrong', error.code)
       dispatch({
         type: DOCTOR_PROFILE_CREATE_FAILED,
         payload: error,
@@ -838,7 +844,46 @@ export const DoctorProfile = (DoctorProfileDetail, uri, uid) => {
     }
   }
 }
-
+export const updateDoctorProfile = (uid, DoctorProfileDetails, profilepic) => {
+  return async (dispatch) => {
+    console.log("Starting update",profilepic)
+    dispatch({ type: DOCTOR_PROFILE_UPDATE_START })
+    try {
+      const imgRef = await storage()
+        .ref('userData/Doctors/' + uid)
+        .child('profilePic')
+        .putFile(profilepic)
+      const imgReff = await storage().ref(imgRef.metadata.fullPath)
+      const url = await imgReff.getDownloadURL()
+      var DoctorProfileDetail = {
+        ...DoctorProfileDetails,
+        Full_Name: DoctorProfileDetails.firstName + ' ' + DoctorProfileDetails.lastName,
+        channel: DoctorProfileDetails.lastName + DoctorProfileDetails.firstName,
+        profilePicture: url,
+      }
+      await firestore().collection('doctors').doc(uid).update({
+        DoctorProfileDetail,
+      })
+      updateUser(DoctorProfileDetail)
+      const docRef = await firestore().collection('doctors').doc(uid)
+      docRef.get().then(function (doc) {
+        if (doc.exists) {
+          console.log("document found")
+          const user = doc.data()
+          const doctorIndexValue= user.iid
+          dispatch({ type: DOCTOR_PROFILE_UPDATE_SUCCESS })
+        }
+      })
+    }catch(error){
+      console.log('Profile Updation failed : ', error.code, error)
+      Alert.alert('Something went wrong', error.code)
+      dispatch({
+        type: DOCTOR_PROFILE_UPDATE_FAILED,
+        payload: error,
+      })
+    }
+  }
+}
 export const fetchDoctorList = () => {
   return async (dispatch) => {
     dispatch({ type: DOCTOR_AVAILABLE_LIST_FETCH_START })

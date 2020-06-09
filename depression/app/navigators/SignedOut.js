@@ -18,7 +18,7 @@ export const  SignedOut = () =>(
         <Stack.Screen name="patientDoctor" component={PatientDoctor} />
         <Stack.Screen name="ploginSignup" component={PatientLoginSignup} />
         <Stack.Screen name="dloginSignup" component={DoctorLoginSignup} />
-        <Stack.Screen name="doctorCreateProfile" component={DoctorCreateProfile} />
+        <Stack.Screen name="CreateProfile" component={DoctorCreateProfile} />
         <Stack.Screen name="Avatar" component={AvtarSelection} />
     </Stack.Navigator>
 );

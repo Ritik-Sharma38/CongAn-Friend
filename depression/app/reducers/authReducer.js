@@ -31,6 +31,9 @@ import {START_GOOGLE_SIGN_IN,
     DOCTOR_PROFILE_CREATE_UPDATE,
     DOCTOR_PROFILE_CREATE_SUCCESS,
     DOCTOR_PROFILE_CREATE_FAILED,
+    DOCTOR_PROFILE_UPDATE_START,
+    DOCTOR_PROFILE_UPDATE_SUCCESS,
+    DOCTOR_PROFILE_UPDATE_FAILED,
     DOCTOR_AVAILABLE_LIST_FETCH_START,
     DOCTOR_AVAILABLE_LIST_FETCH_SUCCESS,
     DOCTOR_AVAILABLE_LIST_FETCH_FAILED,
@@ -266,6 +269,22 @@ export default (state=DEFAULT_STATE, action)=>{
                 progressBarStatus: false,
             }
         case DOCTOR_PROFILE_CREATE_FAILED:
+            return{
+                ...state,
+                progressBarStatus: false,
+                errorMessage: action.payload
+            }
+        case DOCTOR_PROFILE_UPDATE_START:
+            return{
+                ...state,
+                progressBarStatus: true,
+            }
+        case DOCTOR_PROFILE_UPDATE_SUCCESS:
+            return{
+                ...state,
+                progressBarStatus: false,
+            }
+        case DOCTOR_PROFILE_UPDATE_FAILED:
             return{
                 ...state,
                 progressBarStatus: false,

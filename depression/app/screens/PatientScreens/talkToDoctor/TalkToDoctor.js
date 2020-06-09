@@ -14,7 +14,6 @@ import {
   Alert,
 } from 'react-native'
 import { useSelector, useDispatch } from 'react-redux'
-import { fetchDoctorList } from '../../../actions/authAction'
 import { Card, Avatar, ListItem } from 'react-native-elements'
 import { useNavigation } from '@react-navigation/native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
@@ -26,7 +25,7 @@ const TalkToDoctor = () => {
   const navigation = useNavigation()
   const DoctorList = useSelector((state) => state.auth.DoctorList)
   const dispatch = useDispatch()
-  console.log('profile detils', DoctorList)
+  console.log('Doctors detils', DoctorList)
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor="#2E71DC" />
@@ -51,13 +50,15 @@ const TalkToDoctor = () => {
                 uri: user.profileURL,
               }}
             />
-            <Avatar
-              size="large"
-              rounded
-              source={{
-                uri: user.AvatarImg,
-              }}
-            />
+            <View style={{marginLeft: 8}}>
+              <Avatar
+                size="large"
+                rounded
+                source={{
+                  uri: user.AvatarImg,
+                }}
+              />
+            </View>
           </View>
         
         <View
@@ -98,19 +99,19 @@ const TalkToDoctor = () => {
           <View style={styles.ListAvailableDoctor}>
             <ListItem
               leftAvatar={{
-                title: item.doctorProfile.Full_Name,
+                title: item.Full_Name,
                 source: { uri: item.profilePicture },
               }}
-              title={item.doctorProfile.Full_Name}
-              subtitle={item.doctorProfile.DoctorProfile.specialization}
+              title={item.Full_Name}
+              subtitle={item.specialization}
               onPress={() =>navigation.navigate("Selected Doctor", {DoctorsInfo: item})}
               chevron
             />
-            <Text style={styles.AvailableDocCityState}>City: {item.doctorProfile.DoctorProfile.cityTown} State: {item.doctorProfile.DoctorProfile.state}</Text>
+            <Text style={styles.AvailableDocCityState}>City: {item.cityTown} State: {item.state}</Text>
           </View>
         ))}
       </ScrollView>
-    </SafeAreaView>
+    </SafeAreaView>  
   )
 }
 

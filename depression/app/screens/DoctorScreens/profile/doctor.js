@@ -1,5 +1,5 @@
 import React, { Component, useState } from 'react';
-import {StyleSheet, Text, View, TouchableOpacity, SafeAreaView, ScrollView, Dimensions, Animated, ProgressBarAndroid, StatusBar} from 'react-native';
+import {RefreshControl, StyleSheet, Text, View, TouchableOpacity, SafeAreaView, ScrollView, Dimensions, Animated, ProgressBarAndroid, StatusBar} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import {userSignout, } from '../../../actions/authAction';
 import { Button, Avatar, Card } from 'react-native-elements';
@@ -45,17 +45,22 @@ class ImageLoader extends Component {
     }
 }
 
- 
 const ProfileScreen = () => {
     const [trigerTimeline, setTrigerTimeline] = useState(true)
     const [trigerMps, setTrigerMps] = useState(true)
     const [trigerProfile, setTrigerProfile] = useState(true)
     const user = useSelector(state => state.auth.user)
     const navigation = useNavigation();
+    const [refreshing, setRefreshing] = React.useState(false);
     const progressBar = useSelector(state => state.auth.progressBarStatus) 
     const dispatch = useDispatch();
-    console.log("profile detils",user.channel)
-    return (
+    const onRefresh = React.useCallback(async () => {
+        setRefreshing(true);
+        console.log("refreshing............")
+        setRefreshing(false);
+    }, [refreshing]);
+    console.log("profile detils",user)
+    return ( 
         <SafeAreaView style = {styles.container}>
             <StatusBar backgroundColor='#2E71DC'/>
             <View style = {styles.FirstHalf}>
@@ -73,7 +78,7 @@ const ProfileScreen = () => {
                                 uri: user.profilePicture
                             }}
                             showEditButton
-                            onEditPress={() => navigation.navigate('Profile_Update')}
+                            onEditPress={() => navigation.navigate('Profile_Update', {update: true})}
                         />
                     </View>
                 </View>
@@ -81,7 +86,10 @@ const ProfileScreen = () => {
                     <Text style={{fontSize: 18,color: '#fff'}}>{user.Full_Name}</Text>
                 </View>
             </View>
-            <ScrollView contentContainerStyle={styles.SecondHalf}>
+            <ScrollView contentContainerStyle={styles.SecondHalf}
+                refreshControl={
+                    <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                  }>
                 { trigerTimeline && trigerMps && trigerProfile &&  (
                     <View>
                         <Card
@@ -106,7 +114,7 @@ const ProfileScreen = () => {
                             </TouchableOpacity>
                         </Card>
                         <Card
-                            containerStyle={{backgroundColor: '#2E71DC', height: height/2.5, width: width/1.08, borderRadius: 15, alignItems: 'center', justifyContent: 'center',}}>
+                            containerStyle={{backgroundColor: '#2E71DC', height: height/2.5, width: width/1.08, borderRadius: 8, alignItems: 'center', justifyContent: 'center',}}>
                             <ImageLoader
                             style={{width: width, height: height/3,}}
                             source={require('../../../assets/healty12.png')}
@@ -154,7 +162,7 @@ const styles = StyleSheet.create({
       backgroundColor: '#2E71DC',
       height: height/2,
       width: width/1.08,
-      borderRadius: 15,
+      borderRadius: 8,
       alignItems: 'center',
       justifyContent: 'center',
       shadowOffset: { width: 0, height: 3 },
