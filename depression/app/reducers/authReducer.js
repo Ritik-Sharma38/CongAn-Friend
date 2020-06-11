@@ -46,6 +46,9 @@ import {START_GOOGLE_SIGN_IN,
     INITIALIZING_USER_STARTED,
     INITIALIZING_USER_SUCCESS,
     INITIALIZING_USER_FAILED,
+    BOOKING_APPOINTMENT_FOR_DOCTOR_STARTED,
+    BOOKING_APPOINTMENT_FOR_DOCTOR_SUCCESS,
+    BOOKING_APPOINTMENT_FOR_DOCTOR_FAILED,
 } from '../actions/types';
 import { act } from 'react-test-renderer';
 
@@ -64,6 +67,7 @@ const DEFAULT_STATE={
     QuestionList: [],
     backtoProfile: false,
     firebaseUser:{},
+    BookedAppointment: false,
 }
 export default (state=DEFAULT_STATE, action)=>{
     switch(action.type){
@@ -355,6 +359,23 @@ export default (state=DEFAULT_STATE, action)=>{
                 firebaseUser: action.payload
             }
         case INITIALIZING_USER_FAILED:
+            return{
+                ...state,
+                progressBarStatus: false,
+                errorMessage: action.payload
+            }
+        case BOOKING_APPOINTMENT_FOR_DOCTOR_STARTED:
+            return{
+                ...state,
+                progressBarStatus: true,
+            }
+        case BOOKING_APPOINTMENT_FOR_DOCTOR_SUCCESS:
+            return{
+                ...state,
+                progressBarStatus: false,
+                BookedAppointment: true
+            }
+        case BOOKING_APPOINTMENT_FOR_DOCTOR_FAILED:
             return{
                 ...state,
                 progressBarStatus: false,

@@ -55,6 +55,9 @@ import {
   INITIALIZING_USER_SUCCESS,
   INITIALIZING_USER_STARTED,
   INITIALIZING_USER_FAILED,
+  BOOKING_APPOINTMENT_FOR_DOCTOR_STARTED,
+  BOOKING_APPOINTMENT_FOR_DOCTOR_SUCCESS,
+  BOOKING_APPOINTMENT_FOR_DOCTOR_FAILED,
 } from './types'
 import { act } from 'react-test-renderer'
 import { exp } from 'react-native-reanimated'
@@ -960,6 +963,38 @@ export const voiceQuestionAnswerUpload = (uid, file, id) => {
         payload: error.code,
       })
       console.log(error)
+    }
+  }
+}
+
+export const bookAppointmentForDoctor = (UserUid, DoctorUid, appointmentDetails) => {
+  return async (dispatch) => {
+    dispatch({ type: BOOKING_APPOINTMENT_FOR_DOCTOR_STARTED })
+    try{
+      await firestore()
+        .collection('users')
+        .doc(UserUid)
+        .update({ 
+          BookedAppointment: firebase.firestore.FieldValue.arrayUnion(
+          appointmentDetails
+        ),
+      })
+      await firestore()
+        .collection('doctors')
+        .doc(DoctorUid)
+        .update({ 
+          BookedAppointment: firebase.firestore.FieldValue.arrayUnion(
+          appointmentDetails
+        ),
+      })
+      console.log("Uloaded appointment deails to firebase")
+      dispatch({ type: BOOKING_APPOINTMENT_FOR_DOCTOR_SUCCESS})
+    }catch(error){
+      dispatch({
+        type: BOOKING_APPOINTMENT_FOR_DOCTOR_FAILED,
+        payload: error,
+      })
+      console.log("Error from bookingAppointmentForDoctor", error)
     }
   }
 }

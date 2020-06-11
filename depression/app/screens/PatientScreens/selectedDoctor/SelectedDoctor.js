@@ -31,7 +31,7 @@ const SelectedDoctorInformation = () => {
   const dispatch = useDispatch()
   const route = useRoute();
   const DoctorsInfo = route.params;
-  const [AppoitmentDetails, setAppointment] = useState(
+  const [AppointmentDetails, setAppointment] = useState(
     {
       date: new Date(1598051730000),
       docDetails: DoctorsInfo,
@@ -72,7 +72,8 @@ const SelectedDoctorInformation = () => {
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setShow(Platform.OS === 'ios');
-    setAppointment({...AppoitmentDetails, date: currentDate});
+    setAppointment({...AppointmentDetails, date: currentDate});
+    setAppointment({...AppointmentDetails, date: AppointmentDetails.date.toString()})
   };
 
   const showMode = currentMode => {
@@ -88,17 +89,17 @@ const SelectedDoctorInformation = () => {
     showMode('time');
   };
   const selectComMode = (mode) => {
-    if(AppoitmentDetails.comunicationMode[mode]){
-      setAppointment({...AppoitmentDetails, comunicationMode:{...AppoitmentDetails.comunicationMode, [mode]: 0}})
+    if(AppointmentDetails.comunicationMode[mode]){
+      setAppointment({...AppointmentDetails, comunicationMode:{...AppointmentDetails.comunicationMode, [mode]: 0}})
     }else{
-      setAppointment({...AppoitmentDetails, comunicationMode:{...AppoitmentDetails.comunicationMode, [mode]: 1}})
+      setAppointment({...AppointmentDetails, comunicationMode:{...AppointmentDetails.comunicationMode, [mode]: 1}})
     }
   }
   const bookAppointment = () => {
-    navigation.navigate('Subscription', {AppoitmentDetails})
+    navigation.navigate('Subscription', {AppointmentDetails})
     console.log("pressed button")
   }
-  console.log('Doctors detils', DoctorsInfo, AppoitmentDetails )
+  console.log('Doctors detils', DoctorsInfo, AppointmentDetails )
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor="#2E71DC" />
@@ -200,7 +201,7 @@ const SelectedDoctorInformation = () => {
                   {show && (
                     <DateTimePicker
                       testID="dateTimePicker"
-                      value={AppoitmentDetails.date}
+                      value={AppointmentDetails.date}
                       mode={mode}
                       is24Hour={true}
                       display="default"
@@ -220,11 +221,11 @@ const SelectedDoctorInformation = () => {
                   </View>
                 </View>
               </View>
-              <Text style={styles.DateTimeText}>{AppoitmentDetails.date.toString()}</Text>
+              <Text style={styles.DateTimeText}>{AppointmentDetails.date.toString()}</Text>
               <View style={styles.CommView}>
                 <Text style={styles.SelectComModeText}>Select Communication Mode</Text>
                 <View style={styles.SelectComMode}>
-                  <TouchableOpacity style={AppoitmentDetails.comunicationMode.video ? styles.VideoCallButtonOnn : styles.VideoCallButtonOff} onPress={()=> selectComMode('video')}>
+                  <TouchableOpacity style={AppointmentDetails.comunicationMode.video ? styles.VideoCallButtonOnn : styles.VideoCallButtonOff} onPress={()=> selectComMode('video')}>
                     <Text style={styles.VideoCallText}>{'  '}
                       <Icon
                         size={16}
@@ -234,7 +235,7 @@ const SelectedDoctorInformation = () => {
                       {' '}Video{'  '}
                     </Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style={AppoitmentDetails.comunicationMode.call ? styles.VideoCallButtonOnn : styles.VideoCallButtonOff} onPress={()=> selectComMode('call')}>
+                  <TouchableOpacity style={AppointmentDetails.comunicationMode.call ? styles.VideoCallButtonOnn : styles.VideoCallButtonOff} onPress={()=> selectComMode('call')}>
                     <Text style={styles.VideoCallText}>{'  '}
                       <Icon
                         size={16}
@@ -244,7 +245,7 @@ const SelectedDoctorInformation = () => {
                       {' '}Call{'  '}
                     </Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style={AppoitmentDetails.comunicationMode.chat ? styles.VideoCallButtonOnn : styles.VideoCallButtonOff} onPress={()=> selectComMode('chat')}>
+                  <TouchableOpacity style={AppointmentDetails.comunicationMode.chat ? styles.VideoCallButtonOnn : styles.VideoCallButtonOff} onPress={()=> selectComMode('chat')}>
                     <Text style={styles.VideoCallText}>{'  '}
                       <Icon
                         size={16}
