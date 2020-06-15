@@ -12,6 +12,7 @@ import SurveyComplete from '../screens/PatientScreens/Survey/SurveyComplete'
 import HealthTimeline from '../screens/PatientScreens/HealthTimeline/HealthTimeline'
 import SelectedDoctorInformation from '../screens/PatientScreens/selectedDoctor/SelectedDoctor' 
 import SubscriptionType from '../screens/PatientScreens/talkToDoctor/Payment/SubscriptionType'
+import RecorderTest from '../screens/PatientScreens/recorder/RecorderTest'
 
 const Drawer = createDrawerNavigator()
 const Stack = createStackNavigator()
@@ -43,6 +44,7 @@ export class PatientSignedIn extends Component {
         <Drawer.Screen name="Talk To Doctor" component={TalkToDoctor} />
         <Drawer.Screen name="Selected Doctor" component={SelectedDoctorInformation} />
         <Drawer.Screen name="Subscription" component={SubscriptionType} />
+        <Drawer.Screen name="recorder" component={RecorderTest} />
         {/*
         <Drawer.Screen name="Survey" children={this.createSurveyStack} />
          */}

@@ -186,6 +186,10 @@ const HealthTimeline = () => {
                   onPress={()=> navigation.navigate("Talk To Doctor")}
                   title="Talk to a doctor"
                 />
+                <Button
+                  onPress={()=> navigation.navigate("recorder")}
+                  title="recorder"
+                />
               </View>
             </View>
         )}
