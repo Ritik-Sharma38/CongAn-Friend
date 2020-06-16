@@ -81,7 +81,7 @@ const ProfileScreen = () => {
   }, []);
   const onRefresh = React.useCallback(async () => {
     setRefreshing(true);
-    await initalize(user.id);
+    await dispatch(initalize(user.id));
     setRefreshing(false);
   }, [refreshing]);
   console.log('profile detils', user);
@@ -104,39 +104,35 @@ const ProfileScreen = () => {
             onPress={() => navigation.openDrawer()}
           />
             */}
-          <View style={{flexDirection: 'row', alignSelf: 'center' }}>
+          <View style={styles.AvatarView}>
             <Avatar
-              size="large"
+              size='medium'
               rounded
               source={{
                 uri: user.profileURL,
               }}
-              showEditButton
-              onEditPress={() => alert('not allowed now')}
             />
             <View style={{marginLeft: 8}}>
               <Avatar
-                size="large"
+                size="medium"
                 rounded
                 source={{
                   uri: user.AvatarImg,
                 }}
-                showEditButton
-                onEditPress={() => navigation.navigate('Change Avatar')}
               />
+            </View>        
+            <View
+              style={styles.UserName}>
+              <Text style={{ fontSize: 18, color: '#fff' }}>{user.fullname}</Text>
             </View>
           </View>
-        <View
-          style={{
-            alignItems: 'center',
-            alignContent: 'center',
-            paddingTop: 5,
-            paddingBottom: 5,
-          }}>
-          <Text style={{fontSize: 18, color: '#fff'}}>{user.fullname}</Text>
-        </View>
       </View>
-      <ScrollView contentContainerStyle={styles.SecondHalf}>
+      <ScrollView 
+        contentContainerStyle={styles.SecondHalf}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+        >
         {progressBar && (
               <ProgressBarAndroid styleAttr="Horizontal" color="#2E71DC" />
         )}
@@ -402,9 +398,28 @@ const ProfileScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#fff'
   },
   FirstHalf: {
+    
+  },
+  AvatarView: {
+    padding: 10,
+    width: width/1.08,
+    flexDirection: 'row',
     backgroundColor: '#2E71DC',
+    borderRadius: 10,
+    marginTop: '4%',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    shadowOffset: { width: 0, height: 3 },
+    shadowColor: '#000',
+    shadowOpacity: 0.4,
+    elevation: 4,
+  },
+  UserName: {
+    justifyContent: 'center',
+    paddingLeft: 15,
   },
   SecondHalf: {},
   Cards: {

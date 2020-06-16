@@ -52,9 +52,9 @@ const SubscriptionType = () => {
             name="menu"
             onPress={() => navigation.openDrawer()}
           />*/}
-          <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
+          <View style={styles.AvatarView}>
             <Avatar
-              size="large"
+              size='small'
               rounded
               source={{
                 uri: user.profileURL,
@@ -62,24 +62,18 @@ const SubscriptionType = () => {
             />
             <View style={{marginLeft: 8}}>
               <Avatar
-                size="large"
+                size="small"
                 rounded
                 source={{
                   uri: user.AvatarImg,
                 }}
               />
+            </View>        
+            <View
+              style={styles.UserName}>
+              <Text style={{ fontSize: 18 }}>{user.fullname}</Text>
             </View>
           </View>
-        
-        <View
-          style={{
-            alignItems: 'center',
-            alignContent: 'center',
-            paddingTop: 5,
-            paddingBottom: 5,
-          }}>
-          <Text style={{ fontSize: 18, color: '#fff' }}>{user.fullname}</Text>
-        </View>
       </View>
       <ScrollView contentContainerStyle={styles.SecondHalf}>
         <View style={styles.SubSecondHalf}>
@@ -108,9 +102,28 @@ const SubscriptionType = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#fff'
   },
   FirstHalf: {
-    backgroundColor: '#2E71DC',
+
+  },
+  AvatarView: {
+    padding: 10,
+    width: width/1.1,
+    flexDirection: 'row',
+    backgroundColor: 'white',
+    borderRadius: 10,
+    marginTop: '4%',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    shadowOffset: { width: 0, height: 3 },
+    shadowColor: '#000',
+    shadowOpacity: 0.4,
+    elevation: 4,
+  },
+  UserName: {
+    justifyContent: 'center',
+    paddingLeft: 15,
   },
   SecondHalf: {
     

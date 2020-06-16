@@ -50,9 +50,9 @@ const UpdateDoctorProfile = () => {
     const dispatch = useDispatch();
     const user = useSelector(state => state.auth.user)
     const navigation = useNavigation()
-    const [uploadImg, setUploadImg] = useState('Upload profile pic')
+    const [uploadImg, setUploadImg] = useState('Update profile')
     const [profileImage, setProfileImage] = useState(user.profilePicture)
-    const [DoctorProfileDetails, setDocProfile] = useState(
+    const [DoctorProfileDetail, setDocProfile] = useState(
       {
         firstName: '',
         lastName: '',
@@ -72,13 +72,13 @@ const UpdateDoctorProfile = () => {
       }
     )
     const selectDays = (day) => {
-      if(DoctorProfileDetails.workingday[day]){
-        setDocProfile({...DoctorProfileDetails, workingday:{...DoctorProfileDetails.workingday, [day]: 0}})
+      if(DoctorProfileDetail.workingday[day]){
+        setDocProfile({...DoctorProfileDetail, workingday:{...DoctorProfileDetail.workingday, [day]: 0}})
       }else{
-        setDocProfile({...DoctorProfileDetails, workingday:{...DoctorProfileDetails.workingday, [day]: 1}})
+        setDocProfile({...DoctorProfileDetail, workingday:{...DoctorProfileDetail.workingday, [day]: 1}})
       }
     }
-    console.log(DoctorProfileDetails)
+    console.log(DoctorProfileDetail)
     const progressBar = useSelector(state => state.auth.progressBarStatus)
     function pickProfileImage(){
       ImagePicker.showImagePicker((response) => {
@@ -94,8 +94,8 @@ const UpdateDoctorProfile = () => {
       })
     }
     function uploadData(){
-      dispatch(updateDoctorProfile(user.id, DoctorProfileDetails, profileImage))
-      setUploadImg('Creating profile.....')
+      dispatch(updateDoctorProfile(user.id, DoctorProfileDetail, profileImage))
+      setUploadImg('updating profile.....')
     }
     return (
         <ScrollView style={styles.container}>
@@ -121,7 +121,7 @@ const UpdateDoctorProfile = () => {
                             autoCompleteType='name'
                             autoCapitalize='characters'
                             importantForAutofill='yes'
-                            onChangeText = { FirstName => { DoctorProfileDetails.firstName=FirstName }}
+                            onChangeText = { FirstName => { DoctorProfileDetail.firstName=FirstName }}
                         />
                         <TextInput
                             placeholder="Last Name"
@@ -129,21 +129,21 @@ const UpdateDoctorProfile = () => {
                             placeholderTextColor='black'
                             autoCompleteType='name'
                             autoCapitalize='characters'
-                            onChangeText = { lastNmae => { DoctorProfileDetails.lastName=lastNmae}}
+                            onChangeText = { lastNmae => { DoctorProfileDetail.lastName=lastNmae}}
                         />
                         <TextInput
                             placeholder="Age"
                             style={styles.textInput}
                             placeholderTextColor='black'
                             keyboardType='numeric'
-                            onChangeText = { age => { DoctorProfileDetails.age=age}}
+                            onChangeText = { age => { DoctorProfileDetail.age=age}}
                         />
                         <TextInput
                             placeholder="Gender"
                             style={styles.textInput}
                             placeholderTextColor='black'
                             autoCapitalize='characters'
-                            onChangeText = { gender => { DoctorProfileDetails.gender=gender}}
+                            onChangeText = { gender => { DoctorProfileDetail.gender=gender}}
                         />
                         <TextInput
                             placeholder="Country"
@@ -151,7 +151,7 @@ const UpdateDoctorProfile = () => {
                             placeholderTextColor='black'
                             textContentType='countryName'
                             autoCapitalize='characters'
-                            onChangeText = { country => { DoctorProfileDetails.country=country}}
+                            onChangeText = { country => { DoctorProfileDetail.country=country}}
                         />
                         <TextInput
                             placeholder="State"
@@ -159,7 +159,7 @@ const UpdateDoctorProfile = () => {
                             placeholderTextColor='black'
                             textContentType='addressState'
                             autoCapitalize='characters'
-                            onChangeText = { state => { DoctorProfileDetails.state=state}}
+                            onChangeText = { state => { DoctorProfileDetail.state=state}}
                         />
                         <TextInput
                             placeholder="City/Town"
@@ -167,39 +167,39 @@ const UpdateDoctorProfile = () => {
                             placeholderTextColor='black'
                             textContentType='addressCityAndState'
                             autoCapitalize='characters'
-                            onChangeText = { cityTown => { DoctorProfileDetails.cityTown=cityTown}}
+                            onChangeText = { cityTown => { DoctorProfileDetail.cityTown=cityTown}}
                         />
                         <TextInput
                             placeholder="Hospital/Clinic Name"
                             style={styles.textInput}
                             placeholderTextColor='black'
-                            onChangeText = { hospitalClinicName => { DoctorProfileDetails.hospitalClinicName=hospitalClinicName}}
+                            onChangeText = { hospitalClinicName => { DoctorProfileDetail.hospitalClinicName=hospitalClinicName}}
                         />
                         <TextInput
                             placeholder="Hospital/Clinic Address"
                             style={styles.textInput}
                             placeholderTextColor='black'
-                            onChangeText = { hospitalClinicAddress => { DoctorProfileDetails.hospitalClinicAddress=hospitalClinicAddress}}
+                            onChangeText = { hospitalClinicAddress => { DoctorProfileDetail.hospitalClinicAddress=hospitalClinicAddress}}
                         />
                         <TextInput
                             placeholder="Postal code"
                             style={styles.textInput}
                             placeholderTextColor='black'
                             autoCompleteType='postal-code'
-                            onChangeText = { postalCode => { DoctorProfileDetails.postalCode=postalCode}}
+                            onChangeText = { postalCode => { DoctorProfileDetail.postalCode=postalCode}}
                         />
                         <TextInput
                             placeholder="Specialization"
                             style={styles.textInput}
                             placeholderTextColor='black'
                             autoCapitalize='characters'
-                            onChangeText = { specialization => { DoctorProfileDetails.specialization=specialization}}
+                            onChangeText = { specialization => { DoctorProfileDetail.specialization=specialization}}
                         />
                         <TextInput
                             placeholder="Licence Number"
                             style={styles.textInput}
                             placeholderTextColor='black'
-                            onChangeText = { licenceNumer => { DoctorProfileDetails.licenceNumer=licenceNumer}}
+                            onChangeText = { licenceNumer => { DoctorProfileDetail.licenceNumer=licenceNumer}}
                         />
                     </View>
                     <View>
@@ -207,25 +207,25 @@ const UpdateDoctorProfile = () => {
                           <Text style={styles.WorkingDaysText}>Select working days</Text>
                         </View>
                         <View style={styles.SelectDays}>
-                          <TouchableOpacity style={DoctorProfileDetails.workingday.Mon ? styles.DaysButtonFirstOnn : styles.DaysButtonFirstOff} onPress={()=> selectDays('Mon')}>
+                          <TouchableOpacity style={DoctorProfileDetail.workingday.Mon ? styles.DaysButtonFirstOnn : styles.DaysButtonFirstOff} onPress={()=> selectDays('Mon')}>
                             <Text style={styles.DaysText}>{'  '}Mon{'  '}</Text>
                           </TouchableOpacity>
-                          <TouchableOpacity style={DoctorProfileDetails.workingday.Tue ? styles.DaysButtonOnn : styles.DaysButtonOff} onPress={()=> selectDays('Tue')}>
+                          <TouchableOpacity style={DoctorProfileDetail.workingday.Tue ? styles.DaysButtonOnn : styles.DaysButtonOff} onPress={()=> selectDays('Tue')}>
                             <Text style={styles.DaysText}>{'  '}Tue{'  '}</Text>
                           </TouchableOpacity>
-                          <TouchableOpacity style={DoctorProfileDetails.workingday.Wed ? styles.DaysButtonOnn : styles.DaysButtonOff} onPress={()=> selectDays('Wed')}>
+                          <TouchableOpacity style={DoctorProfileDetail.workingday.Wed ? styles.DaysButtonOnn : styles.DaysButtonOff} onPress={()=> selectDays('Wed')}>
                             <Text style={styles.DaysText}>{'  '}Wed{'  '}</Text>
                           </TouchableOpacity>
-                          <TouchableOpacity style={DoctorProfileDetails.workingday.Thr ? styles.DaysButtonOnn : styles.DaysButtonOff} onPress={()=> selectDays('Thr')}>
+                          <TouchableOpacity style={DoctorProfileDetail.workingday.Thr ? styles.DaysButtonOnn : styles.DaysButtonOff} onPress={()=> selectDays('Thr')}>
                             <Text style={styles.DaysText}>{'  '}Thr{'  '}</Text>
                           </TouchableOpacity>
-                          <TouchableOpacity style={DoctorProfileDetails.workingday.Fri ? styles.DaysButtonOnn : styles.DaysButtonOff} onPress={()=> selectDays('Fri')}>
+                          <TouchableOpacity style={DoctorProfileDetail.workingday.Fri ? styles.DaysButtonOnn : styles.DaysButtonOff} onPress={()=> selectDays('Fri')}>
                             <Text style={styles.DaysText}>{'  '}Fri{'  '}</Text>
                           </TouchableOpacity>
-                          <TouchableOpacity style={DoctorProfileDetails.workingday.Sat ? styles.DaysButtonOnn : styles.DaysButtonOff} onPress={()=> selectDays('Sat')}>
+                          <TouchableOpacity style={DoctorProfileDetail.workingday.Sat ? styles.DaysButtonOnn : styles.DaysButtonOff} onPress={()=> selectDays('Sat')}>
                             <Text style={styles.DaysText}>{'  '}Sat{'  '}</Text>
                           </TouchableOpacity>
-                          <TouchableOpacity style={DoctorProfileDetails.workingday.Sun ? styles.DaysButtonOnn : styles.DaysButtonOff} onPress={()=> selectDays('Sun')}>
+                          <TouchableOpacity style={DoctorProfileDetail.workingday.Sun ? styles.DaysButtonOnn : styles.DaysButtonOff} onPress={()=> selectDays('Sun')}>
                             <Text style={styles.DaysText}>{'  '}Sun{'  '}</Text>
                           </TouchableOpacity>
                         </View>
@@ -234,12 +234,12 @@ const UpdateDoctorProfile = () => {
                           <View style={styles.TimeFrom}>
                             <Text style={styles.TimeFromToText}>From:</Text>
                             <TimePicker
-                              selectedHours={DoctorProfileDetails.workingHours.fromHours}
-                              selectedMinutes={DoctorProfileDetails.workingHours.fromMinutes}
+                              selectedHours={DoctorProfileDetail.workingHours.fromHours}
+                              selectedMinutes={DoctorProfileDetail.workingHours.fromMinutes}
                               onChange={(hours, minutes) => setDocProfile({
-                                ...DoctorProfileDetails, 
+                                ...DoctorProfileDetail, 
                                 workingHours:{
-                                  ...DoctorProfileDetails.workingHours, 
+                                  ...DoctorProfileDetail.workingHours, 
                                   fromHours: hours, 
                                   fromMinutes: minutes
                                 }
@@ -247,12 +247,12 @@ const UpdateDoctorProfile = () => {
                             />
                             <Text style={styles.TimeFromToText}>To:</Text>
                             <TimePicker
-                              selectedHours={DoctorProfileDetails.workingHours.toHours}
-                              selectedMinutes={DoctorProfileDetails.workingHours.toMinutes}
+                              selectedHours={DoctorProfileDetail.workingHours.toHours}
+                              selectedMinutes={DoctorProfileDetail.workingHours.toMinutes}
                               onChange={(hours, minutes) => setDocProfile({
-                                ...DoctorProfileDetails, 
+                                ...DoctorProfileDetail, 
                                 workingHours:{
-                                  ...DoctorProfileDetails.workingHours, 
+                                  ...DoctorProfileDetail.workingHours, 
                                   toHours: hours, 
                                   toMinutes: minutes
                                 }
@@ -265,7 +265,7 @@ const UpdateDoctorProfile = () => {
                             style={styles.messageInput}
                             placeholderTextColor='black'
                             multiline={true}
-                            onChangeText = {messagePatient => { DoctorProfileDetails.messagePatient=messagePatient}}
+                            onChangeText = {messagePatient => { DoctorProfileDetail.messagePatient=messagePatient}}
                         />
                         <TouchableOpacity style={styles.button} onPress={() => uploadData()}>
                             <Text style={{color: '#fff'}}>{uploadImg}</Text>
@@ -273,7 +273,7 @@ const UpdateDoctorProfile = () => {
                         {progressBar && (
                             <ProgressBarAndroid styleAttr="Horizontal" color="#2E71DC" />
                         )}
-                        { uploadImg==='Creating profile.....' && (
+                        { uploadImg==='Updating profile.....' && (
                           <View>
                             {!progressBar && (
                               navigation.navigate('Profile')

@@ -23,8 +23,6 @@ const { width, height } = Dimensions.get('window')
 
 var depressionLevel = 0
 var depressionStatus = ''
-var depressionOverTimeGraphValue=[]
-var depressionOverTimeGraphLable=[]
 var loadingState=true
 
 const HealthTimeline = () => {
@@ -34,6 +32,8 @@ const HealthTimeline = () => {
   const dispatch = useDispatch()
   const user = useSelector((state) => state.auth.user);
   const firebaseUser = useSelector((state) => state.auth.firebaseUser);
+  var depressionOverTimeGraphValue=[]
+  var depressionOverTimeGraphLable=[]
   if(firebaseUser){
     try
     {
@@ -85,7 +85,6 @@ const HealthTimeline = () => {
   };
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar backgroundColor="#2E71DC" />
       <View style={styles.FirstHalf}>
         {/* 
         <View
@@ -101,9 +100,9 @@ const HealthTimeline = () => {
             onPress={() => navigation.openDrawer()}
           />
           */}
-          <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
+          <View style={styles.AvatarView}>
             <Avatar
-              size="large"
+              size='small'
               rounded
               source={{
                 uri: user.profileURL,
@@ -111,23 +110,18 @@ const HealthTimeline = () => {
             />
             <View style={{marginLeft: 8}}>
               <Avatar
-                size="large"
+                size="small"
                 rounded
                 source={{
                   uri: user.AvatarImg,
                 }}
               />
+            </View>        
+            <View
+              style={styles.UserName}>
+              <Text style={{ fontSize: 18 }}>{user.fullname}</Text>
             </View>
           </View>
-        <View
-          style={{
-            alignItems: 'center',
-            alignContent: 'center',
-            paddingTop: 5,
-            paddingBottom: 5,
-          }}>
-          <Text style={{ fontSize: 18, color: '#fff' }}>{user.fullname}</Text>
-        </View>
       </View>
       <ScrollView contentContainerStyle={styles.SecondHalf}>
         {loadingState && (
@@ -135,7 +129,7 @@ const HealthTimeline = () => {
         )}
         {!loadingState && (
             <View>
-              <Text>Last update: {depressionLevel.Date} :{depressionLevel.Time}</Text>
+              <Text style={styles.LastUpdate}>Last update: {depressionLevel.Date} :{depressionLevel.Time}</Text>
               <View style={styles.DepressionStatusView}>
                 <Text style={styles.DepressionText}>Your level of depression is: {depressionLevel.ScaleValue}</Text>
                 <Text style={styles.DepressionText}>Your Depression status is: {depressionStatus}</Text>
@@ -186,10 +180,12 @@ const HealthTimeline = () => {
                   onPress={()=> navigation.navigate("Talk To Doctor")}
                   title="Talk to a doctor"
                 />
-                <Button
-                  onPress={()=> navigation.navigate("recorder")}
-                  title="recorder"
-                />
+                <View style={{marginTop: 20}}>
+                  <Button
+                    onPress={()=> navigation.navigate("recorder")}
+                    title="Test feature don't use - recorder"
+                  />
+                </View>
               </View>
             </View>
         )}
@@ -201,9 +197,32 @@ const HealthTimeline = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#fff'
   },
   FirstHalf: {
-    backgroundColor: '#2E71DC',
+    
+  },
+  AvatarView: {
+    padding: 10,
+    width: width/1.1,
+    flexDirection: 'row',
+    backgroundColor: 'white',
+    borderRadius: 10,
+    marginTop: '4%',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    shadowOffset: { width: 0, height: 3 },
+    shadowColor: '#000',
+    shadowOpacity: 0.4,
+    elevation: 4,
+  },
+  UserName: {
+    justifyContent: 'center',
+    paddingLeft: 15,
+  },
+  LastUpdate: {
+    paddingTop: 5,
+    paddingLeft: 20,
   },
   SecondHalf: {
 

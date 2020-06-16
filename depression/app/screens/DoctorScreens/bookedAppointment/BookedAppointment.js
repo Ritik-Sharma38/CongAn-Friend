@@ -9,7 +9,56 @@ const { width, height } = Dimensions.get('window');
 
 const BookedAppointment = () => {
     const user = useSelector(state => state.auth.user)
+    const firebaseUser = useSelector(state => state.auth.firebaseUser)
     const navigation = useNavigation();
+    const [moreInfoBookedApt, setMoreInfoApt] = useState(false)
+    const [BookedAppointmentAvatar, setAvatar] = useState(
+        { 
+          profilePicture: 'https://image.flaticon.com/icons/png/512/17/17004.png',
+          patientName: 'No appointment',
+          gender: '',
+          date: '',
+          age: '',
+          ageGender:" ",
+          comMod: 
+            {
+              call: 0,
+              chat: 0,
+              video: 0,
+            },
+          moreInfoDoc: {},      
+        }
+      )
+    try {
+        var AppointmentDetails = firebaseUser.BookedAppointment
+    }catch(error){
+        console.log(error)
+    }
+    useEffect(()=> {
+        try{
+          //AppointmentDetails = firebaseUser.BookedAppointment
+          //console.log(" from try",AppointmentDetails, typeof AppointmentDetails)
+          {/*if(AppointmentDetails){
+            setAvatar(
+              {
+                ...BookedAppointmentAvatar,
+                profilePicture: AppointmentDetails.AppointmentDetails.patientDetails.profileURL,
+                patientName: AppointmentDetails.AppointmentDetails.patientDetails.fullname,
+                comMod: AppointmentDetails.AppointmentDetails.comunicationMode,
+                date: AppointmentDetails.AppointmentDetails.date,
+                age: AppointmentDetails.AppointmentDetails.patientDetails.BasicDetails.age,
+                gender: AppointmentDetails.AppointmentDetails.patientDetails.BasicDetails.gender,
+                ageGender: AppointmentDetails.AppointmentDetails.patientDetails.BasicDetails.age + ', ' + AppointmentDetails.AppointmentDetails.patientDetails.BasicDetails.gender,
+                moreInfoDoc: AppointmentDetails.AppointmentDetails.patientDetails,
+              }
+            )
+            console.log("from try-if block", AppointmentDetails.AppointmentDetails.patientDetails)
+          }
+        */}
+        }catch(error){
+          console.log("error from booked appointment from doctor", error)
+        }
+      }, [])
     var date = new Date().getDate(); 
     var month = new Date().getMonth() + 1;
     var year = new Date().getFullYear(); 
@@ -18,55 +67,92 @@ const BookedAppointment = () => {
     var sec = new Date().getSeconds();
     const [CurrentDate, setDate] = useState({ Date: date + '/' + month + '/' + year})
     const [CurrentTime, setTime] = useState({ Time: hours + ':' + min + ':' + sec})
-    console.log("profile detils",user)
+    console.log("firebase detils", AppointmentDetails)
     return (
         <SafeAreaView style = {styles.container} >
             <StatusBar backgroundColor='#2E71DC'/>
             <View style = {styles.FirstHalf}>
-                <View style={{flexDirection: 'row', justifyContent: 'flex-start',  alignContent:'center', alignItems: 'center', }}>
-                    <Icon.Button 
-                        backgroundColor="#2E71DC"
-                        name="menu"
-                        onPress={() => navigation.openDrawer()}
-                    />
-                    <View style={{marginHorizontal: '30%'}}>
-                        <Avatar
-                            size="large"
-                            rounded
-                            source={{
-                                uri: user.profilePicture
-                            }}
-                        />
+                <View style={styles.AvatarView}>
+                    <Avatar
+                    size='small'
+                    rounded
+                    source={{
+                        uri: user.profilePicture,
+                    }}
+                    />       
+                    <View style={styles.UserName}>
+                        <Text style={{ fontSize: 18 }}>{user.fullname}</Text>
                     </View>
-                </View>
-                <View style={{alignItems: 'center', alignContent: 'center', paddingTop: 5,paddingBottom: 5,}}>
-                    <Text style={{fontSize: 18,color: '#fff'}}>{user.Full_Name}</Text>
                 </View>
             </View>
             <ScrollView contentContainerStyle={styles.SecondHalf}>
                 <View style={styles.appointmentBox}>
                     <Text style={styles.appointment}>Booked appointment</Text>
-                    <View>
-                        <ListItem
-                            leftAvatar={{
-                                title: 'appointment',
-                                source: { uri: 'https://cdn2.iconfinder.com/data/icons/calendar-36/64/5-512.png' },
-                            }}
-                            title={'Ritik Sharma'}
-                            subtitle={'Mumbai'}
-                        />
-                        <Text style={{paddingLeft: 20, fontSize: 17}}>Date: {CurrentDate.Date}</Text>
-                        <Text style={{paddingLeft: 20, fontSize: 17}}>Time: {CurrentTime.Time}</Text>
-                    </View>
-                    <View style={{flexDirection: 'row'}}>
-                        <TouchableOpacity style={styles.Lbutton}>
-                            <Text style={{color: 'white'}}>Call</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.Rbutton} onPress={() => navigation.navigate('VideoCall', { channel: user.channel})}>
-                            <Text style={{color: 'white'}}>Video Call</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View >
+                    {AppointmentDetails.map((item) => (
+                        <View>
+                            <ListItem
+                                leftAvatar={{
+                                    title: item.AppointmentDetails.patientDetails.fullname,
+                                    source: {
+                                    uri:
+                                        item.AppointmentDetails.patientDetails.profileURL,
+                                    },
+                                }}
+                                title={item.AppointmentDetails.patientDetails.fullname}
+                                subtitle={item.AppointmentDetails.patientDetails.BasicDetails.age + ', ' + item.AppointmentDetails.patientDetails.BasicDetails.gender}
+                                onLongPress={() => setMoreInfoApt(true)}
+                            />
+                            <Text style={styles.BookedAptDate}>
+                                Date : {item.AppointmentDetails.date}
+                            </Text>
+                            <View style={styles.SelectComMode}>
+                                <TouchableOpacity style={item.AppointmentDetails.comunicationMode.video ? styles.VideoCallButtonOnnFirst : styles.VideoCallButtonOffFirst} onPress={()=> selectComMode('video')}>
+                                    <Text style={styles.VideoCallText}>{'  '}
+                                        <Icon
+                                            size={16}
+                                            name='personal-video'
+                                            type='MaterialIcons'
+                                        />
+                                    {' '}Video{'  '}
+                                    </Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={item.AppointmentDetails.comunicationMode.call ? styles.VideoCallButtonOnn : styles.VideoCallButtonOff} onPress={()=> selectComMode('call')}>
+                                    <Text style={styles.VideoCallText}>{'  '}
+                                        <Icon
+                                            size={16}
+                                            name='phone-in-talk'
+                                            type='MaterialIcons'
+                                        />
+                                    {' '}Call{'  '}
+                                    </Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={item.AppointmentDetails.comunicationMode.chat ? styles.VideoCallButtonOnn : styles.VideoCallButtonOff} onPress={()=> selectComMode('chat')}>
+                                    <Text style={styles.VideoCallText}>{'  '}
+                                        <Icon
+                                            size={16}
+                                            name='textsms'
+                                            type='MaterialIcons'
+                                        />
+                                    {' '}Chat{'  '}
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                            <Text style={styles.LongPressMoreInfo}>Long press on doctor for more details</Text>
+                            {moreInfoBookedApt && (
+                                <View style={styles.MoreInfoDoc}>
+                                    <Text style={styles.MoreinfoHeading}>More information</Text>
+                                    <Text style={styles.MOreInfoText}>Age: {item.AppointmentDetails.patientDetails.BasicDetails.age}</Text>
+                                    <Text style={styles.MOreInfoText}>Gender: {item.AppointmentDetails.patientDetails.BasicDetails.gender}</Text>
+                                    <Text style={styles.MOreInfoText}>City / Town: {item.AppointmentDetails.patientDetails.BasicDetails.cityTown}</Text>
+                                    <Text style={styles.MOreInfoText}>
+                                    State: {item.AppointmentDetails.patientDetails.BasicDetails.state}{'   '}
+                                    Country: {item.AppointmentDetails.patientDetails.BasicDetails.country}
+                                    </Text>
+                                </View>
+                            )}
+                        </View>
+                    ))}
+                </View>
             </ScrollView>
 		</SafeAreaView>
     );
@@ -75,83 +161,102 @@ const BookedAppointment = () => {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
+      backgroundColor: '#fff'
     },
     FirstHalf: {
-      backgroundColor: '#2E71DC',
+
     },
-    SecondHalf: {
-     
-    },
-    appointment: {
+    AvatarView: {
         padding: 10,
-        fontSize: 25,
-    },
-    appointmentBox: {
-        backgroundColor: '#fff'
-    },
-    card: {
-        borderRadius: 7,
-        width: width/1.07,
+        width: width/1.1,
+        flexDirection: 'row',
+        backgroundColor: 'white',
+        borderRadius: 10,
+        marginTop: '4%',
+        justifyContent: 'center',
+        alignSelf: 'center',
         shadowOffset: { width: 0, height: 3 },
         shadowColor: '#000',
         shadowOpacity: 0.4,
         elevation: 4,
+      },
+    UserName: {
+        justifyContent: 'center',
+        paddingLeft: 15,
     },
-    image: {
-        width: width/1.155,
-        height: width/1.155,
-        borderRadius: 3,
+    SecondHalf: {
+        padding: 20, 
     },
-    DocName: {
-        fontSize: 25,
-        padding: 10
+    appointmentBox: {
+        paddingTop: 20,
+        paddingBottom: 10,
+        borderColor: '#D3D3D3',
+        borderBottomWidth: 1,
+      },
+    appointment: {
+        fontSize: 20,
+    },
+    LongPressMoreInfo: {
+        paddingTop: '2%',
+        fontStyle: 'italic',
+        color: 'rgba(100, 100, 100, 1)'
     },
     message: {
         paddingLeft: 19,
         fontSize: 15,
     },
-    appointmentButton: {
-        backgroundColor: '#2E71DC',
-        height: 40,
-        marginHorizontal: 25,
-        borderRadius: 5,
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginVertical: 15,
-        shadowOffset: { width: 0, height: 3 },
-        shadowColor: '#000',
-        shadowOpacity: 0.4,
-        elevation: 4,
+    BookedAptDate: { 
+        fontSize: 17,
     },
-    Lbutton: {
-        backgroundColor: '#2E71DC',
-        height: 40,
-        marginHorizontal: 25,
-        borderBottomLeftRadius: 5,
-        borderTopLeftRadius: 5,
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginVertical: 5,
-        width: width/2.9,
-        shadowOffset: { width: 0, height: 3 },
-        shadowColor: '#000',
-        shadowOpacity: 0.4,
-        elevation: 4,
-      },
-      Rbutton: {
-        backgroundColor: '#2E71DC',
-        height: 40,
-        borderBottomRightRadius: 5,
-        borderTopRightRadius: 5,
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginVertical: 5,
-        width: width/2.9,
-        shadowOffset: { width: 0, height: 3 },
-        shadowColor: '#000',
-        shadowOpacity: 0.4,
-        elevation: 4,
-      },
+    SelectComMode: {
+        marginTop: '2%',
+        flexDirection: 'row',
+        paddingTop: '1.5%',
+    },
+    SelectComModeText: {
+        fontSize: 16
+    },
+    VideoCallButtonOnnFirst: {
+        backgroundColor: '#00FF00'
+    },
+    VideoCallButtonOffFirst: {
+        backgroundColor: 'rgba(235, 235, 235, 1)'
+    },
+    VideoCallButtonOnn: {
+        marginLeft: '4%',
+        backgroundColor: '#00FF00'
+    },
+    VideoCallButtonOff: {
+        marginLeft: '4%',
+        backgroundColor: 'rgba(235, 235, 235, 1)'
+    },
+    VideoCallText: {
+        fontSize: 16,
+    },
+    MOreInfoText: {
+        fontSize: 15,
+        marginBottom: '0.5%'
+    },
+    MoreinfoHeading: {
+        fontSize: 15,
+        fontWeight: 'bold'
+    },
+    MoreInfoDoc: {
+        borderColor: '#D3D3D3',
+        borderTopWidth: 1,
+        marginTop: '3%',
+        paddingTop: 10,
+    },
+    MessagePatient: {
+        borderColor: '#D3D3D3',
+        borderTopWidth: 1,
+        marginTop: '3%',
+        paddingTop: '2.5%'
+    },
+    MessageHeading: {
+        fontWeight: 'bold',
+        marginBottom: '1%'
+    },
 });
 
 export default BookedAppointment

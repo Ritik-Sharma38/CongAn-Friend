@@ -1,5 +1,6 @@
 import React, { Component, useState, useEffect, useCallback } from 'react'
 import {
+  RefreshControl,
   StyleSheet,
   Text,
   View,
@@ -23,6 +24,7 @@ const { width, height } = Dimensions.get('window')
 const TalkToDoctor = () => {
   const user = useSelector((state) => state.auth.user)
   const firebaseUser = useSelector((state) => state.auth.firebaseUser)
+  const [refreshing, setRefreshing] = React.useState(false);
   const navigation = useNavigation()
   const DoctorList = useSelector((state) => state.auth.DoctorList)
   const [moreInfoBookedApt, setMoreInfoApt] = useState(false)
@@ -43,7 +45,16 @@ const TalkToDoctor = () => {
   )
   const dispatch = useDispatch()
   var AppointmentDetails = {}
+  const onRefresh = React.useCallback(async () => {
+    setRefreshing(true);
+    console.log("refreshing............")
+    refresAppointment()
+    setRefreshing(false);
+  }, [refreshing]);
   useEffect(()=> {
+    refresAppointment()
+  }, [])
+  const refresAppointment = () => {
     try{
       AppointmentDetails = firebaseUser.BookedAppointment[firebaseUser.BookedAppointment.length-1]
       if(AppointmentDetails){
@@ -63,14 +74,13 @@ const TalkToDoctor = () => {
     }catch(error){
       console.log("error from talk-is to doctor", error)
     }
-  }, [])
+  }
   const selectComMode = (mode) => {
     console.log("comMod", mode)
   }
   console.log('firebase detils from talk to doctor', BookedAppointmentAvatar.moreInfoDoc)
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar backgroundColor="#2E71DC"/>
       <View style={styles.FirstHalf}>
         {/*<View
           style={{
@@ -84,9 +94,9 @@ const TalkToDoctor = () => {
             name="menu"
             onPress={() => navigation.openDrawer()}
           />*/}
-          <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
+          <View style={styles.AvatarView}>
             <Avatar
-              size="large"
+              size='small'
               rounded
               source={{
                 uri: user.profileURL,
@@ -94,26 +104,25 @@ const TalkToDoctor = () => {
             />
             <View style={{marginLeft: 8}}>
               <Avatar
-                size="large"
+                size="small"
                 rounded
                 source={{
                   uri: user.AvatarImg,
                 }}
               />
+            </View>        
+            <View
+              style={styles.UserName}>
+              <Text style={{ fontSize: 18 }}>{user.fullname}</Text>
             </View>
           </View>
-        
-        <View
-          style={{
-            alignItems: 'center',
-            alignContent: 'center',
-            paddingTop: 5,
-            paddingBottom: 5,
-          }}>
-          <Text style={{ fontSize: 18, color: '#fff' }}>{user.fullname}</Text>
-        </View>
       </View>
-      <ScrollView contentContainerStyle={styles.SecondHalf}>
+      <ScrollView
+        contentContainerStyle={styles.SecondHalf}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+        >
         <View style={styles.appointmentBox}>
           <Text style={styles.appointment}>Booked appointment</Text>
           <View>
@@ -133,7 +142,7 @@ const TalkToDoctor = () => {
               Date : {BookedAppointmentAvatar.date}
             </Text>
             <View style={styles.SelectComMode}>
-              <TouchableOpacity style={BookedAppointmentAvatar.comMod.video ? styles.VideoCallButtonOnn : styles.VideoCallButtonOff} onPress={()=> selectComMode('video')}>
+              <TouchableOpacity style={BookedAppointmentAvatar.comMod.video ? styles.VideoCallButtonOnnFirst : styles.VideoCallButtonOffFirst} onPress={()=> selectComMode('video')}>
                 <Text style={styles.VideoCallText}>{'  '}
                   <Icon
                     size={16}
@@ -164,7 +173,7 @@ const TalkToDoctor = () => {
                 </Text>
               </TouchableOpacity>
             </View>
-            <Text style={styles.LongPressMoreInfo}>Long press for more details</Text>
+            <Text style={styles.LongPressMoreInfo}>Long press on doctor for more details</Text>
             {moreInfoBookedApt && (
               <View style={styles.MoreInfoDoc}>
                 <Text style={styles.MoreinfoHeading}>More information</Text>
@@ -184,22 +193,24 @@ const TalkToDoctor = () => {
             )}
           </View>
         </View>
-        <Text style={styles.AvailableDoc}>Available Doctors</Text>
-        {DoctorList.map((item) => (
-          <View style={styles.ListAvailableDoctor}>
-            <ListItem
-              leftAvatar={{
-                title: item.Full_Name,
-                source: { uri: item.profilePicture },
-              }}
-              title={item.Full_Name}
-              subtitle={item.specialization}
-              onPress={() =>navigation.navigate("Selected Doctor", {DoctorsInfo: item})}
-              chevron
-            />
-            <Text style={styles.AvailableDocCityState}>City: {item.cityTown} State: {item.state}</Text>
-          </View>
-        ))}
+        <View>
+          <Text style={styles.AvailableDoc}>Available Doctors</Text>
+          {DoctorList.map((item) => (
+            <View style={styles.ListAvailableDoctor}>
+              <ListItem
+                leftAvatar={{
+                  title: item.Full_Name,
+                  source: { uri: item.profilePicture },
+                }}
+                title={item.Full_Name}
+                subtitle={item.specialization}
+                onPress={() =>navigation.navigate("Selected Doctor", {DoctorsInfo: item})}
+                chevron
+              />
+              <Text style={styles.AvailableDocCityState}>City: {item.cityTown} State: {item.state}</Text>
+            </View>
+          ))}
+        </View>
       </ScrollView>
     </SafeAreaView>  
   )
@@ -208,14 +219,38 @@ const TalkToDoctor = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'white'
   },
   FirstHalf: {
-    backgroundColor: '#2E71DC',
+    
   },
-  SecondHalf: {},
+  AvatarView: {
+    padding: 10,
+    width: width/1.1,
+    flexDirection: 'row',
+    backgroundColor: 'white',
+    borderRadius: 10,
+    marginTop: '4%',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    shadowOffset: { width: 0, height: 3 },
+    shadowColor: '#000',
+    shadowOpacity: 0.4,
+    elevation: 4,
+  },
+  UserName: {
+    justifyContent: 'center',
+    paddingLeft: 15,
+  },
+  SecondHalf: {
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingBottom: 20,
+  },
   AvailableDoc: {
-    fontSize: 25,
-    padding: 8,
+    fontSize: 20,
+    fontWeight: 'bold',
+    paddingTop: '3%',
   },
   ListAvailableDoctor: {
     backgroundColor: '#fff'
@@ -226,27 +261,17 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   appointment: {
-    padding: 10,
-    fontSize: 25,
+    fontWeight: 'bold',
+    fontSize: 20,
   },
   appointmentBox: {
-    backgroundColor: '#fff',
-  },
-  card: {
-    borderRadius: 7,
-    width: width / 1.07,
-    shadowOffset: { width: 0, height: 3 },
-    shadowColor: '#000',
-    shadowOpacity: 0.4,
-    elevation: 4,
-  },
-  image: {
-    width: width / 1.155,
-    height: width / 1.155,
-    borderRadius: 3,
+    paddingTop: 20,
+    paddingBottom: 10,
+    borderColor: '#D3D3D3',
+    borderBottomWidth: 1,
   },
   LongPressMoreInfo: {
-    paddingLeft: '5%',
+    paddingTop: '2%',
     fontStyle: 'italic',
     color: 'rgba(100, 100, 100, 1)'
   },
@@ -259,16 +284,21 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   BookedAptDate: { 
-    paddingLeft: '5%',
     fontSize: 17,
   },
   SelectComMode: {
     marginTop: '2%',
     flexDirection: 'row',
-    padding: '1.5%',
+    paddingTop: '1.5%',
   },
   SelectComModeText: {
     fontSize: 16
+  },
+  VideoCallButtonOnnFirst: {
+    backgroundColor: '#00FF00'
+  },
+  VideoCallButtonOffFirst: {
+    backgroundColor: 'rgba(235, 235, 235, 1)'
   },
   VideoCallButtonOnn: {
     marginLeft: '4%',
@@ -293,60 +323,21 @@ const styles = StyleSheet.create({
     borderColor: '#D3D3D3',
     borderTopWidth: 1,
     marginTop: '3%',
-    padding: '4%'
+    paddingTop: 10,
   },
   MessagePatient: {
     borderColor: '#D3D3D3',
     borderTopWidth: 1,
     marginTop: '3%',
-    paddingTop: '4%'
+    paddingTop: '2.5%'
   },
   MessageHeading: {
     fontWeight: 'bold',
     marginBottom: '1%'
   },
-  appointmentButton: {
-    backgroundColor: '#2E71DC',
-    height: 40,
-    marginHorizontal: 25,
-    borderRadius: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginVertical: 15,
-    shadowOffset: { width: 0, height: 3 },
-    shadowColor: '#000',
-    shadowOpacity: 0.4,
-    elevation: 4,
-  },
-  Lbutton: {
-    backgroundColor: '#2E71DC',
-    height: 40,
-    marginHorizontal: 25,
-    borderBottomLeftRadius: 5,
-    borderTopLeftRadius: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginVertical: 5,
-    width: width / 2.9,
-    shadowOffset: { width: 0, height: 3 },
-    shadowColor: '#000',
-    shadowOpacity: 0.4,
-    elevation: 4,
-  },
-  Rbutton: {
-    backgroundColor: '#2E71DC',
-    height: 40,
-    borderBottomRightRadius: 5,
-    borderTopRightRadius: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginVertical: 5,
-    width: width / 2.9,
-    shadowOffset: { width: 0, height: 3 },
-    shadowColor: '#000',
-    shadowOpacity: 0.4,
-    elevation: 4,
-  },
+  AvailableDocView: {
+    
+  }
 })
 
 export default TalkToDoctor
