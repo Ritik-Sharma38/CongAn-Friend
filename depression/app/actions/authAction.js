@@ -40,6 +40,9 @@ import {
   DOCTOR_PROFILE_CREATE_START,
   DOCTOR_PROFILE_CREATE_SUCCESS,
   DOCTOR_PROFILE_CREATE_FAILED,
+  DOCTOR_PROFILE_UPDATE_START,
+  DOCTOR_PROFILE_UPDATE_SUCCESS,
+  DOCTOR_PROFILE_UPDATE_FAILED,
   DOCTOR_AVAILABLE_LIST_FETCH_START,
   DOCTOR_AVAILABLE_LIST_FETCH_SUCCESS,
   DOCTOR_AVAILABLE_LIST_FETCH_FAILED,
@@ -52,6 +55,12 @@ import {
   INITIALIZING_USER_SUCCESS,
   INITIALIZING_USER_STARTED,
   INITIALIZING_USER_FAILED,
+  INITIALIZING_DOCTOR_STARTED,
+  INITIALIZING_DOCTOR_SUCCESS,
+  INITIALIZING_DOCTOR_FAILED,
+  BOOKING_APPOINTMENT_FOR_DOCTOR_STARTED,
+  BOOKING_APPOINTMENT_FOR_DOCTOR_SUCCESS,
+  BOOKING_APPOINTMENT_FOR_DOCTOR_FAILED,
 } from './types'
 import { act } from 'react-test-renderer'
 import { exp } from 'react-native-reanimated'
@@ -94,9 +103,10 @@ async function saveUser(user) {
 async function updateUser(user) {
   try {
     await AsyncStorage.mergeItem('user_details', JSON.stringify(user))
-    console.log('saved user')
+    console.log('updated user')
+    fetchUser()
   } catch (error) {
-    console.log('error saving user', error)
+    console.log('error updating user', error)
     // Error saving data
   }
 }
@@ -233,7 +243,7 @@ export const googleSignin = (profileType) => {
                 profileURL: user.photoURL,
               },
             }
-            firestore().collection('doctors').doc(user.uid).set(temp)
+            firestore().collection('doctors').doc(user.uid).update(temp)
             saveUser(userDict)
             dispatch({
               type: DOCTOR_GOOGLE_SIGN_IN_SUCCESS,
@@ -281,7 +291,7 @@ export const googleSignin = (profileType) => {
               },
             }
             console.log('google signIn success from patient')
-            firestore().collection('users').doc(user.uid).set(temp)
+            firestore().collection('users').doc(user.uid).update(temp)
             saveUser(userDict)
             dispatch({
               type: GOOGLE_SIGN_IN_SUCCESS,
@@ -359,7 +369,7 @@ export const fbSignin = (profileType) => {
                     profileURL: user.photoURL,
                   },
                 }
-                firestore().collection('doctors').doc(user.uid).set(temp)
+                firestore().collection('doctors').doc(user.uid).update(temp)
                 saveUser(userDict)
                 console.log('upload finished')
                 dispatch({
@@ -409,7 +419,7 @@ export const fbSignin = (profileType) => {
                     ],
                   },
                 }
-                firestore().collection('users').doc(user.uid).set(temp)
+                firestore().collection('users').doc(user.uid).update(temp)
                 saveUser(userDict)
                 console.log('upload finished')
                 dispatch({
@@ -454,7 +464,7 @@ export const emailSignup = (email, password, profileType) => {
         await firestore()
           .collection('doctors')
           .doc(doLogin.user.uid)
-          .set(userDict)
+          .update(userDict)
         saveUser(userDict)
         console.log('upload finished , user saved: ', userDict)
         dispatch({
@@ -487,6 +497,7 @@ export const emailSignup = (email, password, profileType) => {
             ],
           },
         }
+        console.log("writting to firesetore ....", doLogin.user.uid, userDict)
         await firestore()
           .collection('users')
           .doc(doLogin.user.uid)
@@ -517,8 +528,8 @@ export const initalize = (uid) => {
         'starting fetching of User data from firestore with uid=',
         uid
       )
+      await dispatch(fetchDoctorList())
       const docRef = await firestore().collection('users').doc(uid)
-      console.log('docref', docRef)
       docRef.get().then(function (doc) {
         if (true) {
           dispatch({
@@ -530,7 +541,6 @@ export const initalize = (uid) => {
           )
         }
       })
-      dispatch(fetchDoctorList())
       console.log('Finished initalizing.')
     } catch (error) {
       console.log('Error in initalizing....', error)
@@ -590,7 +600,37 @@ export const emailLogin = (email, password, profileType) => {
     }
   }
 }
-
+export const docInitalize = (uid) => {
+  return async (dispatch) => {
+    dispatch({ type: INITIALIZING_DOCTOR_STARTED })
+    try {
+      console.log(
+        'starting fetching of doctor data from firestore with uid=',
+        uid
+      )
+      const docRef = await firestore().collection('doctors').doc(uid)
+      console.log('docref', docRef)
+      docRef.get().then(function (doc) {
+        if (true) {
+          dispatch({
+            type: INITIALIZING_DOCTOR_SUCCESS,
+            payload: doc.data(),
+          })
+          console.log(
+            'Finished Firestore doctor fetching'
+          )
+        }
+      })
+      console.log('Finished initalizing.')
+    } catch (error) {
+      console.log('Error in initalizing....', error)
+      dispatch({
+        type: INITIALIZING_DOCTOR_FAILED,
+        payload: error,
+      })
+    }
+  }
+}
 export const pickImage = (uid, userName) => {
   return async (dispatch) => {
     dispatch({ type: UPLOAD_IMAGE_STARTED })
@@ -770,8 +810,7 @@ export const doctorProfileUpload = (uid, DoctorProfileDetails) => {
     try {
       var DoctorProfileDetail = {
         ...DoctorProfileDetails,
-        Full_Name:
-          DoctorProfileDetails.firstName + ' ' + DoctorProfileDetails.lastName,
+        Full_Name: DoctorProfileDetails.firstName + ' ' + DoctorProfileDetails.lastName,
         channel: DoctorProfileDetails.lastName + DoctorProfileDetails.firstName,
       }
       ImagePicker.showImagePicker((response) => {
@@ -799,21 +838,24 @@ export const doctorProfileUpload = (uid, DoctorProfileDetails) => {
 export const DoctorProfile = (DoctorProfileDetail, uri, uid) => {
   return async (dispatch) => {
     try {
-      console.log('printing received data.......', DoctorProfileDetail)
       const imgRef = await storage()
         .ref('userData/Doctors/' + uid)
         .child('profilePic')
         .putFile(uri)
       const imgReff = await storage().ref(imgRef.metadata.fullPath)
       const url = await imgReff.getDownloadURL()
+      const docRef = await firestore()
+        .collection('DoctorsData')
+        .doc('AvailabeleDoctor')
+      const DoctorList = await (await docRef.get()).data().DoctorsList
       var DoctorProfileDetails = {
         ...DoctorProfileDetail,
         profilePicture: url,
+        iid: DoctorList.length,
       }
       await firestore().collection('doctors').doc(uid).update({
         DoctorProfileDetails,
       })
-      updateUser(DoctorProfileDetails)
       await firestore()
         .collection('DoctorsData')
         .doc('AvailabeleDoctor')
@@ -826,9 +868,10 @@ export const DoctorProfile = (DoctorProfileDetail, uri, uid) => {
         type: DOCTOR_PROFILE_CREATE_SUCCESS,
       })
       console.log('created proflie and updated doctors list')
-    } catch (error) {
+      updateUser(DoctorProfileDetails)
+    }catch(error){
       console.log('Profile creation failed : ', error.code, error)
-      Alert.alert('Something went worng', error.code)
+      Alert.alert('Something went wrong', error.code)
       dispatch({
         type: DOCTOR_PROFILE_CREATE_FAILED,
         payload: error,
@@ -836,7 +879,46 @@ export const DoctorProfile = (DoctorProfileDetail, uri, uid) => {
     }
   }
 }
-
+export const updateDoctorProfile = (uid, DoctorProfileDetail, profilepic) => {
+  return async (dispatch) => {
+    console.log("Starting update",profilepic)
+    dispatch({ type: DOCTOR_PROFILE_UPDATE_START })
+    try {
+      const imgRef = await storage()
+        .ref('userData/Doctors/' + uid)
+        .child('profilePic')
+        .putFile(profilepic)
+      const imgReff = await storage().ref(imgRef.metadata.fullPath)
+      const url = await imgReff.getDownloadURL()
+      var DoctorProfileDetails = {
+        ...DoctorProfileDetail,
+        Full_Name: DoctorProfileDetail.firstName + ' ' + DoctorProfileDetail.lastName,
+        channel: DoctorProfileDetail.lastName + DoctorProfileDetail.firstName,
+        profilePicture: url,
+      }
+      await firestore().collection('doctors').doc(uid).update({
+        DoctorProfileDetails,
+      })
+      updateUser(DoctorProfileDetails)
+      const docRef = await firestore().collection('doctors').doc(uid)
+      docRef.get().then(function (doc) {
+        if (doc.exists) {
+          console.log("document found")
+          const user = doc.data()
+          const doctorIndexValue= user.iid
+          dispatch({ type: DOCTOR_PROFILE_UPDATE_SUCCESS })
+        }
+      })
+    }catch(error){
+      console.log('Profile Updation failed : ', error.code, error)
+      Alert.alert('Something went wrong', error.code)
+      dispatch({
+        type: DOCTOR_PROFILE_UPDATE_FAILED,
+        payload: error,
+      })
+    }
+  }
+}
 export const fetchDoctorList = () => {
   return async (dispatch) => {
     dispatch({ type: DOCTOR_AVAILABLE_LIST_FETCH_START })
@@ -939,6 +1021,38 @@ export const voiceQuestionAnswerUpload = (uid, file, id) => {
         payload: error.code,
       })
       console.log(error)
+    }
+  }
+}
+
+export const bookAppointmentForDoctor = (UserUid, DoctorUid, appointmentDetails) => {
+  return async (dispatch) => {
+    dispatch({ type: BOOKING_APPOINTMENT_FOR_DOCTOR_STARTED })
+    try{
+      await firestore()
+        .collection('users')
+        .doc(UserUid)
+        .update({ 
+          BookedAppointment: firebase.firestore.FieldValue.arrayUnion(
+          appointmentDetails
+        ),
+      })
+      await firestore()
+        .collection('doctors')
+        .doc(DoctorUid)
+        .update({ 
+          BookedAppointment: firebase.firestore.FieldValue.arrayUnion(
+          appointmentDetails
+        ),
+      })
+      console.log("Uloaded appointment deails to firebase")
+      dispatch({ type: BOOKING_APPOINTMENT_FOR_DOCTOR_SUCCESS})
+    }catch(error){
+      dispatch({
+        type: BOOKING_APPOINTMENT_FOR_DOCTOR_FAILED,
+        payload: error,
+      })
+      console.log("Error from bookingAppointmentForDoctor", error)
     }
   }
 }

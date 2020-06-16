@@ -361,7 +361,7 @@ class DoctorLoginSignup extends React.Component {
               <ProgressBarAndroid styleAttr="Horizontal" color="#fff" />
             )}
             {this.props.SignIn && (
-              this.props.navigation.navigate('doctorCreateProfile')
+              this.props.navigation.navigate('CreateProfile')
             )}
           </Animated.View>
         </View>
@@ -380,7 +380,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     height: 40,
     marginHorizontal: 25,
-    borderRadius: 35,
+    borderRadius: 5,
     alignItems: 'center',
     justifyContent: 'center',
     marginVertical: 5,
@@ -394,8 +394,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     height: 40,
     marginHorizontal: 25,
-    borderBottomLeftRadius: 35,
-    borderTopLeftRadius: 35,
+    borderBottomLeftRadius: 5,
+    borderTopLeftRadius: 5,
     alignItems: 'center',
     justifyContent: 'center',
     marginVertical: 5,
@@ -409,8 +409,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: 'white',
     height: 40,
-    borderBottomRightRadius: 35,
-    borderTopRightRadius: 35,
+    borderBottomRightRadius: 5,
+    borderTopRightRadius: 5,
     alignItems: 'center',
     justifyContent: 'center',
     marginVertical: 5,

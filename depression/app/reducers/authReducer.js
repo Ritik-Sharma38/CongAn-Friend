@@ -31,6 +31,9 @@ import {START_GOOGLE_SIGN_IN,
     DOCTOR_PROFILE_CREATE_UPDATE,
     DOCTOR_PROFILE_CREATE_SUCCESS,
     DOCTOR_PROFILE_CREATE_FAILED,
+    DOCTOR_PROFILE_UPDATE_START,
+    DOCTOR_PROFILE_UPDATE_SUCCESS,
+    DOCTOR_PROFILE_UPDATE_FAILED,
     DOCTOR_AVAILABLE_LIST_FETCH_START,
     DOCTOR_AVAILABLE_LIST_FETCH_SUCCESS,
     DOCTOR_AVAILABLE_LIST_FETCH_FAILED,
@@ -43,6 +46,12 @@ import {START_GOOGLE_SIGN_IN,
     INITIALIZING_USER_STARTED,
     INITIALIZING_USER_SUCCESS,
     INITIALIZING_USER_FAILED,
+    INITIALIZING_DOCTOR_STARTED,
+    INITIALIZING_DOCTOR_SUCCESS,
+    INITIALIZING_DOCTOR_FAILED,
+    BOOKING_APPOINTMENT_FOR_DOCTOR_STARTED,
+    BOOKING_APPOINTMENT_FOR_DOCTOR_SUCCESS,
+    BOOKING_APPOINTMENT_FOR_DOCTOR_FAILED,
 } from '../actions/types';
 import { act } from 'react-test-renderer';
 
@@ -61,6 +70,7 @@ const DEFAULT_STATE={
     QuestionList: [],
     backtoProfile: false,
     firebaseUser:{},
+    BookedAppointment: false,
 }
 export default (state=DEFAULT_STATE, action)=>{
     switch(action.type){
@@ -271,6 +281,22 @@ export default (state=DEFAULT_STATE, action)=>{
                 progressBarStatus: false,
                 errorMessage: action.payload
             }
+        case DOCTOR_PROFILE_UPDATE_START:
+            return{
+                ...state,
+                progressBarStatus: true,
+            }
+        case DOCTOR_PROFILE_UPDATE_SUCCESS:
+            return{
+                ...state,
+                progressBarStatus: false,
+            }
+        case DOCTOR_PROFILE_UPDATE_FAILED:
+            return{
+                ...state,
+                progressBarStatus: false,
+                errorMessage: action.payload
+            }
         case DOCTOR_AVAILABLE_LIST_FETCH_START:
             return{
                 ...state,
@@ -336,6 +362,40 @@ export default (state=DEFAULT_STATE, action)=>{
                 firebaseUser: action.payload
             }
         case INITIALIZING_USER_FAILED:
+            return{
+                ...state,
+                progressBarStatus: false,
+                errorMessage: action.payload
+            }
+        case INITIALIZING_DOCTOR_STARTED:
+            return{
+                ...state,
+                progressBarStatus: true,
+            }
+        case INITIALIZING_DOCTOR_SUCCESS:
+            return{
+                ...state,
+                progressBarStatus: false,
+                firebaseUser: action.payload
+            }
+        case INITIALIZING_DOCTOR_FAILED:
+            return{
+                ...state,
+                progressBarStatus: false,
+                errorMessage: action.payload
+            }
+        case BOOKING_APPOINTMENT_FOR_DOCTOR_STARTED:
+            return{
+                ...state,
+                progressBarStatus: true,
+            }
+        case BOOKING_APPOINTMENT_FOR_DOCTOR_SUCCESS:
+            return{
+                ...state,
+                progressBarStatus: false,
+                BookedAppointment: true
+            }
+        case BOOKING_APPOINTMENT_FOR_DOCTOR_FAILED:
             return{
                 ...state,
                 progressBarStatus: false,
