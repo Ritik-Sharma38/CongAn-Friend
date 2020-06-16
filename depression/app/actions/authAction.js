@@ -894,6 +894,7 @@ async function postData(url = '', payload = {}) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'Host': 'backend.default.example.com',
     },
     data: payload,
   })
