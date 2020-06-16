@@ -63,3 +63,6 @@ buck-out/
 
 # firebase credentials
 android/app/google-services.json
+
+# backend credentials
+app/credentials/*

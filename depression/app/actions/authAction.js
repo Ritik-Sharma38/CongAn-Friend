@@ -64,6 +64,7 @@ import {
 } from './types'
 import { act } from 'react-test-renderer'
 import { exp } from 'react-native-reanimated'
+import backend_api from '../credentials/api.json'
 
 function bootstrap() {
   GoogleSignin.configure({
@@ -695,14 +696,11 @@ export const firestoreUpload = (name, uid, patientBasicDetails) => {
       const imgReff = await storage().ref('userData/assets/' + name)
       const url = await imgReff.getDownloadURL()
       console.log(url)
-      await firestore()
-        .collection('users')
-        .doc(uid)
-        .update({
-          fullname: patientBasicDetails.fullname,
-          BasicDetails: patientBasicDetails,
-          AvatarImg: url,
-        })
+      await firestore().collection('users').doc(uid).update({
+        fullname: patientBasicDetails.fullname,
+        BasicDetails: patientBasicDetails,
+        AvatarImg: url,
+      })
       console.log('url written to firestore')
       var userDict = {
         BasicDetails: patientBasicDetails,
@@ -972,6 +970,17 @@ export const avatarFormUpload = (uid, answers) => {
   }
 }
 
+// api call
+async function postData(url = '', payload = {}) {
+  await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: payload,
+  })
+}
+
 export const voiceQuestionAnswerUpload = (uid, file, id) => {
   return async (dispatch) => {
     dispatch({ type: AVATAR_VOICE_ANSWER_UPLOAD_STARTED })
@@ -986,11 +995,25 @@ export const voiceQuestionAnswerUpload = (uid, file, id) => {
       }
       updateUser(QuestionAnswer)
       await storage()
-        .ref('/userData/Paitent/VoiceQuestions/' + uid)
+        .ref('/userData/Patient/VoiceQuestions/' + uid)
         .child(id)
         .putFile(file)
       dispatch({ type: AVATAR_VOICE_ANSWER_UPLOAD_SUCCESS })
-      console.log('Finished Voice Answers upload', uid + '/' + id)
+      console.log('Finished Voice Answers upload', id)
+
+      // backend api call on last audio
+      if (id.substring(0, 2) == '33') {
+        console.log('LAST AUDIO', id, backend_api.endpoint)
+        const data = {
+          dir: 'userData/Patient/VoiceQuestions',
+          uid: uid,
+        }
+        try {
+          await postData(backend_api.endpoint, data)
+        } catch (err) {
+          console.log(err)
+        }
+      }
     } catch (error) {
       dispatch({
         type: AVATAR_VOICE_ANSWER_UPLOAD_FAILED,

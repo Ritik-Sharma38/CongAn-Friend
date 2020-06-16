@@ -33,6 +33,7 @@
     "agora-rn-uikit": "^0.2.2",
     "axios": "^0.19.2",
     "moment": "^2.26.0",
+    "js-yaml": "^3.14.0",
     "npm": "^6.14.5",
     "react": "16.9.0",
     "react-native": "^0.62.1",
