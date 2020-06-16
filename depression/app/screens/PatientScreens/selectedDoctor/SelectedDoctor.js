@@ -34,6 +34,7 @@ const SelectedDoctorInformation = () => {
   const [AppointmentDetails, setAppointment] = useState(
     {
       date: new Date(1598051730000),
+      dateStamp: new Date(1598051730000),
       docDetails: DoctorsInfo,
       patientDetails: user,
       comunicationMode:{
@@ -73,6 +74,7 @@ const SelectedDoctorInformation = () => {
     const currentDate = selectedDate || date;
     setShow(Platform.OS === 'ios');
     setAppointment({...AppointmentDetails, date: currentDate});
+    setAppointment({...AppointmentDetails, dateStamp: currentDate});
   };
 
   const showMode = currentMode => {
