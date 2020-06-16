@@ -71,7 +71,7 @@ const ProfileScreen = () => {
   const [trigerProfile, setTrigerProfile] = useState(true);
   const [trigerAvtarVideo, setTrigerAvatarVideo] = useState(true);
   const [refreshing, setRefreshing] = React.useState(false);
-  const user = useSelector((state) => state.auth.user);
+  var user = useSelector((state) => state.auth.user);
   const navigation = useNavigation();
   const imageSource = useSelector((state) => state.auth.imageSource);
   const progressBar = useSelector((state) => state.auth.progressBarStatus);
@@ -111,6 +111,8 @@ const ProfileScreen = () => {
               source={{
                 uri: user.profileURL,
               }}
+              showEditButton
+              onEditPress={() => alert('not allowed now')}
             />
             <View style={{marginLeft: 8}}>
               <Avatar
@@ -119,6 +121,8 @@ const ProfileScreen = () => {
                 source={{
                   uri: user.AvatarImg,
                 }}
+                showEditButton
+                onEditPress={() => navigation.navigate('Change Avatar')}
               />
             </View>        
             <View
@@ -401,7 +405,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff'
   },
   FirstHalf: {
-    
+    paddingBottom: "1.5%"
   },
   AvatarView: {
     padding: 10,

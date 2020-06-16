@@ -64,7 +64,7 @@ const ProfileScreen = () => {
     useEffect(() => {
         dispatch(docInitalize(user.id))
     }, [])
-    console.log("profile detils",user)
+    console.log("profile detils",user.profileURL)
     return ( 
         <SafeAreaView style = {styles.container}>
             <StatusBar backgroundColor='#2E71DC'/>
@@ -74,7 +74,7 @@ const ProfileScreen = () => {
                         size='medium'
                         rounded
                         source={{
-                            uri: user.profilePicture,
+                            uri: user.profileURL,
                         }}
                     />      
                     <View style={styles.UserName}>

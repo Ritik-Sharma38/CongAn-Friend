@@ -496,11 +496,11 @@ export const emailSignup = (email, password, profileType) => {
             ],
           },
         }
-        console.log("writting to firesetore")
+        console.log("writting to firesetore ....", doLogin.user.uid, userDict)
         await firestore()
           .collection('users')
           .doc(doLogin.user.uid)
-          .update(userDict)
+          .set(userDict)
         saveUser(userDict)
         console.log('upload finished , user saved: ', userDict)
         dispatch({
@@ -529,7 +529,6 @@ export const initalize = (uid) => {
       )
       await dispatch(fetchDoctorList())
       const docRef = await firestore().collection('users').doc(uid)
-      console.log('docref', docRef)
       docRef.get().then(function (doc) {
         if (true) {
           dispatch({

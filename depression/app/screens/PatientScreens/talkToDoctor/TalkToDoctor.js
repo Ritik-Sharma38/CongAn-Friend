@@ -22,8 +22,8 @@ import Icon from 'react-native-vector-icons/MaterialIcons'
 const { width, height } = Dimensions.get('window')
 
 const TalkToDoctor = () => {
-  const user = useSelector((state) => state.auth.user)
-  const firebaseUser = useSelector((state) => state.auth.firebaseUser)
+  var user = useSelector((state) => state.auth.user)
+  var firebaseUser = useSelector((state) => state.auth.firebaseUser)
   const [refreshing, setRefreshing] = React.useState(false);
   const navigation = useNavigation()
   const DoctorList = useSelector((state) => state.auth.DoctorList)
@@ -54,7 +54,7 @@ const TalkToDoctor = () => {
   useEffect(()=> {
     refresAppointment()
   }, [])
-  const refresAppointment = () => {
+  const refresAppointment = async() => {
     try{
       AppointmentDetails = firebaseUser.BookedAppointment[firebaseUser.BookedAppointment.length-1]
       if(AppointmentDetails){
@@ -174,6 +174,11 @@ const TalkToDoctor = () => {
               </TouchableOpacity>
             </View>
             <Text style={styles.LongPressMoreInfo}>Long press on doctor for more details</Text>
+            <TouchableOpacity onPress={()=> navigation.navigate('Booked Appointment')}>
+              <Text style={styles.AllAppointment}>
+                All appointments
+              </Text>
+            </TouchableOpacity>
             {moreInfoBookedApt && (
               <View style={styles.MoreInfoDoc}>
                 <Text style={styles.MoreinfoHeading}>More information</Text>
@@ -274,6 +279,10 @@ const styles = StyleSheet.create({
     paddingTop: '2%',
     fontStyle: 'italic',
     color: 'rgba(100, 100, 100, 1)'
+  },
+  AllAppointment: {
+    fontSize: 17,
+    paddingTop: '2%'
   },
   DocName: {
     fontSize: 25,

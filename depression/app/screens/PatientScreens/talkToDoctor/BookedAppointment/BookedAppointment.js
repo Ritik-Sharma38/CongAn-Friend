@@ -12,23 +12,6 @@ const BookedAppointment = () => {
     var firebaseUser = useSelector(state => state.auth.firebaseUser)
     const navigation = useNavigation();
     const [moreInfoBookedApt, setMoreInfoApt] = useState(false)
-    const [BookedAppointmentAvatar, setAvatar] = useState(
-        { 
-          profilePicture: 'https://image.flaticon.com/icons/png/512/17/17004.png',
-          patientName: 'No appointment',
-          gender: '',
-          date: '',
-          age: '',
-          ageGender:" ",
-          comMod: 
-            {
-              call: 0,
-              chat: 0,
-              video: 0,
-            },
-          moreInfoDoc: {},      
-        }
-      )
     try {
         var AppointmentDetails = firebaseUser.BookedAppointment
     }catch(error){
@@ -49,12 +32,21 @@ const BookedAppointment = () => {
             <View style = {styles.FirstHalf}>
                 <View style={styles.AvatarView}>
                     <Avatar
-                    size='small'
-                    rounded
-                    source={{
-                        uri: user.profileURL,
-                    }}
-                    />       
+                        size='small'
+                        rounded
+                        source={{
+                            uri: user.profileURL,
+                        }}
+                    />
+                    <View style={{marginLeft: 8}}>
+                        <Avatar
+                            size="small"
+                            rounded
+                            source={{
+                            uri: user.AvatarImg,
+                            }}
+                        />
+                    </View>      
                     <View style={styles.UserName}>
                         <Text style={{ fontSize: 18 }}>{user.fullname}</Text>
                     </View>
@@ -67,14 +59,14 @@ const BookedAppointment = () => {
                         <View>
                             <ListItem
                                 leftAvatar={{
-                                    title: item.AppointmentDetails.patientDetails.fullname,
+                                    title: item.AppointmentDetails.docDetails.DoctorsInfo.Full_Name,
                                     source: {
                                     uri:
-                                        item.AppointmentDetails.patientDetails.profileURL,
+                                        item.AppointmentDetails.docDetails.DoctorsInfo.profilePicture,
                                     },
                                 }}
-                                title={item.AppointmentDetails.patientDetails.fullname}
-                                subtitle={item.AppointmentDetails.patientDetails.BasicDetails.age + ', ' + item.AppointmentDetails.patientDetails.BasicDetails.gender}
+                                title={item.AppointmentDetails.docDetails.DoctorsInfo.Full_Name}
+                                subtitle={item.AppointmentDetails.docDetails.DoctorsInfo.specialization}
                                 onLongPress={() => setMoreInfoApt(true)}
                             />
                             <Text style={styles.BookedAptDate}>
@@ -116,13 +108,18 @@ const BookedAppointment = () => {
                             {moreInfoBookedApt && (
                                 <View style={styles.MoreInfoDoc}>
                                     <Text style={styles.MoreinfoHeading}>More information</Text>
-                                    <Text style={styles.MOreInfoText}>Age: {item.AppointmentDetails.patientDetails.BasicDetails.age}</Text>
-                                    <Text style={styles.MOreInfoText}>Gender: {item.AppointmentDetails.patientDetails.BasicDetails.gender}</Text>
-                                    <Text style={styles.MOreInfoText}>City / Town: {item.AppointmentDetails.patientDetails.BasicDetails.cityTown}</Text>
+                                    <Text style={styles.MOreInfoText}>Age: {item.AppointmentDetails.docDetails.DoctorsInfo.age}</Text>
+                                    <Text style={styles.MOreInfoText}>Gender: {item.AppointmentDetails.docDetails.DoctorsInfo.gender}</Text>
+                                    <Text style={styles.MOreInfoText}>Hospital / Clinic :{item.AppointmentDetails.docDetails.DoctorsInfo.hospitalClinicName}</Text>
+                                    <Text style={styles.MOreInfoText}>City / Town: {item.AppointmentDetails.docDetails.DoctorsInfo.cityTown}</Text>
                                     <Text style={styles.MOreInfoText}>
-                                    State: {item.AppointmentDetails.patientDetails.BasicDetails.state}{'   '}
-                                    Country: {item.AppointmentDetails.patientDetails.BasicDetails.country}
+                                    State: {item.AppointmentDetails.docDetails.DoctorsInfo.state}{'   '}
+                                    Country: {item.AppointmentDetails.docDetails.DoctorsInfo.country}
                                     </Text>
+                                    <View style={styles.MessagePatient}>
+                                        <Text style={styles.MessageHeading}>Message:</Text>
+                                        <Text style={styles.MOreInfoText}>{item.AppointmentDetails.docDetails.DoctorsInfo.messagePatient}</Text>
+                                    </View>
                                 </View>
                             )}
                         </View>
@@ -221,6 +218,16 @@ const styles = StyleSheet.create({
         marginTop: '3%',
         paddingTop: 10,
         paddingBottom: '3%'
+    },
+    MessagePatient: {
+        borderColor: '#D3D3D3',
+        borderTopWidth: 1,
+        marginTop: '3%',
+        paddingTop: '2.5%'
+    },
+      MessageHeading: {
+        fontWeight: 'bold',
+        marginBottom: '1%'
     },
 });
 
