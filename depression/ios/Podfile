@@ -44,6 +44,8 @@ target 'depression' do
 
   pod 'RNVoiceRecorder', :path => '../node_modules/react-native-voice-recorder'
 
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+
   target 'depressionTests' do
     inherit! :search_paths
     # Pods for testing

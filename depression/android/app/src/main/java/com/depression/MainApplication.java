@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+import com.oblador.vectoricons.VectorIconsPackage;
 import px.voicerecorder.RNVoiceRecorderPackage;
 import net.no_mad.tts.TextToSpeechPackage;
 import com.horcrux.svg.SvgPackage;

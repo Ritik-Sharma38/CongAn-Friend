@@ -497,7 +497,7 @@ export const emailSignup = (email, password, profileType) => {
             ],
           },
         }
-        console.log("writting to firesetore ....", doLogin.user.uid, userDict)
+        console.log('writting to firesetore ....', doLogin.user.uid, userDict)
         await firestore()
           .collection('users')
           .doc(doLogin.user.uid)
@@ -616,9 +616,7 @@ export const docInitalize = (uid) => {
             type: INITIALIZING_DOCTOR_SUCCESS,
             payload: doc.data(),
           })
-          console.log(
-            'Finished Firestore doctor fetching'
-          )
+          console.log('Finished Firestore doctor fetching')
         }
       })
       console.log('Finished initalizing.')
@@ -810,7 +808,8 @@ export const doctorProfileUpload = (uid, DoctorProfileDetails) => {
     try {
       var DoctorProfileDetail = {
         ...DoctorProfileDetails,
-        Full_Name: DoctorProfileDetails.firstName + ' ' + DoctorProfileDetails.lastName,
+        Full_Name:
+          DoctorProfileDetails.firstName + ' ' + DoctorProfileDetails.lastName,
         channel: DoctorProfileDetails.lastName + DoctorProfileDetails.firstName,
       }
       ImagePicker.showImagePicker((response) => {
@@ -869,7 +868,7 @@ export const DoctorProfile = (DoctorProfileDetail, uri, uid) => {
       })
       console.log('created proflie and updated doctors list')
       updateUser(DoctorProfileDetails)
-    }catch(error){
+    } catch (error) {
       console.log('Profile creation failed : ', error.code, error)
       Alert.alert('Something went wrong', error.code)
       dispatch({
@@ -881,7 +880,7 @@ export const DoctorProfile = (DoctorProfileDetail, uri, uid) => {
 }
 export const updateDoctorProfile = (uid, DoctorProfileDetail, profilepic) => {
   return async (dispatch) => {
-    console.log("Starting update",profilepic)
+    console.log('Starting update', profilepic)
     dispatch({ type: DOCTOR_PROFILE_UPDATE_START })
     try {
       const imgRef = await storage()
@@ -892,7 +891,8 @@ export const updateDoctorProfile = (uid, DoctorProfileDetail, profilepic) => {
       const url = await imgReff.getDownloadURL()
       var DoctorProfileDetails = {
         ...DoctorProfileDetail,
-        Full_Name: DoctorProfileDetail.firstName + ' ' + DoctorProfileDetail.lastName,
+        Full_Name:
+          DoctorProfileDetail.firstName + ' ' + DoctorProfileDetail.lastName,
         channel: DoctorProfileDetail.lastName + DoctorProfileDetail.firstName,
         profilePicture: url,
       }
@@ -903,13 +903,13 @@ export const updateDoctorProfile = (uid, DoctorProfileDetail, profilepic) => {
       const docRef = await firestore().collection('doctors').doc(uid)
       docRef.get().then(function (doc) {
         if (doc.exists) {
-          console.log("document found")
+          console.log('document found')
           const user = doc.data()
-          const doctorIndexValue= user.iid
+          const doctorIndexValue = user.iid
           dispatch({ type: DOCTOR_PROFILE_UPDATE_SUCCESS })
         }
       })
-    }catch(error){
+    } catch (error) {
       console.log('Profile Updation failed : ', error.code, error)
       Alert.alert('Something went wrong', error.code)
       dispatch({
@@ -976,7 +976,7 @@ async function postData(url = '', payload = {}) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Host': 'backend.default.example.com',
+      Host: 'backend.default.example.com',
     },
     data: payload,
   })
@@ -1025,34 +1025,38 @@ export const voiceQuestionAnswerUpload = (uid, file, id) => {
   }
 }
 
-export const bookAppointmentForDoctor = (UserUid, DoctorUid, appointmentDetails) => {
+export const bookAppointmentForDoctor = (
+  UserUid,
+  DoctorUid,
+  appointmentDetails
+) => {
   return async (dispatch) => {
     dispatch({ type: BOOKING_APPOINTMENT_FOR_DOCTOR_STARTED })
-    try{
+    try {
       await firestore()
         .collection('users')
         .doc(UserUid)
-        .update({ 
+        .update({
           BookedAppointment: firebase.firestore.FieldValue.arrayUnion(
-          appointmentDetails
-        ),
-      })
+            appointmentDetails
+          ),
+        })
       await firestore()
         .collection('doctors')
         .doc(DoctorUid)
-        .update({ 
+        .update({
           BookedAppointment: firebase.firestore.FieldValue.arrayUnion(
-          appointmentDetails
-        ),
-      })
-      console.log("Uloaded appointment deails to firebase")
-      dispatch({ type: BOOKING_APPOINTMENT_FOR_DOCTOR_SUCCESS})
-    }catch(error){
+            appointmentDetails
+          ),
+        })
+      console.log('Uloaded appointment deails to firebase')
+      dispatch({ type: BOOKING_APPOINTMENT_FOR_DOCTOR_SUCCESS })
+    } catch (error) {
       dispatch({
         type: BOOKING_APPOINTMENT_FOR_DOCTOR_FAILED,
         payload: error,
       })
-      console.log("Error from bookingAppointmentForDoctor", error)
+      console.log('Error from bookingAppointmentForDoctor', error)
     }
   }
 }
