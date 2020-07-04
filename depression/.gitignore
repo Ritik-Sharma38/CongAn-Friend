@@ -63,6 +63,8 @@ buck-out/
 
 # firebase credentials
 android/app/google-services.json
+depression/functions/cammit-covid-19-firebase-adminsdk-hklss-b309173335.json
 
 # backend credentials
 app/credentials/*
+
