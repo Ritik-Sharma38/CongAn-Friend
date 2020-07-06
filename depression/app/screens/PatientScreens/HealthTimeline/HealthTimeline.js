@@ -23,8 +23,6 @@ const { width, height } = Dimensions.get('window')
 
 var depressionLevel = 0
 var depressionStatus = ''
-var depressionOverTimeGraphValue=[]
-var depressionOverTimeGraphLable=[]
 var loadingState=true
 
 const HealthTimeline = () => {
@@ -34,29 +32,36 @@ const HealthTimeline = () => {
   const dispatch = useDispatch()
   const user = useSelector((state) => state.auth.user);
   const firebaseUser = useSelector((state) => state.auth.firebaseUser);
+  var depressionOverTimeGraphValue=[]
+  var depressionOverTimeGraphLable=[]
   if(firebaseUser){
-    depressionLevel = firebaseUser.healthTimeline.PHQ8Value[(firebaseUser.healthTimeline.PHQ8Value.length)-1]
-    for(let i=0; i<firebaseUser.healthTimeline.PHQ8Value.length; i++){
-      depressionOverTimeGraphValue.push(firebaseUser.healthTimeline.PHQ8Value[i].ScaleValue)
-      depressionOverTimeGraphLable.push(firebaseUser.healthTimeline.PHQ8Value[i].Date)
+    try
+    {
+      depressionLevel = firebaseUser.healthTimeline.PHQ8Value[(firebaseUser.healthTimeline.PHQ8Value.length)-1]
+      for(let i=0; i<firebaseUser.healthTimeline.PHQ8Value.length; i++){
+        depressionOverTimeGraphValue.push(firebaseUser.healthTimeline.PHQ8Value[i].ScaleValue)
+        depressionOverTimeGraphLable.push(firebaseUser.healthTimeline.PHQ8Value[i].Date)
+      }
+      if(depressionLevel.ScaleValue<5){
+          depressionStatus = 'Not Depressed'
+      }
+      else if(depressionLevel.ScaleValue>4 && depressionLevel.ScaleValue<10){
+          depressionStatus = 'Mild Depression'
+      }
+      else if(depressionLevel.ScaleValue>9 && depressionLevel.ScaleValue<15){
+        depressionStatus = 'Moderate Depression'
+      }
+      else if(depressionLevel.ScaleValue>14 && depressionLevel.ScaleValue<20){
+        depressionStatus = 'Moderately severe depression'
+      }
+      else if(depressionLevel.ScaleValue>19 && depressionLevel.ScaleValue<25){
+        depressionStatus = 'Severe depression'
+      }
+      console.log("printing firebase user data", firebaseUser)
+      loadingState=false
+    }catch(error){
+      console.log("error from healthTimeline", error)
     }
-    if(depressionLevel.ScaleValue<5){
-        depressionStatus = 'Not Depressed'
-    }
-    else if(depressionLevel.ScaleValue>4 && depressionLevel.ScaleValue<10){
-        depressionStatus = 'Mild Depression'
-    }
-    else if(depressionLevel.ScaleValue>9 && depressionLevel.ScaleValue<15){
-      depressionStatus = 'Moderate Depression'
-    }
-    else if(depressionLevel.ScaleValue>14 && depressionLevel.ScaleValue<20){
-      depressionStatus = 'Moderately severe depression'
-    }
-    else if(depressionLevel.ScaleValue>19 && depressionLevel.ScaleValue<25){
-      depressionStatus = 'Severe depression'
-    }
-    console.log("printing firebase user data", firebaseUser)
-    loadingState=false
   }
   const chartConfig = {
     backgroundGradientFrom: "#1E2923",
@@ -80,25 +85,10 @@ const HealthTimeline = () => {
   };
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar backgroundColor="#2E71DC" />
       <View style={styles.FirstHalf}>
-        {/* 
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'flex-start',
-            alignContent: 'center',
-            alignItems: 'center',
-          }}>
-          <Icon.Button
-            backgroundColor="#2E71DC"
-            name="menu"
-            onPress={() => navigation.openDrawer()}
-          />
-          */}
-          <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
+          <View style={styles.AvatarView}>
             <Avatar
-              size="large"
+              size='small'
               rounded
               source={{
                 uri: user.profileURL,
@@ -106,23 +96,18 @@ const HealthTimeline = () => {
             />
             <View style={{marginLeft: 8}}>
               <Avatar
-                size="large"
+                size="small"
                 rounded
                 source={{
                   uri: user.AvatarImg,
                 }}
               />
+            </View>        
+            <View
+              style={styles.UserName}>
+              <Text style={{ fontSize: 18 }}>{user.fullname}</Text>
             </View>
           </View>
-        <View
-          style={{
-            alignItems: 'center',
-            alignContent: 'center',
-            paddingTop: 5,
-            paddingBottom: 5,
-          }}>
-          <Text style={{ fontSize: 18, color: '#fff' }}>{user.fullname}</Text>
-        </View>
       </View>
       <ScrollView contentContainerStyle={styles.SecondHalf}>
         {loadingState && (
@@ -130,7 +115,7 @@ const HealthTimeline = () => {
         )}
         {!loadingState && (
             <View>
-              <Text>Last update: {depressionLevel.Date} :{depressionLevel.Time}</Text>
+              <Text style={styles.LastUpdate}>Last update: {depressionLevel.Date} :{depressionLevel.Time}</Text>
               <View style={styles.DepressionStatusView}>
                 <Text style={styles.DepressionText}>Your level of depression is: {depressionLevel.ScaleValue}</Text>
                 <Text style={styles.DepressionText}>Your Depression status is: {depressionStatus}</Text>
@@ -173,7 +158,7 @@ const HealthTimeline = () => {
                     type='MaterialIcons'
                     onPress={()=> Alert.alert(
                       "Talk to Doctor",
-                      "How it works? \n 1. Click the button below \n 2. Select a doctor from list \n 3. Buy subscription or select pay as you go \n 4. Book appointment with doctor"
+                      "We not just help the user analyse his emotional states but we also provide a telemedicine service that helps the user connect with available doctors by scheduling appointments at their convenience \n\nHow it works? \n 1. Click the button below \n 2. Select a doctor from list \n 3. Buy subscription or select pay as you go \n 4. Book appointment with doctor"
                     )}  
                   />
                 </View>
@@ -181,6 +166,12 @@ const HealthTimeline = () => {
                   onPress={()=> navigation.navigate("Talk To Doctor")}
                   title="Talk to a doctor"
                 />
+                <View style={{marginTop: 20}}>
+                  <Button
+                    onPress={()=> navigation.navigate("ExampleApp")}
+                    title="Test feature - vOICE/VIDEO/TEXT MULTI MODEL"
+                  />
+                </View>
               </View>
             </View>
         )}
@@ -192,9 +183,32 @@ const HealthTimeline = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#fff'
   },
   FirstHalf: {
-    backgroundColor: '#2E71DC',
+    
+  },
+  AvatarView: {
+    padding: 10,
+    width: width/1.1,
+    flexDirection: 'row',
+    backgroundColor: 'white',
+    borderRadius: 10,
+    marginTop: '4%',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    shadowOffset: { width: 0, height: 3 },
+    shadowColor: '#000',
+    shadowOpacity: 0.4,
+    elevation: 4,
+  },
+  UserName: {
+    justifyContent: 'center',
+    paddingLeft: 15,
+  },
+  LastUpdate: {
+    paddingTop: 5,
+    paddingLeft: 20,
   },
   SecondHalf: {
 

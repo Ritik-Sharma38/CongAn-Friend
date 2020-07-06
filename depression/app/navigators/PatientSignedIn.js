@@ -11,6 +11,11 @@ import SurveyScreen from '../screens/PatientScreens/Survey/SurveyScreen'
 import SurveyComplete from '../screens/PatientScreens/Survey/SurveyComplete'
 import HealthTimeline from '../screens/PatientScreens/HealthTimeline/HealthTimeline'
 import SelectedDoctorInformation from '../screens/PatientScreens/selectedDoctor/SelectedDoctor' 
+import SubscriptionType from '../screens/PatientScreens/talkToDoctor/Payment/SubscriptionType'
+import RecorderTest from '../screens/PatientScreens/recorder/RecorderTest'
+import BookedAppointment from '../screens/PatientScreens/talkToDoctor/BookedAppointment/BookedAppointment'
+import VideoScreen from '../components/VideoScreen'
+import ExampleApp from '../screens/ExampleApp'
 
 const Drawer = createDrawerNavigator()
 const Stack = createStackNavigator()
@@ -38,9 +43,14 @@ export class PatientSignedIn extends Component {
         <Drawer.Screen name="Voice Questions" component={VoiceQuestions} />
         <Drawer.Screen name="Health Timeline" component={HealthTimeline} />
         {/*<Drawer.Screen name="Video" component={Video} />*/}
-        <Drawer.Screen name="Video Call" component={Test} />
+        <Drawer.Screen name="Video_Call" component={Test} />
         <Drawer.Screen name="Talk To Doctor" component={TalkToDoctor} />
         <Drawer.Screen name="Selected Doctor" component={SelectedDoctorInformation} />
+        <Drawer.Screen name="Subscription" component={SubscriptionType} />
+        <Drawer.Screen name="recorder" component={RecorderTest} />
+        <Drawer.Screen name="Booked Appointment" component={BookedAppointment} />
+        <Drawer.Screen name="Video call" component={VideoScreen} />
+        <Drawer.Screen name="ExampleApp" component={ExampleApp} />
         {/*
         <Drawer.Screen name="Survey" children={this.createSurveyStack} />
          */}
