@@ -47,14 +47,6 @@ var videoData = {
   audName: ''
 }
 
-const uploadData = () => {
-  const dispatch = useDispatch()
-  console.log("...insdie upload data", videoData)
-  if( videoData.video){
-    dispatch(voiceQuestionAnswerUpload("video", currentUser.id, videoData.audfile, videoData.audName , videoData.videofile, videoData.videoName ))
-  }
-}
-
 class Example extends Component {
   constructor(){
     super();
@@ -299,9 +291,7 @@ const VoiceQuestions = (props) => {
   }
 
   const AudioVideoRecording = async() => {
-    setAutVid(false)
-    setVidDisplay(true)
-    console.log("inside video recording")    
+    navigation.navigate("Video Questions", {questionList} )
   }
   console.log('rendring voice question page', props)
 

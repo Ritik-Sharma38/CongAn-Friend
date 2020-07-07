@@ -969,28 +969,26 @@ async function postData(url = '', payload = {}) {
   })
 }
 
-export const voiceQuestionAnswerUpload = (answertype , uid, file, id, videoFile, videoName) => {
+export const voiceQuestionAnswerUpload = (answertype , uid, file, id) => {
   return async (dispatch) => {
     dispatch({ type: AVATAR_VOICE_ANSWER_UPLOAD_STARTED })
     try {
-      console.log('started Voice Answers upload')
-      QuestionAnswer = {
-        VoiceAnsers: {
-          id: id, //push in array form// error // solve this.
-          file: file,
-          answer: true,
-        },
-      }
-      updateUser(QuestionAnswer)
+      console.log('started Voice Answers upload', answertype, uid, file, id)
+      
+      if(answertype === 'voice')
       await storage()
         .ref('/userData/Patient/VoiceQuestions/' + uid)
         .child(id)
         .putFile(file)
+        .then(
+          console.log("voice uploading finished")
+        )
+
       if(answertype === 'video'){
         await storage()
           .ref('/userData/Patient/VideoQuestions/' + uid)
-          .child(videoName)
-          .putFile(videoFile)
+          .child(id)
+          .putFile(file)
           .then(
             console.log("video uploading finished")
           )

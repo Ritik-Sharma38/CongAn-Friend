@@ -168,7 +168,7 @@ const HealthTimeline = () => {
                 />
                 <View style={{marginTop: 20}}>
                   <Button
-                    onPress={()=> navigation.navigate("ExampleApp")}
+                    onPress={()=> navigation.navigate("Video Questions")}
                     title="Test feature - vOICE/VIDEO/TEXT MULTI MODEL"
                   />
                 </View>

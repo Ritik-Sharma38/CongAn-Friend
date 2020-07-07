@@ -15,7 +15,7 @@ import SubscriptionType from '../screens/PatientScreens/talkToDoctor/Payment/Sub
 import RecorderTest from '../screens/PatientScreens/recorder/RecorderTest'
 import BookedAppointment from '../screens/PatientScreens/talkToDoctor/BookedAppointment/BookedAppointment'
 import VideoScreen from '../components/VideoScreen'
-import ExampleApp from '../screens/ExampleApp'
+import VideoQuestions from '../screens/PatientScreens/voiceQuestions/VideoQuestions'
 
 const Drawer = createDrawerNavigator()
 const Stack = createStackNavigator()
@@ -50,7 +50,7 @@ export class PatientSignedIn extends Component {
         <Drawer.Screen name="recorder" component={RecorderTest} />
         <Drawer.Screen name="Booked Appointment" component={BookedAppointment} />
         <Drawer.Screen name="Video call" component={VideoScreen} />
-        <Drawer.Screen name="ExampleApp" component={ExampleApp} />
+        <Drawer.Screen name="Video Questions" component={VideoQuestions} />
         {/*
         <Drawer.Screen name="Survey" children={this.createSurveyStack} />
          */}
