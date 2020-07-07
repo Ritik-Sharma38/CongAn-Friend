@@ -1,17 +1,15 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, Image, Dimensions, ProgressBarAndroid, StatusBar, Alert, TouchableOpacity } from 'react-native';
-import { Card, Button  } from 'react-native-elements';
+import { Card, Button, Avatar  } from 'react-native-elements';
 import {connect} from 'react-redux';
 import { voiceQuestionAnswerUpload } from '../../../actions/authAction'
 import { RNCamera } from 'react-native-camera'
 import Tts from 'react-native-tts'
-import AudioRecord from 'react-native-audio-record'
-import storage from '@react-native-firebase/storage'
-
 
 const { width, height } = Dimensions.get('window');
 
-var questionList = [{"Answer": false, "Question": "We will record your video, Press start button below", "id": -1}, {"Answer": false, "Question": "How are you doing today?", "id": 0}, {"Answer": false, "Question": "- Where are you from originally?", "id": 1}, {"Answer": false, "Question": "How do you like it there?", "id": 2}, {"Answer": false, "Question": "What are the things you like the most about it?", "id": 3}, {"Answer": false, "Question": "How easy for you to get adjusted to your place?", "id": 4}, {"Answer": false, "Question": "What is it that you don't really like about the place?", "id": 5}, {"Answer": false, "Question": "What did you study at the school?", "id": 6}, {"Answer": false, "Question": "Do you still pursue it?", "id": 7}, {"Answer": false, "Question": "What is your dream job?", "id": 8}, {"Answer": false, "Question": "How hard is that?", "id": 9}, {"Answer": false, "Question": "- Do you travel a lot?", "id": 10}, {"Answer": false, "Question": "How often do you go to your hometown?", "id": 11}, {"Answer": false, "Question": "Who is someone that is a positive influence in your life?", "id": 12}, {"Answer": false, "Question": "- Do you have roommates?", "id": 13}, {"Answer": false, "Question": "- Do you consider yourself an introvert?", "id": 14}, {"Answer": false, "Question": "Why?", "id": 15}, {"Answer": false, "Question": "How are you at controlling your anger?", "id": 16}, {"Answer": false, "Question": "When was the last time you argued with someone and what was it about?", "id": 17}, {"Answer": false, "Question": "Is there anything that you regret?", "id": 18}, {"Answer": false, "Question": "What was the most memorable memory you've had?", "id": 19}, {"Answer": false, "Question": "How easy is it to get a good night's sleep?", "id": 20}, {"Answer": false, "Question": "How often do you get good sleep?", "id": 21}, {"Answer": false, "Question": "How are you when you don't get enough sleep?", "id": 22}, {"Answer": false, "Question": "Do you feel down?", "id": 23}, {"Answer": false, "Question": "Have you ever been diagnosed with depression?", "id": 24}, {"Answer": false, "Question": "Were you ever diagnosed with PTSD? ", "id": 25}, {"Answer": false, "Question": "Did you serve in military?", "id": 26}, {"Answer": false, "Question": "How would your best friend describe you?", "id": 27}, {"Answer": false, "Question": "How do you know them?", "id": 28}, {"Answer": false, "Question": "How close are you to them?", "id": 29}, {"Answer": false, "Question": "What do you do to relax?", "id": 30}, {"Answer": false, "Question": "What advice will you give yourself in the next ten to twenty years?", "id": 31}, {"Answer": false, "Question": "What was the last time you were really happy?", "id": 32}, {"Answer": false, "Question": "What do you think of today's kids?", "id": 33}]
+var intro = [{"Answer": false, "Question": "We will record your video, Press start button below", "id": -1}]
+var questionList = []
 var currentquestion = questionList[0]
 var date = new Date().getDate()
 var month = new Date().getMonth() + 1
@@ -27,6 +25,8 @@ class VideoQuestions extends Component {
   state = {
     classQuestionControl: 0,
     videoUri: '',
+    start: true,
+    questionFinish: false
   }
   
   componentWillMount(){
@@ -34,12 +34,18 @@ class VideoQuestions extends Component {
       Tts.speak('')
       Tts.setDucking(true)
     })
-    this.voiceQuestion()
+    try{
+      questionList = this.props.QuestionList
+      this.voiceQuestion()
+    }catch(error){
+      console.log("Error" + error)
+    }
   }
 
   record = async () => {
     try {
       if (this.camera) {
+        this.setState({ start: false})
         Tts.stop()
         Tts.speak(questionList[this.state.classQuestionControl].Question)
         console.log("starting recording.....")
@@ -47,19 +53,14 @@ class VideoQuestions extends Component {
         const data = await this.camera.recordAsync(options);
         this.setState({ videoUri: data.uri})
         const videoName = currentquestion.id + date + time + 'Answer'
-        console.log("...from start recording...", this.state.videoUri)
         this.props.voiceQuestionAnswerUpload("video", this.props.user.id, data.uri, videoName )
         if(this.state.classQuestionControl === questionList.length -1){
           console.log("finished")
+          this.setState({ questionFinish: true})
         }else{
-          console.log("......control variables...", questionList.length, this.state.classQuestionControl)
           this.setState({ classQuestionControl : this.state.classQuestionControl + 1})
-          console.log("...variable counter....", this.state.classQuestionControl)
           currentquestion = questionList[this.state.classQuestionControl]
-          console.log(".....current question......", currentquestion)
         }
-      }else {
-        console.log("else.........")
       }
     }catch(error){
       console.log("Error from record", error)
@@ -82,49 +83,118 @@ class VideoQuestions extends Component {
   voiceQuestion = async () => {
     try{
       Tts.stop()
-      Tts.speak(questionList[this.state.classQuestionControl].Question)
+      Tts.speak(intro[0].Question)
       currentquestion=questionList[this.state.classQuestionControl]
     }catch(error){
       console.log("Error from voiceQuestion class component", error)
     }
   }
 
+  questionFinished = () => {
+    this.props.navigation.navigate('Profile')
+  }
+
   render() {
-    console.log("....props....",this.props.navigation)
+    console.log("....props....",questionList)
     return (
       <View style={styles.containertwo}>
-        <RNCamera
-          ref={(ref) => {
-            this.camera = ref;
-          }}
-          style={styles.preview}
-          type={RNCamera.Constants.Type.front}
-          flashMode={RNCamera.Constants.FlashMode.off}
-          androidCameraPermissionOptions={{
-            title: 'Permission to use camera',
-            message: 'We need your permission to use your camera',
-            buttonPositive: 'Ok',
-            buttonNegative: 'Cancel',
-          }}
-          androidRecordAudioPermissionOptions={{
-            title: 'Permission to use audio recording',
-            message: 'We need your permission to use your audio',
-            buttonPositive: 'Ok',
-            buttonNegative: 'Cancel',
-          }}
-        >
-          <View>
-            <Text style={styles.VideoQuestionText}>{questionList[this.state.classQuestionControl].Question}</Text>
+        {!this.state.questionFinish && (
+          <RNCamera
+            ref={(ref) => {
+              this.camera = ref;
+            }}
+            style={styles.preview}
+            type={RNCamera.Constants.Type.front}
+            flashMode={RNCamera.Constants.FlashMode.off}
+            androidCameraPermissionOptions={{
+              title: 'Permission to use camera',
+              message: 'We need your permission to use your camera',
+              buttonPositive: 'Ok',
+              buttonNegative: 'Cancel',
+            }}
+            androidRecordAudioPermissionOptions={{
+              title: 'Permission to use audio recording',
+              message: 'We need your permission to use your audio',
+              buttonPositive: 'Ok',
+              buttonNegative: 'Cancel',
+            }}
+          > 
+            <View style={{ flex: 0, justifyContent: 'center' }}>
+              {this.state.start && (
+                <View>
+                  <View>
+                    <Text style={styles.VideoQuestionText}>{intro[0].Question}</Text>
+                  </View>
+                  <TouchableOpacity onPress={this.record} style={styles.capture}>
+                    <Text style={{ fontSize: 14 }}> start </Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+              {!this.state.start && (
+                <View>
+                  <View>
+                    <Text style={styles.VideoQuestionText}>{questionList[this.state.classQuestionControl].Question}</Text>
+                  </View>
+                  <Text style={styles.subCardRecordingText}>Recording....</Text>
+                  <TouchableOpacity onPress={this.stopRecord.bind(this)} style={styles.capture}>
+                    <Text style={{ fontSize: 14 }}> Finish recording </Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+            </View>
+          </RNCamera>
+        )}
+        
+        {this.state.questionFinish && 
+          (
+            <View>
+                <View style={styles.FirstHalf}>
+                  <View style={styles.AvatarView}>
+                    <Avatar
+                      size='small'
+                      rounded
+                      source={{
+                        uri: this.props.user.profileURL,
+                      }}
+                    />
+                    <View style={{marginLeft: 8}}>
+                      <Avatar
+                        size="small"
+                        rounded
+                        source={{
+                          uri: this.props.user.AvatarImg,
+                        }}
+                      />
+                    </View>        
+                    <View
+                      style={styles.UserName}>
+                      <Text style={{ fontSize: 18 }}>{this.props.user.fullname}</Text>
+                    </View>
+                  </View>
+                </View>
+                <View style={styles.SecondHalf}>
+                  <Card containerStyle={{ borderRadius: 5, width: width / 1.1 }}>
+                    <Avatar
+                      size="small"
+                      rounded
+                      source={{
+                        uri: this.props.user.AvatarImg,
+                      }}
+                    />
+                    <Text style={styles.subCardFinishQuestionText}>
+                      Thank you. Your ansers are recorded. You will get reports after
+                      sometime in Reports section of profile.
+                    </Text>
+                    <Button
+                      onPress={() => this.questionFinished()}
+                      buttonStyle={{ borderRadius: 5 }}
+                      title="Finished"
+                    />
+                  </Card>
+                </View>
           </View>
-          <View style={{ flex: 0, flexDirection: 'row', justifyContent: 'center' }}>
-            <TouchableOpacity onPress={this.record} style={styles.capture}>
-                <Text style={{ fontSize: 14 }}> start </Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={this.stopRecord.bind(this)} style={styles.capture}>
-                <Text style={{ fontSize: 14 }}> Stop </Text>
-            </TouchableOpacity>
-          </View>
-        </RNCamera>
+        )
+      }
       </View>
     );
   }
@@ -132,6 +202,7 @@ class VideoQuestions extends Component {
 
 const mapStateToProps = (state) => ({
   user: state.auth.user,
+  QuestionList: state.auth.QuestionList,
   progressBarStatus: state.auth.progressBarStatus
 });
 const mapDispatch = { voiceQuestionAnswerUpload };
@@ -230,7 +301,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   subCardRecordingText: {
-    fontSize: 18,
+    paddingLeft: 15,
+    fontStyle: 'italic',
+    fontSize: 16,
     color: 'green',
     fontWeight: 'bold',
   },
