@@ -229,7 +229,7 @@ const VoiceQuestions = (props) => {
                   <Button
                     onPress={() => questionFinished()}
                     buttonStyle={{ borderRadius: 5 }}
-                    title="Finished"
+                    title="Finish"
                   />
                 </Card>
               )}

@@ -23,7 +23,7 @@ var time = hours + '_' + min + '_' + sec + '_'
 class VideoQuestions extends Component {
 
   state = {
-    classQuestionControl: 0,
+    classQuestionControl: 33,
     videoUri: '',
     start: true,
     questionFinish: false
@@ -53,7 +53,7 @@ class VideoQuestions extends Component {
         const data = await this.camera.recordAsync(options);
         this.setState({ videoUri: data.uri})
         const videoName = currentquestion.id + date + time + 'Answer'
-        this.props.voiceQuestionAnswerUpload("video", this.props.user.id, data.uri, videoName )
+        //this.props.voiceQuestionAnswerUpload("video", this.props.user.id, data.uri, videoName )
         if(this.state.classQuestionControl === questionList.length -1){
           console.log("finished")
           this.setState({ questionFinish: true})
@@ -98,82 +98,37 @@ class VideoQuestions extends Component {
     console.log("....props....",questionList)
     return (
       <View style={styles.containertwo}>
-        {!this.state.questionFinish && (
-          <RNCamera
-            ref={(ref) => {
-              this.camera = ref;
-            }}
-            style={styles.preview}
-            type={RNCamera.Constants.Type.front}
-            flashMode={RNCamera.Constants.FlashMode.off}
-            androidCameraPermissionOptions={{
-              title: 'Permission to use camera',
-              message: 'We need your permission to use your camera',
-              buttonPositive: 'Ok',
-              buttonNegative: 'Cancel',
-            }}
-            androidRecordAudioPermissionOptions={{
-              title: 'Permission to use audio recording',
-              message: 'We need your permission to use your audio',
-              buttonPositive: 'Ok',
-              buttonNegative: 'Cancel',
-            }}
+        <RNCamera
+          ref={(ref) => {
+            this.camera = ref;
+          }}
+          style={styles.preview}
+          type={RNCamera.Constants.Type.front}
+          flashMode={RNCamera.Constants.FlashMode.off}
+          androidCameraPermissionOptions={{
+            title: 'Permission to use camera',
+            message: 'We need your permission to use your camera',
+            buttonPositive: 'Ok',
+            buttonNegative: 'Cancel',
+          }}
+          androidRecordAudioPermissionOptions={{
+            title: 'Permission to use audio recording',
+            message: 'We need your permission to use your audio',
+            buttonPositive: 'Ok',
+            buttonNegative: 'Cancel',
+          }}
           > 
-            <View style={{ flex: 0, justifyContent: 'center' }}>
-              {this.state.start && (
-                <View>
-                  <View>
-                    <Text style={styles.VideoQuestionText}>{intro[0].Question}</Text>
-                  </View>
-                  <TouchableOpacity onPress={this.record} style={styles.capture}>
-                    <Text style={{ fontSize: 14 }}> start </Text>
-                  </TouchableOpacity>
-                </View>
-              )}
-              {!this.state.start && (
-                <View>
-                  <View>
-                    <Text style={styles.VideoQuestionText}>{questionList[this.state.classQuestionControl].Question}</Text>
-                  </View>
-                  <Text style={styles.subCardRecordingText}>Recording....</Text>
-                  <TouchableOpacity onPress={this.stopRecord.bind(this)} style={styles.capture}>
-                    <Text style={{ fontSize: 14 }}> Finish recording </Text>
-                  </TouchableOpacity>
-                </View>
-              )}
-            </View>
-          </RNCamera>
-        )}
-        
-        {this.state.questionFinish && 
-          (
-            <View>
-                <View style={styles.FirstHalf}>
-                  <View style={styles.AvatarView}>
-                    <Avatar
-                      size='small'
-                      rounded
-                      source={{
-                        uri: this.props.user.profileURL,
-                      }}
-                    />
-                    <View style={{marginLeft: 8}}>
-                      <Avatar
-                        size="small"
-                        rounded
-                        source={{
-                          uri: this.props.user.AvatarImg,
-                        }}
-                      />
-                    </View>        
-                    <View
-                      style={styles.UserName}>
-                      <Text style={{ fontSize: 18 }}>{this.props.user.fullname}</Text>
-                    </View>
-                  </View>
-                </View>
-                <View style={styles.SecondHalf}>
-                  <Card containerStyle={{ borderRadius: 5, width: width / 1.1 }}>
+            <View style={styles.front}>
+              <View style={styles.FirstHalf}>
+                <View style={styles.AvatarView}>
+                  <Avatar
+                    size='small'
+                    rounded
+                    source={{
+                      uri: this.props.user.profileURL,
+                    }}
+                  />
+                  <View style={{marginLeft: 8}}>
                     <Avatar
                       size="small"
                       rounded
@@ -181,20 +136,68 @@ class VideoQuestions extends Component {
                         uri: this.props.user.AvatarImg,
                       }}
                     />
-                    <Text style={styles.subCardFinishQuestionText}>
-                      Thank you. Your ansers are recorded. You will get reports after
-                      sometime in Reports section of profile.
-                    </Text>
-                    <Button
-                      onPress={() => this.questionFinished()}
-                      buttonStyle={{ borderRadius: 5 }}
-                      title="Finished"
-                    />
-                  </Card>
+                  </View>        
+                  <View
+                    style={styles.UserName}>
+                    <Text style={{ fontSize: 18 }}>{this.props.user.fullname}</Text>
+                  </View>
                 </View>
-          </View>
-        )
-      }
+              </View>
+            </View>
+            <View style={{ flex: 0, justifyContent: 'center' }}>
+              {!this.state.questionFinish && (
+                <View>
+                  {this.state.start && (
+                    <View>
+                      <View>
+                        <Text style={styles.VideoQuestionText}>{intro[0].Question}</Text>
+                      </View>
+                      <TouchableOpacity onPress={this.record} style={styles.capture}>
+                        <Text style={{ fontSize: 14 }}> start </Text>
+                      </TouchableOpacity>
+                    </View>
+                  )}
+                  {!this.state.start && (
+                    <View>
+                      <View>
+                        <Text style={styles.VideoQuestionText}>{questionList[this.state.classQuestionControl].Question}</Text>
+                      </View>
+                      <Text style={styles.subCardRecordingText}>Recording....</Text>
+                      <TouchableOpacity onPress={this.stopRecord.bind(this)} style={styles.capture}>
+                        <Text style={{ fontSize: 14 }}> Finish recording </Text>
+                      </TouchableOpacity>
+                    </View>
+                  )}
+                </View>
+              )}
+            </View>       
+            {this.state.questionFinish && 
+              (
+                <View>
+                    <View style={styles.SecondHalf}>
+                      <Card containerStyle={{ borderRadius: 5, width: width / 1.1 }}>
+                        <Avatar
+                          size="small"
+                          rounded
+                          source={{
+                            uri: this.props.user.AvatarImg,
+                          }}
+                        />
+                        <Text style={styles.subCardFinishQuestionText}>
+                          Thank you. Your ansers are recorded. You will get reports after
+                          sometime in Reports section of profile.
+                        </Text>
+                        <Button
+                          onPress={() => this.questionFinished()}
+                          buttonStyle={{ borderRadius: 5 }}
+                          title="Finish"
+                        />
+                      </Card>
+                    </View>
+              </View>
+            )
+          }
+        </RNCamera>
       </View>
     );
   }
@@ -216,6 +219,9 @@ const styles = StyleSheet.create({
     flex: 1,
     height: height/1.08,
     flexDirection: "column"
+  },
+  front: {
+    flex: 1
   },
   preview: {
     flex: 1,
@@ -254,7 +260,7 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
   },
   SecondHalf: {
-    
+    marginTop: width/3,
   },
   cardSetting: {
     padding: 10,
