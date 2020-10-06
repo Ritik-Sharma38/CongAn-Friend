@@ -18,6 +18,9 @@ Please follow the [guidelines](#codes--redistribution) to build upon our work.
 
 # Protoype Development
 
+![RNative](https://img.shields.io/badge/framework-React--Native-blue) ![Pythonv3.7](https://img.shields.io/badge/python-v3.7-brightgreen)  ![Redux](https://img.shields.io/badge/redux-v4.0.5-brightgreen) ![npm](https://img.shields.io/badge/npm-v6.14-brightgreen) ![Node](https://img.shields.io/badge/node-v14.9.0-brightgreen)
+
+
 ## Front-end:
 React-Native was the base framework for the front end development of the cross platform smartphone application. It was then used with Redux as a state management tool to store cache and reuse state components instead of loading them multiple times that included authentication, firebase, WebRTC, etc. Node Package Manager (NPM) was used to manage the JavaScript packages necessary for the User Interface (UI) components. Over 20 packages were used for Firebase services and authentication, Firestore, Firebase storage, Cloud messaging, React Navigation, and Video audio recording options.
 
@@ -26,14 +29,26 @@ Back-end was structured using Google Cloud Platform (GCP) that involved services
 
 
 
+
+
 ## Codes & Redistribution
 
-### Codes
-[Prototype](https://github.com/Ritik-Sharma38/CongAn-Friend)
+Below are the buttons to redirect you to each of the repositories, and the license.
 
-[Models](https://github.com/shivanishimpi/DepressionSeverityPrediction)
+[![PrototypeCode][2.2]][2] 
 
-[LICENSE: Creative Common's Non Attribution International 4.0](https://github.com/shivanishimpi/DepressionSeverityPrediction/blob/master/Attribution-NonCommercial-NoDerivatives4.0International.pdf)
+[![MLCode][3.3]][3]
+
+[![License][1.1]][1]
+
+
+[1.1]:https://img.shields.io/badge/license-LICENSE%3A%20Creative%20Common's%20Non%20Attribution%20International%204.0-red
+[2.2]: https://img.shields.io/badge/code-protoype-green
+[3.3]: https://img.shields.io/badge/code-ML--models-green
+
+[1]: https://github.com/shivanishimpi/DepressionSeverityPrediction/blob/master/Attribution-NonCommercial-NoDerivatives4.0International.pdf
+[2]: https://github.com/Ritik-Sharma38/CongAn-Friend
+[3]: https://github.com/shivanishimpi/DepressionSeverityPrediction 
 
 *Linked Repositories: [shivanishimpi/DepressionSeverityPrediction](https://github.com/shivanishimpi/DepressionSeverityPrediction/)*
 
