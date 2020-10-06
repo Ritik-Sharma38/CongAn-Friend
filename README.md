@@ -46,7 +46,7 @@ Below are the buttons to redirect you to each of the repositories, and the licen
 [2.2]: https://img.shields.io/badge/code-protoype-green
 [3.3]: https://img.shields.io/badge/code-ML--models-green
 
-[1]: https://github.com/shivanishimpi/DepressionSeverityPrediction/blob/master/Attribution-NonCommercial-NoDerivatives4.0International.pdf
+[1]: https://github.com/shivanishimpi/DepressionSeverityPrediction/blob/master/LICENSE.pdf
 [2]: https://github.com/Ritik-Sharma38/CongAn-Friend
 [3]: https://github.com/shivanishimpi/DepressionSeverityPrediction 
 
