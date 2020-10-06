@@ -14,7 +14,7 @@ Depression has been a leading cause of mental-health illnesses across the world.
 Long Short Term Memory Networks, Multi-modality Learning, Multi-class Depression Prediction,Ensemble Learning
 
 
-Please follow the [guidelines]() to build upon our work.
+Please follow the [guidelines](#codes--redistribution) to build upon our work.
 
 # Protoype Development
 
