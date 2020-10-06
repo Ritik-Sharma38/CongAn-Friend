@@ -35,6 +35,7 @@ Back-end was structured using Google Cloud Platform (GCP) that involved services
 
 [LICENSE: Creative Common's Non Attribution International 4.0](https://github.com/shivanishimpi/DepressionSeverityPrediction/blob/master/Attribution-NonCommercial-NoDerivatives4.0International.pdf)
 
+*Linked Repositories: [shivanishimpi/DepressionSeverityPrediction](https://github.com/shivanishimpi/DepressionSeverityPrediction/)*
 
 ### Terms and Conditions 
 
