@@ -42,7 +42,7 @@ Below are the buttons to redirect you to each of the repositories, and the licen
 [![License][1.1]][1]
 
 
-[1.1]:https://img.shields.io/badge/license-LICENSE%3A%20Creative%20Common's%20Non%20Attribution%20International%204.0-red
+[1.1]:https://img.shields.io/badge/license-Creative%20Common's%20Non%20Attribution%20International%204.0-red
 [2.2]: https://img.shields.io/badge/code-protoype-green
 [3.3]: https://img.shields.io/badge/code-ML--models-green
 
